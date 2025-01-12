@@ -1,0 +1,39 @@
+{
+    "configurations": [
+        {
+            "name": "flex-ui-sample [Desktop]",
+            "type": "gradle",
+            "workingDir": "$PROJECT_DIR$",
+            "tasks": [
+                "desktopRun"
+            ],
+            "args": [
+                "-DmainClass=cn.vividcode.multiplatform.flex.ui.sample.MainKt",
+                "--quiet",
+                "-p",
+                "$PROJECT_DIR$/flex-ui-sample"
+            ],
+            "initScripts": {
+                "flmapper": "ext.mapPath = { path -> path }"
+            }
+        },
+        {
+            "name": "flex-ui-sample [android]",
+            "type": "android-app",
+            "workingDir": "$PROJECT_DIR$",
+            "allowParallelRun": true,
+            "module": "flex-ui.flex-ui-sample.main"
+        },
+        {
+            "name": "flex-ui-sample [ios]",
+            "type": "xcode-app",
+            "workingDir": "$PROJECT_DIR$",
+            "allowParallelRun": true,
+            "buildTarget": {
+                "project": "iosApp",
+                "target": "iosApp"
+            },
+            "configuration": "Debug"
+        }
+    ]
+}
