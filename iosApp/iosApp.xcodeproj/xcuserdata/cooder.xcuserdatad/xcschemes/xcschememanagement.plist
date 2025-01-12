@@ -11,10 +11,10 @@
 		</dict>
 		<key>[Fleet] flex-ui-sample [ios].xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>2</integer>
 			<key>isShown</key>
 			<false />
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 		<key>[Fleet] iosApp.xcscheme</key>
 		<dict>
