@@ -13,4 +13,11 @@ interface FlexColorType {
 	data object Warning : FlexColorType
 	
 	data object Error : FlexColorType
+	
+	companion object {
+		
+		val entries by lazy {
+			arrayOf(Primary, Default, Secondary, Success, Warning, Error)
+		}
+	}
 }

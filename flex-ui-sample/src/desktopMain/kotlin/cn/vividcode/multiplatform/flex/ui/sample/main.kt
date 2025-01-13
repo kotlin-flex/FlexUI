@@ -4,7 +4,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -32,21 +31,24 @@ fun main() = application {
 			window.rootPane.putClientProperty("apple.awt.transparentTitleBar", true)
 			window.minimumSize = Dimension(800, 600)
 		}
-		MaterialTheme(
-			colorScheme = getColorScheme()
+		val inDarkTheme = if (InDarkTheme != null) {
+			InDarkTheme!!
+		} else {
+			isSystemInDarkTheme()
+		}
+		CompositionLocalProvider(
+			LocalFlex provides flex(),
+			LocalSystemInDarkTheme provides inDarkTheme
 		) {
-			CompositionLocalProvider(
-				LocalFlex provides flex(),
-				LocalSystemInDarkTheme provides isSystemInDarkTheme()
+			MaterialTheme(
+				colorScheme = getColorScheme()
 			) {
-				val surface = MaterialTheme.colorScheme.surface
+				val background = MaterialTheme.colorScheme.background
 				LaunchedEffect(LocalSystemInDarkTheme.current) {
-					window.background = surface.let { Color(it.red, it.green, it.blue) }
+					window.background = background.let { Color(it.red, it.green, it.blue) }
 				}
 				App()
 			}
 		}
 	}
 }
-
-private val LocalSystemInDarkTheme = staticCompositionLocalOf { false }

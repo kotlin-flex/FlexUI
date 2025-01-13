@@ -5,11 +5,13 @@ import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType.*
 
 class FlexButtonSizeConfig {
 	
-	internal val small = FlexButtonConfig.smallButton
+	private val mini = FlexButtonConfig.DefaultMiniButton
 	
-	internal val medium = FlexButtonConfig.mediumButton
+	private val small = FlexButtonConfig.DefaultSmallButton
 	
-	internal val large = FlexButtonConfig.largeButton
+	private val medium = FlexButtonConfig.DefaultMediumButton
+	
+	private val large = FlexButtonConfig.DefaultLargeButton
 	
 	fun small(config: FlexButtonConfig.() -> Unit) {
 		this.small.apply(config)
@@ -24,6 +26,7 @@ class FlexButtonSizeConfig {
 	}
 	
 	fun getButton(size: FlexSizeType) = when (size) {
+		Mini -> this.mini
 		Small -> this.small
 		Medium -> this.medium
 		Large -> this.large

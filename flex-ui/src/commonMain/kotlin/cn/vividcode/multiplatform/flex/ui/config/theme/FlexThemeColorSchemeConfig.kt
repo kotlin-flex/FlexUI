@@ -43,23 +43,23 @@ class FlexColorScheme internal constructor(
 		
 		val lightScheme: FlexColorScheme
 			get() = FlexColorScheme(
-				default = Color(0xFFF5F5F5),
+				default = Color(0xFF252525),
 				primary = Color(0xFF2E53EB),
 				secondary = Color(0xFF07969C),
 				success = Color(0xFF52C41A),
 				warning = Color(0xFFF9AC13),
-				error = Color(0xfff1211c),
+				error = Color(0xFFF1211C),
 				customs = emptyMap()
 			)
 		
 		val darkScheme: FlexColorScheme
 			get() = FlexColorScheme(
 				default = Color(0xFF434343),  // 更深的灰蓝色背景
-				primary = Color(0xFF0050B3),  // 更深的蓝色
-				secondary = Color(0xFF006C75), // 更深的青色
-				success = Color(0xFF227804),   // 更深的绿色
-				warning = Color(0xFFAC4E00),   // 更深的橙色
-				error = Color(0xFFA8061A),     // 更深的红色
+				primary = Color(0xFF2E53EB),  // 更深的蓝色
+				secondary = Color(0xFF07969C), // 更深的青色
+				success = Color(0xFF52C41A),   // 更深的绿色
+				warning = Color(0xFFF9AC13),   // 更深的橙色
+				error = Color(0xFFF1211C),     // 更深的红色
 				customs = emptyMap()
 			)
 	}
