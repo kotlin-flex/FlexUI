@@ -19,13 +19,13 @@ kotlin {
 			jvmTarget.set(JvmTarget.JVM_21)
 		}
 	}
-
+	
 	jvm("desktop") {
 		compilerOptions {
 			jvmTarget.set(JvmTarget.JVM_21)
 		}
 	}
-
+	
 	listOf(
 		iosX64(),
 		iosArm64(),
@@ -36,7 +36,7 @@ kotlin {
 			isStatic = true
 		}
 	}
-
+	
 	js {
 		moduleName = "flexUiSample"
 		browser {
@@ -47,7 +47,7 @@ kotlin {
 		binaries.executable()
 		useEsModules()
 	}
-
+	
 	@OptIn(ExperimentalWasmDsl::class)
 	wasmJs {
 		moduleName = "flexUiSample"
@@ -66,7 +66,7 @@ kotlin {
 		}
 		binaries.executable()
 	}
-
+	
 	sourceSets {
 		commonMain {
 			dependencies {
@@ -76,6 +76,7 @@ kotlin {
 				implementation(compose.material3)
 				implementation(compose.ui)
 				implementation(compose.components.resources)
+				implementation(compose.materialIconsExtended)
 				implementation(compose.components.uiToolingPreview)
 			}
 			kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
@@ -96,11 +97,11 @@ kotlin {
 android {
 	namespace = "cn.vividcode.multiplatform.flex.ui.sample"
 	compileSdk = libs.versions.android.compileSdk.get().toInt()
-
+	
 	sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 	sourceSets["main"].res.srcDirs("src/androidMain/res")
 	sourceSets["main"].resources.srcDirs("src/commonMain/resources")
-
+	
 	defaultConfig {
 		applicationId = "cn.vividcode.multiplatform.flex.ui.sample"
 		minSdk = libs.versions.android.minSdk.get().toInt()
@@ -130,7 +131,7 @@ android {
 compose.desktop {
 	application {
 		mainClass = "cn.vividcode.multiplatform.flex.ui.sample.MainKt"
-
+		
 		nativeDistributions {
 			targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
 			packageName = "cn.vividcode.multiplatform.flex.ui.sample"

@@ -16,6 +16,7 @@ class FlexButtonConfig internal constructor(
 	var fontSize: TextUnit,
 	var fontWeight: FontWeight,
 	var iconSize: Dp,
+	var iconInterval: Dp,
 ) {
 	
 	internal companion object {
@@ -27,11 +28,12 @@ class FlexButtonConfig internal constructor(
 			get() = FlexButtonConfig(
 				height = 32.dp,
 				padding = 11.dp,
-				cornerShape = RoundedCornerShape(5.dp),
+				cornerShape = RoundedCornerShape(8.dp),
 				borderWidth = 1.5.dp,
 				fontSize = 12.sp,
 				fontWeight = FontWeight.Medium,
-				iconSize = 18.dp
+				iconSize = 18.dp,
+				iconInterval = 5.5.dp
 			)
 		
 		// 默认小尺寸按钮配置
@@ -39,11 +41,12 @@ class FlexButtonConfig internal constructor(
 			get() = FlexButtonConfig(
 				height = 36.dp,
 				padding = 12.dp,
-				cornerShape = RoundedCornerShape(6.dp),
+				cornerShape = RoundedCornerShape(9.dp),
 				borderWidth = 1.5.dp,
 				fontSize = 14.sp,
 				fontWeight = FontWeight.Medium,
 				iconSize = 21.dp,
+				iconInterval = 6.dp
 			)
 		
 		// 默认中尺寸按钮配置
@@ -51,11 +54,12 @@ class FlexButtonConfig internal constructor(
 			get() = FlexButtonConfig(
 				height = 40.dp,
 				padding = 16.dp,
-				cornerShape = RoundedCornerShape(8.dp),
+				cornerShape = RoundedCornerShape(10.dp),
 				borderWidth = 1.5.dp,
 				fontSize = 16.sp,
 				fontWeight = FontWeight.Medium,
-				iconSize = 24.dp
+				iconSize = 24.dp,
+				iconInterval = 8.dp
 			)
 		
 		// 默认大尺寸按钮配置
@@ -63,11 +67,12 @@ class FlexButtonConfig internal constructor(
 			get() = FlexButtonConfig(
 				height = 44.dp,
 				padding = 20.dp,
-				cornerShape = RoundedCornerShape(10.dp),
+				cornerShape = RoundedCornerShape(11.dp),
 				borderWidth = 1.5.dp,
 				fontSize = 18.sp,
 				fontWeight = FontWeight.Medium,
-				iconSize = 27.dp
+				iconSize = 27.dp,
+				iconInterval = 10.dp
 			)
 	}
 }

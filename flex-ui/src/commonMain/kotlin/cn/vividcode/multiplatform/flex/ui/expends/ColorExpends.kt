@@ -15,7 +15,7 @@ private const val BLUE_WEIGHT = 0.114
  * 是否是暗色
  */
 internal val Color.isDark: Boolean
-	get() = this.red * RED_WEIGHT + this.green * GREEN_WEIGHT + blue * BLUE_WEIGHT < 0.5
+	get() = (this.red * RED_WEIGHT + this.green * GREEN_WEIGHT + this.blue * BLUE_WEIGHT) < 0.5
 
 /**
  * 颜色变量
@@ -29,14 +29,16 @@ internal fun Color.brightness(factor: Float): Color {
 	return hslToRgb(h, s, l)
 }
 
-
+/**
+ * RGB 转 HSL
+ */
 private fun Color.rgbToHsl(): FloatArray {
 	val max = maxOf(red, green, blue)
 	val min = minOf(red, green, blue)
 	val delta = max - min
 	val l = (max + min) / 2f
 	val s = if (delta == 0f) 0f else delta / (1 - abs(2 * l - 1))
-	val h = when (max) {
+	val h = if (delta == 0f) 0f else when (max) {
 		red -> ((green - blue) / delta + (if (green < blue) 6 else 0)) / 6f
 		green -> ((blue - red) / delta + 2) / 6f
 		else -> ((red - green) / delta + 4) / 6f

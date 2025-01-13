@@ -13,6 +13,10 @@ class FlexButtonSizeConfig {
 	
 	private val large = FlexButtonConfig.DefaultLargeButton
 	
+	fun mini(config: FlexButtonConfig.() -> Unit) {
+		this.mini.apply(config)
+	}
+	
 	fun small(config: FlexButtonConfig.() -> Unit) {
 		this.small.apply(config)
 	}
@@ -25,7 +29,7 @@ class FlexButtonSizeConfig {
 		this.large.apply(config)
 	}
 	
-	fun getButton(size: FlexSizeType) = when (size) {
+	fun getButtonConfig(size: FlexSizeType) = when (size) {
 		Mini -> this.mini
 		Small -> this.small
 		Medium -> this.medium

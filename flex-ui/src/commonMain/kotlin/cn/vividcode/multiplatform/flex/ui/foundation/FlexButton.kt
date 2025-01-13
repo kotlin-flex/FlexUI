@@ -16,10 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
-import cn.vividcode.multiplatform.flex.ui.config.LocalFlex
+import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.button.FlexButtonConfig
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType
@@ -37,11 +38,12 @@ fun FlexButton(
 	buttonType: ButtonType = FlexButtons.DefaultButtonType,
 	icon: ImageVector? = null,
 	iconDirection: ButtonIconDirection = FlexButtons.DefaultIconDirection,
+	iconRotation: Float = 0f,
 	enabled: Boolean = true,
 	onClick: () -> Unit,
 ) {
-	val current = LocalFlex.current
-	val config = current.button.getButton(sizeType)
+	val current = LocalFlexConfig.current
+	val config = current.button.getButtonConfig(sizeType)
 	val colorScheme = current.theme.colorScheme.current
 	val color = colorScheme.getColor(colorType)
 	val interactionSource = remember { MutableInteractionSource() }
@@ -69,17 +71,17 @@ fun FlexButton(
 			
 			Filled -> {
 				when {
-					!enabled -> color.copy(alpha = 0.2f)
-					isPressed -> color.copy(alpha = 0.25f)
-					isHovered -> color.copy(alpha = 0.4f)
-					else -> color.copy(alpha = 0.3f)
+					!enabled -> color.copy(alpha = 0.1f)
+					isPressed -> color.copy(alpha = 0.15f)
+					isHovered -> color.copy(alpha = 0.25f)
+					else -> color.copy(alpha = 0.2f)
 				}
 			}
 			
 			Text -> {
 				when {
-					isPressed -> color.copy(alpha = 0.25f)
-					isHovered -> color.copy(alpha = 0.3f)
+					isPressed -> color.copy(alpha = 0.15f)
+					isHovered -> color.copy(alpha = 0.2f)
 					else -> Color.Transparent
 				}
 			}
@@ -87,14 +89,7 @@ fun FlexButton(
 			else -> Color.Transparent
 		}
 	)
-	val startPadding = config.padding / when {
-		icon == null || iconDirection == ButtonIconDirection.End || text.isEmpty() -> 1
-		else -> 2
-	}
-	val endPadding = config.padding / when {
-		icon == null || iconDirection == ButtonIconDirection.Start || text.isEmpty() -> 1
-		else -> 2
-	}
+	val padding = if (text.isNotEmpty()) config.padding else Dp.Hairline
 	Row(
 		modifier = modifier
 			.let {
@@ -113,15 +108,15 @@ fun FlexButton(
 			)
 			.let {
 				if (text.isEmpty()) it else it.padding(
-					start = startPadding,
-					end = endPadding
+					start = padding,
+					end = padding
 				)
 			},
 		verticalAlignment = Alignment.CenterVertically,
 		horizontalArrangement = Arrangement.Center
 	) {
 		val fontColor = when (buttonType) {
-			Primary -> if (color.isDark) Color.White else colorScheme.default
+			Primary -> if (color.isDark) Color.White else Color.Black
 			Filled, Text -> color
 			else -> {
 				when {
@@ -138,7 +133,9 @@ fun FlexButton(
 				tint = fontColor,
 				contentDescription = null,
 				modifier = Modifier
-					.padding(end = if (text.isEmpty()) Dp.Hairline else startPadding)
+					.padding(
+						end = if (text.isEmpty()) Dp.Hairline else config.iconInterval
+					)
 					.size(config.iconSize)
 			)
 		}
@@ -155,8 +152,11 @@ fun FlexButton(
 				tint = fontColor,
 				contentDescription = null,
 				modifier = Modifier
-					.padding(start = if (text.isEmpty()) Dp.Hairline else endPadding)
+					.padding(
+						start = if (text.isEmpty()) Dp.Hairline else config.iconInterval
+					)
 					.size(config.iconSize)
+					.rotate(iconRotation)
 			)
 		}
 	}

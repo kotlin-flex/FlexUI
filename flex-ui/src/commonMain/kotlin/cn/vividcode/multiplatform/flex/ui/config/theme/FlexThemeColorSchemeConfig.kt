@@ -1,14 +1,14 @@
 package cn.vividcode.multiplatform.flex.ui.config.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import cn.vividcode.multiplatform.flex.ui.theme.LocalInDarkTheme
 
 class FlexThemeColorSchemeConfig internal constructor() {
 	
-	internal val lightScheme = FlexColorScheme.lightScheme
+	private val lightScheme = FlexColorScheme.lightScheme
 	
-	internal val darkScheme = FlexColorScheme.darkScheme
+	private val darkScheme = FlexColorScheme.darkScheme
 	
 	/**
 	 * 浅色主题
@@ -26,7 +26,7 @@ class FlexThemeColorSchemeConfig internal constructor() {
 	
 	val current: FlexColorScheme
 		@Composable
-		get() = if (isSystemInDarkTheme()) this.darkScheme else this.lightScheme
+		get() = if (LocalInDarkTheme.current) this.darkScheme else this.lightScheme
 }
 
 class FlexColorScheme internal constructor(
@@ -43,7 +43,7 @@ class FlexColorScheme internal constructor(
 		
 		val lightScheme: FlexColorScheme
 			get() = FlexColorScheme(
-				default = Color(0xFF252525),
+				default = Color(0xFF1F1F1F),
 				primary = Color(0xFF2E53EB),
 				secondary = Color(0xFF07969C),
 				success = Color(0xFF52C41A),
@@ -54,7 +54,7 @@ class FlexColorScheme internal constructor(
 		
 		val darkScheme: FlexColorScheme
 			get() = FlexColorScheme(
-				default = Color(0xFF434343),  // 更深的灰蓝色背景
+				default = Color(0xFFEFEFEF),  // 更深的灰蓝色背景
 				primary = Color(0xFF2E53EB),  // 更深的蓝色
 				secondary = Color(0xFF07969C), // 更深的青色
 				success = Color(0xFF52C41A),   // 更深的绿色
