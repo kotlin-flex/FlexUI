@@ -10,14 +10,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.SpaceDashboard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -34,6 +31,7 @@ import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexButtonPage
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalInDarkTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
 	var showFoldButton by remember { mutableStateOf(false) }
@@ -61,7 +59,7 @@ fun App() {
 				}
 			}
 	) {
-		var itemOffsetX by remember { mutableStateOf(Dp.Hairline) }
+		var itemOffsetX by remember { mutableStateOf(-(200.dp)) }
 		Box(
 			modifier = Modifier.fillMaxSize()
 		) {
@@ -117,45 +115,30 @@ fun App() {
 					.fillMaxSize()
 					.padding(start = targetItemOffsetX + 200.dp),
 				topBar = {
-					Row(
-						modifier = Modifier
-							.shadow(
-								elevation = 4.dp,
-								spotColor = Color.Gray
-							)
-							.fillMaxWidth()
-							.height(56.dp)
-							.background(MaterialTheme.colorScheme.surface)
-							.padding(horizontal = 8.dp),
-						verticalAlignment = Alignment.CenterVertically,
-						horizontalArrangement = Arrangement.SpaceBetween
-					) {
-						Row(
-							modifier = Modifier.fillMaxHeight(),
-							verticalAlignment = Alignment.CenterVertically,
-						) {
-							val current = flexComposeState.value
-							Text(
-								text = current.title,
-								fontSize = 18.sp,
-								fontWeight = FontWeight.Medium,
-								color = MaterialTheme.colorScheme.onSurface,
-								lineHeight = 18.sp
-							)
-							Spacer(Modifier.width(4.dp))
-							Text(
-								text = current.alias,
-								fontSize = 13.sp,
-								color = MaterialTheme.colorScheme.onSurface,
-								lineHeight = 13.sp
-							)
+					TopAppBar(
+						title = {
+							Row(
+								modifier = Modifier.fillMaxHeight(),
+								verticalAlignment = Alignment.CenterVertically,
+							) {
+								val current = flexComposeState.value
+								Text(
+									text = current.title,
+									fontSize = 18.sp,
+									fontWeight = FontWeight.Medium,
+									color = MaterialTheme.colorScheme.onSurface,
+									lineHeight = 18.sp
+								)
+								Spacer(Modifier.width(4.dp))
+								Text(
+									text = current.alias,
+									fontSize = 13.sp,
+									color = MaterialTheme.colorScheme.onSurface,
+									lineHeight = 13.sp
+								)
+							}
 						}
-						Row(
-							modifier = Modifier.fillMaxHeight()
-						) {
-						
-						}
-					}
+					)
 				}
 			) {
 				when (flexComposeState.value) {
@@ -164,14 +147,14 @@ fun App() {
 			}
 		}
 		val foldOffsetX by animateDpAsState(
-			targetValue = if (showFoldButton) Dp.Hairline else -(50.dp)
+			targetValue = if (showFoldButton) Dp.Hairline else -(56.dp)
 		)
 		FlexButton(
 			modifier = Modifier
 				.align(Alignment.BottomStart)
 				.padding(
-					start = 8.dp,
-					bottom = 8.dp
+					start = 16.dp,
+					bottom = 16.dp
 				)
 				.offset(x = foldOffsetX),
 			icon = Icons.Outlined.SpaceDashboard,
@@ -181,7 +164,7 @@ fun App() {
 			itemOffsetX = if (itemOffsetX == Dp.Hairline) -(200.dp) else Dp.Hairline
 		}
 		val switchThemeOffsetX by animateDpAsState(
-			targetValue = if (showSwitchThemeButton) Dp.Hairline else 50.dp
+			targetValue = if (showSwitchThemeButton) Dp.Hairline else 56.dp
 		)
 		val iconRotation by animateFloatAsState(
 			targetValue = if (LocalInDarkTheme.current) -90f else 0f
@@ -191,11 +174,10 @@ fun App() {
 			modifier = Modifier
 				.align(Alignment.BottomEnd)
 				.padding(
-					end = 8.dp,
-					bottom = 8.dp
+					end = 16.dp,
+					bottom = 16.dp
 				)
 				.offset(x = switchThemeOffsetX),
-			colorType = FlexColorType.Primary,
 			buttonType = ButtonType.Primary,
 			iconRotation = iconRotation
 		) {
