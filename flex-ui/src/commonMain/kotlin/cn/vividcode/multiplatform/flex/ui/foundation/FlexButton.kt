@@ -1,6 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.foundation
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,156 +9,172 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.TextUnit
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.button.FlexButtonConfig
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.theme.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 import cn.vividcode.multiplatform.flex.ui.expends.dashedBorder
 import cn.vividcode.multiplatform.flex.ui.expends.isDark
-import cn.vividcode.multiplatform.flex.ui.foundation.ButtonType.*
 
+/**
+ * FlexButton
+ *
+ * @param modifier [Modifier]
+ * @param text 文本
+ * @param icon 图标
+ * @param sizeType 尺寸类型
+ * @param colorType 颜色类型
+ * @param cornerType 圆角类型
+ * @param buttonType 按钮类型
+ * @param iconPosition 图标位置
+ * @param iconRotation 图标旋转
+ * @param enabledScale 启用缩放功能
+ * @param letterSpacing 文本间距
+ * @param enabled 是否禁用点击
+ * @param onClick 点击事件
+ */
 @Composable
 fun FlexButton(
-	text: String = "",
 	modifier: Modifier = Modifier,
-	sizeType: FlexSizeType = FlexButtons.DefaultSize,
-	colorType: FlexColorType = FlexButtons.DefaultColor,
-	buttonType: ButtonType = FlexButtons.DefaultButtonType,
+	text: String = "",
 	icon: ImageVector? = null,
-	iconDirection: ButtonIconDirection = FlexButtons.DefaultIconDirection,
-	iconRotation: Float = 0f,
+	sizeType: FlexSizeType = FlexButtons.DefaultSizeType,
+	colorType: FlexColorType = FlexButtons.DefaultColorType,
+	cornerType: FlexCornerType = FlexButtons.DefaultCornerType,
+	buttonType: FlexButtonType = FlexButtons.DefaultButtonType,
+	iconPosition: FlexButtonIconPosition = FlexButtons.DefaultIconDirection,
+	iconRotation: Float = FlexButtons.DefaultIconRotation,
+	enabledScale: Boolean = FlexButtons.DefaultEnabledScale,
+	letterSpacing: TextUnit = FlexButtons.DefaultLetterSpacing,
 	enabled: Boolean = true,
 	onClick: () -> Unit,
 ) {
 	val current = LocalFlexConfig.current
-	val config = current.button.getButtonConfig(sizeType)
+	val config = current.button.getConfigBySize(sizeType)
 	val colorScheme = current.theme.colorScheme.current
 	val color = colorScheme.getColor(colorType)
 	val interactionSource = remember { MutableInteractionSource() }
 	val isHovered by interactionSource.collectIsHoveredAsState()
 	val isPressed by interactionSource.collectIsPressedAsState()
-	val backgroundColor by animateColorAsState(
-		targetValue = when (buttonType) {
-			Primary -> {
-				when {
-					!enabled -> color.brightness(1.2f)
-					isPressed -> color.brightness(0.95f)
-					isHovered -> color.brightness(1.1f)
-					else -> color
-				}
-			}
-			
-			Default, Dashed -> {
-				when {
-					!enabled -> color.brightness(1.25f)
-					isPressed -> color.brightness(0.9f)
-					isHovered -> color.brightness(1.15f)
-					else -> color
-				}
-			}
-			
-			Filled -> {
-				when {
-					!enabled -> color.copy(alpha = 0.1f)
-					isPressed -> color.copy(alpha = 0.15f)
-					isHovered -> color.copy(alpha = 0.25f)
-					else -> color.copy(alpha = 0.2f)
-				}
-			}
-			
-			Text -> {
-				when {
-					isPressed -> color.copy(alpha = 0.15f)
-					isHovered -> color.copy(alpha = 0.2f)
-					else -> Color.Transparent
-				}
-			}
-			
-			else -> Color.Transparent
+	val targetColor by animateColorAsState(
+		targetValue = getTargetColor(color, buttonType, enabled, isPressed, isHovered)
+	)
+	val horizontalPadding = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
+	val cornerShape = when (cornerType) {
+		FlexCornerType.None -> RectangleShape
+		FlexCornerType.Circle -> CircleShape
+		else -> RoundedCornerShape(config.height * cornerType.percent)
+	}
+	val targetScale by animateFloatAsState(
+		targetValue = if (!enabledScale) 1f else when {
+			isPressed -> 0.99f
+			isHovered -> 1.015f
+			else -> 1f
 		}
 	)
-	val padding = if (text.isNotEmpty()) config.padding else Dp.Hairline
-	Row(
-		modifier = modifier
-			.let {
-				if (text.isNotEmpty()) it else it.width(
-					width = config.height
-				)
-			}
-			.height(config.height)
-			.clip(config.cornerShape)
-			.customStyle(buttonType, config, backgroundColor)
-			.clickable(
-				interactionSource = interactionSource,
-				indication = null,
-				enabled = enabled,
-				onClick = onClick
-			)
-			.let {
-				if (text.isEmpty()) it else it.padding(
-					start = padding,
-					end = padding
-				)
-			},
-		verticalAlignment = Alignment.CenterVertically,
-		horizontalArrangement = Arrangement.Center
+	val layoutDirection = LocalLayoutDirection.current
+	CompositionLocalProvider(
+		LocalLayoutDirection provides when {
+			text.isBlank() || iconPosition == FlexButtonIconPosition.Start -> layoutDirection
+			else -> if (layoutDirection == LayoutDirection.Ltr) LayoutDirection.Rtl else LayoutDirection.Ltr
+		}
 	) {
-		val fontColor = when (buttonType) {
-			Primary -> if (color.isDark) Color.White else Color.Black
-			Filled, Text -> color
-			else -> {
-				when {
-					!enabled -> color.brightness(1.2f)
-					isPressed -> color.brightness(0.9f)
-					isHovered -> color.brightness(1.15f)
-					else -> color
+		Row(
+			modifier = modifier
+				.scale(targetScale)
+				.let {
+					if (text.isNotEmpty()) it else it.width(
+						width = config.height
+					)
+				}
+				.height(config.height)
+				.clip(cornerShape)
+				.customStyle(buttonType, config, cornerShape, targetColor)
+				.clickable(
+					interactionSource = interactionSource,
+					indication = null,
+					enabled = enabled,
+					onClick = onClick
+				)
+				.let {
+					if (text.isBlank()) it else it.padding(
+						start = horizontalPadding,
+						end = horizontalPadding
+					)
+				},
+			verticalAlignment = Alignment.CenterVertically,
+			horizontalArrangement = Arrangement.Center
+		) {
+			val fontColor = when (buttonType) {
+				FlexButtonType.Primary -> if (color.isDark) Color.White else Color.Black
+				FlexButtonType.Filled, FlexButtonType.Text -> color
+				else -> {
+					when {
+						!enabled -> color.copy(alpha = 0.8f)
+						isPressed -> color.brightness(0.9f)
+						isHovered -> color.brightness(1.15f)
+						else -> color
+					}
 				}
 			}
-		}
-		if (icon != null && iconDirection == ButtonIconDirection.Start) {
-			Icon(
-				imageVector = icon,
-				tint = fontColor,
-				contentDescription = null,
-				modifier = Modifier
-					.padding(
-						end = if (text.isEmpty()) Dp.Hairline else config.iconInterval
-					)
-					.size(config.iconSize)
+			val targetFontColor by animateColorAsState(
+				targetValue = fontColor
 			)
-		}
-		Text(
-			text = text,
-			color = fontColor,
-			fontSize = config.fontSize,
-			fontWeight = config.fontWeight,
-			lineHeight = config.fontSize
-		)
-		if (icon != null && iconDirection == ButtonIconDirection.End) {
-			Icon(
-				imageVector = icon,
-				tint = fontColor,
-				contentDescription = null,
-				modifier = Modifier
-					.padding(
-						start = if (text.isEmpty()) Dp.Hairline else config.iconInterval
+			if (icon != null) {
+				CompositionLocalProvider(
+					LocalLayoutDirection provides layoutDirection
+				) {
+					Icon(
+						imageVector = icon,
+						tint = targetFontColor,
+						contentDescription = null,
+						modifier = Modifier
+							.padding(
+								start = if (text.isBlank()) Dp.Hairline else config.iconInterval
+							)
+							.rotate(iconRotation)
+							.size(config.iconSize)
 					)
-					.size(config.iconSize)
-					.rotate(iconRotation)
-			)
+				}
+			}
+			CompositionLocalProvider(
+				LocalLayoutDirection provides layoutDirection,
+			) {
+				Text(
+					text = text.trim(),
+					color = targetFontColor,
+					fontSize = config.fontSize,
+					fontWeight = config.fontWeight,
+					letterSpacing = letterSpacing,
+					lineHeight = config.fontSize,
+					overflow = TextOverflow.Ellipsis,
+					maxLines = 1
+				)
+			}
 		}
 	}
 }
@@ -167,51 +184,106 @@ fun FlexButton(
  */
 @Composable
 private fun Modifier.customStyle(
-	buttonType: ButtonType,
+	buttonType: FlexButtonType,
 	config: FlexButtonConfig,
-	color: Color,
+	cornerShape: Shape,
+	primaryColor: Color,
 ): Modifier {
 	return when (buttonType) {
-		Default -> this.border(
+		FlexButtonType.Default -> this.border(
 			width = config.borderWidth,
-			color = color,
-			shape = config.cornerShape
+			color = primaryColor,
+			shape = cornerShape
 		)
 		
-		Dashed -> this.dashedBorder(
+		FlexButtonType.Dashed -> this.dashedBorder(
 			width = config.borderWidth,
-			color = color,
-			shape = config.cornerShape
+			color = primaryColor,
+			shape = cornerShape
 		)
 		
-		Link -> this
+		FlexButtonType.Link -> this
 		
 		else -> this.background(
-			color = color,
-			shape = config.cornerShape,
+			color = primaryColor,
+			shape = cornerShape
 		)
 	}
 }
 
-object FlexButtons {
+private fun getTargetColor(
+	originalColor: Color,
+	buttonType: FlexButtonType,
+	enabled: Boolean,
+	isPressed: Boolean,
+	isHovered: Boolean,
+): Color = when (buttonType) {
+	FlexButtonType.Primary -> {
+		when {
+			!enabled -> originalColor.copy(alpha = 0.8f)
+			isPressed -> originalColor.brightness(0.95f)
+			isHovered -> originalColor.brightness(1.1f)
+			else -> originalColor
+		}
+	}
 	
-	val DefaultSize = FlexSizeType.Medium
+	FlexButtonType.Default, FlexButtonType.Dashed -> {
+		when {
+			!enabled -> originalColor.copy(alpha = 0.8f)
+			isPressed -> originalColor.brightness(0.9f)
+			isHovered -> originalColor.brightness(1.15f)
+			else -> originalColor
+		}
+	}
 	
-	val DefaultColor = FlexColorType.Default
+	FlexButtonType.Filled -> {
+		when {
+			!enabled -> originalColor.copy(alpha = 0.1f)
+			isPressed -> originalColor.copy(alpha = 0.25f)
+			isHovered -> originalColor.copy(alpha = 0.2f)
+			else -> originalColor.copy(alpha = 0.15f)
+		}
+	}
 	
-	val DefaultIconDirection = ButtonIconDirection.End
+	FlexButtonType.Text -> {
+		when {
+			isPressed -> originalColor.copy(alpha = 0.25f)
+			isHovered -> originalColor.copy(alpha = 0.15f)
+			else -> Color.Transparent
+		}
+	}
 	
-	val DefaultButtonType = Default
+	else -> Color.Transparent
 }
 
-enum class ButtonIconDirection {
+@Suppress("ConstPropertyName")
+object FlexButtons {
+	
+	val DefaultSizeType = FlexSizeType.Medium
+	
+	val DefaultColorType = FlexColorType.Default
+	
+	val DefaultCornerType = FlexCornerType.Default
+	
+	val DefaultIconDirection = FlexButtonIconPosition.End
+	
+	val DefaultButtonType = FlexButtonType.Default
+	
+	const val DefaultIconRotation = 0f
+	
+	const val DefaultEnabledScale = true
+	
+	val DefaultLetterSpacing = TextUnit.Unspecified
+}
+
+enum class FlexButtonIconPosition {
 	
 	Start,
 	
 	End
 }
 
-enum class ButtonType {
+enum class FlexButtonType {
 	
 	Primary,
 	

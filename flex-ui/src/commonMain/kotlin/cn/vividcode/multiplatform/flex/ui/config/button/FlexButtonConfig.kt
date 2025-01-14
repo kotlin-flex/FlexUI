@@ -1,17 +1,17 @@
 package cn.vividcode.multiplatform.flex.ui.config.button
 
-import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * FlexButton 配置
+ */
 class FlexButtonConfig internal constructor(
 	var height: Dp,
-	var padding: Dp,
-	var cornerShape: CornerBasedShape,
+	var horizontalPadding: Dp,
 	var borderWidth: Dp,
 	var fontSize: TextUnit,
 	var fontWeight: FontWeight,
@@ -22,30 +22,28 @@ class FlexButtonConfig internal constructor(
 	internal companion object {
 		
 		/**
-		 * 默认迷你尺寸按钮配置
+		 * 默认超小尺寸按钮配置
 		 */
-		val DefaultMiniButton: FlexButtonConfig
+		val DefaultExtraSmallButton: FlexButtonConfig
 			get() = FlexButtonConfig(
-				height = 32.dp,
-				padding = 11.dp,
-				cornerShape = RoundedCornerShape(8.dp),
-				borderWidth = 1.5.dp,
+				height = 24.dp,
+				horizontalPadding = 8.dp,
+				borderWidth = 1.dp,
 				fontSize = 12.sp,
-				fontWeight = FontWeight.Medium,
-				iconSize = 18.dp,
-				iconInterval = 5.5.dp
+				fontWeight = FontWeight.Normal,
+				iconSize = 24.dp * 0.66f,
+				iconInterval = 4.dp
 			)
 		
 		// 默认小尺寸按钮配置
 		val DefaultSmallButton: FlexButtonConfig
 			get() = FlexButtonConfig(
-				height = 36.dp,
-				padding = 12.dp,
-				cornerShape = RoundedCornerShape(9.dp),
+				height = 32.dp,
+				horizontalPadding = 10.dp,
 				borderWidth = 1.5.dp,
-				fontSize = 14.sp,
+				fontSize = 16.sp,
 				fontWeight = FontWeight.Medium,
-				iconSize = 21.dp,
+				iconSize = 32.dp * 0.66f,
 				iconInterval = 6.dp
 			)
 		
@@ -53,26 +51,36 @@ class FlexButtonConfig internal constructor(
 		val DefaultMediumButton: FlexButtonConfig
 			get() = FlexButtonConfig(
 				height = 40.dp,
-				padding = 16.dp,
-				cornerShape = RoundedCornerShape(10.dp),
+				horizontalPadding = 12.dp,
 				borderWidth = 1.5.dp,
-				fontSize = 16.sp,
+				fontSize = 20.sp,
 				fontWeight = FontWeight.Medium,
-				iconSize = 24.dp,
+				iconSize = 40.dp * 0.66f,
 				iconInterval = 8.dp
 			)
 		
 		// 默认大尺寸按钮配置
 		val DefaultLargeButton: FlexButtonConfig
 			get() = FlexButtonConfig(
-				height = 44.dp,
-				padding = 20.dp,
-				cornerShape = RoundedCornerShape(11.dp),
+				height = 48.dp,
+				horizontalPadding = 14.dp,
 				borderWidth = 1.5.dp,
-				fontSize = 18.sp,
-				fontWeight = FontWeight.Medium,
-				iconSize = 27.dp,
+				fontSize = 24.sp,
+				fontWeight = FontWeight.SemiBold,
+				iconSize = 48.dp * 0.66f,
 				iconInterval = 10.dp
+			)
+		
+		// 默认大尺寸按钮配置
+		val DefaultExtraLargeButton: FlexButtonConfig
+			get() = FlexButtonConfig(
+				height = 56.dp,
+				horizontalPadding = 16.dp,
+				borderWidth = 2.dp,
+				fontSize = 28.sp,
+				fontWeight = FontWeight.SemiBold,
+				iconSize = 56.dp * 0.66f,
+				iconInterval = 12.dp
 			)
 	}
 }

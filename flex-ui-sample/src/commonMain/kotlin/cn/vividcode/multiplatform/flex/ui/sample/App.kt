@@ -3,8 +3,10 @@ package cn.vividcode.multiplatform.flex.ui.sample
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
@@ -20,21 +22,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
-import cn.vividcode.multiplatform.flex.ui.foundation.ButtonType
 import cn.vividcode.multiplatform.flex.ui.foundation.FlexButton
+import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.sample.FlexCompose.FlexButton
 import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexButtonPage
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 
-private val ItemWidth = 180.dp
+private val ItemWidth = 200.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,13 +93,13 @@ fun App() {
 					verticalArrangement = Arrangement.Center
 				) {
 					Text(
-						text = "FlexUI",
+						text = "Flex UI",
 						fontSize = 18.sp,
 						color = MaterialTheme.colorScheme.onSurface,
 						fontWeight = FontWeight.Medium
 					)
 					Text(
-						text = "v1.0.0-exp01",
+						text = "v1.0.0-exp-02",
 						fontSize = 13.sp,
 						color = MaterialTheme.colorScheme.onSurface
 					)
@@ -110,8 +113,8 @@ fun App() {
 				) {
 					FlexCompose.entries.forEach {
 						ComposeItem(
-							flexCompose = it,
-							flexComposeState = flexComposeState
+							current = it,
+							state = flexComposeState
 						)
 					}
 				}
@@ -129,18 +132,11 @@ fun App() {
 							) {
 								val current = flexComposeState.value
 								Text(
-									text = current.title,
+									text = current.name,
 									fontSize = 20.sp,
 									fontWeight = FontWeight.Medium,
 									color = MaterialTheme.colorScheme.onSurface,
 									lineHeight = 20.sp
-								)
-								Spacer(Modifier.width(4.dp))
-								Text(
-									text = current.alias,
-									fontSize = 14.sp,
-									color = MaterialTheme.colorScheme.onSurface,
-									lineHeight = 14.sp
 								)
 							}
 						},
@@ -152,7 +148,7 @@ fun App() {
 										false -> Icons.AutoMirrored.Outlined.PlaylistPlay
 									},
 									colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
-									buttonType = ButtonType.Primary,
+									buttonType = FlexButtonType.Primary,
 								) {
 									itemOffsetX = if (itemOffsetX == Dp.Hairline) -ItemWidth else Dp.Hairline
 								}
@@ -162,7 +158,7 @@ fun App() {
 								Spacer(modifier = Modifier.width(8.dp))
 								FlexButton(
 									icon = if (LocalDarkTheme.current) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
-									buttonType = ButtonType.Primary,
+									buttonType = FlexButtonType.Primary,
 									iconRotation = themeIconRotation
 								) {
 									FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
@@ -194,7 +190,7 @@ fun App() {
 					false -> Icons.AutoMirrored.Outlined.PlaylistPlay
 				},
 				colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
-				buttonType = ButtonType.Primary,
+				buttonType = FlexButtonType.Primary,
 			) {
 				itemOffsetX = if (itemOffsetX == Dp.Hairline) -(ItemWidth) else Dp.Hairline
 			}
@@ -213,7 +209,7 @@ fun App() {
 						bottom = 12.dp
 					)
 					.offset(x = switchThemeOffsetX),
-				buttonType = ButtonType.Primary,
+				buttonType = FlexButtonType.Primary,
 				iconRotation = themeIconRotation
 			) {
 				FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
@@ -222,17 +218,14 @@ fun App() {
 	}
 }
 
-enum class FlexCompose(
-	val title: String,
-	val alias: String,
-) {
-	FlexButton("FlexButton", "按钮")
+enum class FlexCompose {
+	FlexButton
 }
 
 @Composable
 private fun ComposeItem(
-	flexCompose: FlexCompose,
-	flexComposeState: MutableState<FlexCompose>,
+	current: FlexCompose,
+	state: MutableState<FlexCompose>,
 ) {
 	Row(
 		modifier = Modifier
@@ -240,27 +233,36 @@ private fun ComposeItem(
 			.height(40.dp)
 			.clip(RoundedCornerShape(10.dp))
 			.background(
-				color = if (flexComposeState.value == flexCompose) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
+				color = if (state.value == current) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
 				shape = RoundedCornerShape(10.dp)
 			)
 			.clickable {
-				flexComposeState.value = flexCompose
+				state.value = current
 			}
 			.padding(horizontal = 16.dp),
 		verticalAlignment = Alignment.CenterVertically,
 		horizontalArrangement = Arrangement.SpaceBetween
 	) {
 		Text(
-			text = flexCompose.title,
+			text = current.name,
+			modifier = Modifier.weight(1f),
 			fontSize = 15.sp,
 			color = MaterialTheme.colorScheme.onSurface,
-			lineHeight = 15.sp
+			lineHeight = 15.sp,
+			maxLines = 1,
+			overflow = TextOverflow.Ellipsis
 		)
-		Text(
-			text = flexCompose.alias,
-			fontSize = 13.sp,
-			color = MaterialTheme.colorScheme.onSurface,
-			lineHeight = 13.sp
-		)
+		if (state.value == current) {
+			Box(
+				modifier = Modifier
+					.size(14.dp)
+					.clip(CircleShape)
+					.border(
+						width = 2.5.dp,
+						color = MaterialTheme.colorScheme.onSurface,
+						shape = CircleShape
+					),
+			)
+		}
 	}
 }

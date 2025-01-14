@@ -5,17 +5,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.theme.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.foundation.ButtonIconDirection
-import cn.vividcode.multiplatform.flex.ui.foundation.ButtonType
 import cn.vividcode.multiplatform.flex.ui.foundation.FlexButton
+import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonIconPosition
+import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonType
 
 @Composable
 fun FlexButtonPage(
@@ -29,17 +31,18 @@ fun FlexButtonPage(
 			.verticalScroll(verticalScrollState)
 			.padding(vertical = 16.dp)
 	) {
-		FlexColorType.entries.forEach { colorType ->
+		FlexColorType.entries.forEachIndexed { colorTypeIndex, colorType ->
 			FlexSizeType.entries.forEach { sizeType ->
+				val horizontalScrollState = rememberScrollState()
 				Spacer(modifier = Modifier.height(16.dp))
-				val scrollState = rememberScrollState()
 				Row(
 					modifier = Modifier
 						.fillMaxWidth()
-						.horizontalScroll(scrollState)
+						.horizontalScroll(horizontalScrollState)
 						.padding(horizontal = 16.dp)
 				) {
-					ButtonType.entries.forEachIndexed { index, buttonType ->
+					val cornerType = FlexCornerType.entries[colorTypeIndex % FlexCornerType.entries.size]
+					FlexButtonType.entries.forEachIndexed { index, buttonType ->
 						if (index != 0) {
 							Spacer(modifier = Modifier.width(16.dp))
 						}
@@ -47,16 +50,45 @@ fun FlexButtonPage(
 							text = "$colorType $buttonType",
 							sizeType = sizeType,
 							colorType = colorType,
+							cornerType = cornerType,
 							buttonType = buttonType,
 							icon = when (buttonType) {
-								ButtonType.Primary -> Icons.Outlined.Search
-								ButtonType.Dashed -> Icons.Outlined.Add
-								ButtonType.Text -> Icons.Outlined.KeyboardArrowDown
+								FlexButtonType.Primary -> Icons.Rounded.Search
+								FlexButtonType.Dashed -> Icons.Rounded.Add
+								FlexButtonType.Text -> Icons.Outlined.KeyboardArrowDown
+								FlexButtonType.Link -> Icons.AutoMirrored.Outlined.KeyboardArrowRight
 								else -> null
 							},
-							iconDirection = when (buttonType) {
-								ButtonType.Dashed -> ButtonIconDirection.Start
-								else -> ButtonIconDirection.End
+							iconPosition = when (buttonType) {
+								FlexButtonType.Dashed -> FlexButtonIconPosition.Start
+								else -> FlexButtonIconPosition.End
+							}
+						) {
+						
+						}
+					}
+					Spacer(modifier = Modifier.width(16.dp))
+					FlexButton(
+						text = "$colorType Disabled",
+						sizeType = sizeType,
+						colorType = colorType,
+						cornerType = cornerType,
+						buttonType = FlexButtonType.Primary,
+						enabled = false
+					) {
+					
+					}
+					FlexButtonType.entries.forEach { buttonType ->
+						Spacer(modifier = Modifier.width(16.dp))
+						FlexButton(
+							sizeType = sizeType,
+							colorType = colorType,
+							cornerType = cornerType,
+							buttonType = buttonType,
+							icon = Icons.Rounded.Search,
+							iconPosition = when (buttonType) {
+								FlexButtonType.Dashed -> FlexButtonIconPosition.Start
+								else -> FlexButtonIconPosition.End
 							}
 						) {
 						

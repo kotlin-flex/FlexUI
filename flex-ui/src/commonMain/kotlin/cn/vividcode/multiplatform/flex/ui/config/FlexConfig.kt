@@ -3,6 +3,9 @@ package cn.vividcode.multiplatform.flex.ui.config
 import cn.vividcode.multiplatform.flex.ui.config.button.FlexButtonSizeConfig
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexThemeConfig
 
+/**
+ * Flex 配置
+ */
 fun flexConfig(config: (FlexConfig.() -> Unit)? = null) = FlexConfig().also {
 	config?.invoke(it)
 }

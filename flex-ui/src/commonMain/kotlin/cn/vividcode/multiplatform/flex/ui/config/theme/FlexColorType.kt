@@ -1,5 +1,11 @@
 package cn.vividcode.multiplatform.flex.ui.config.theme
 
+import androidx.compose.runtime.Stable
+
+/**
+ * 颜色类型
+ */
+@Stable
 interface FlexColorType {
 	
 	data object Default : FlexColorType
