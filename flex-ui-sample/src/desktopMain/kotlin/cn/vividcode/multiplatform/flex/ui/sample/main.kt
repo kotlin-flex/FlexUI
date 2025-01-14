@@ -10,7 +10,7 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import cn.vividcode.multiplatform.flex.ui.theme.FlexTheme
-import cn.vividcode.multiplatform.flex.ui.theme.LocalInDarkTheme
+import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import java.awt.Color
 import java.awt.Dimension
 
@@ -31,7 +31,7 @@ fun main() = application {
 		}
 		FlexTheme {
 			val backgroundColor = MaterialTheme.colorScheme.background
-			LaunchedEffect(LocalInDarkTheme.current) {
+			LaunchedEffect(LocalDarkTheme.current) {
 				window.background = backgroundColor.let { Color(it.red, it.green, it.blue) }
 			}
 			App()

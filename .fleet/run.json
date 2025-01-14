@@ -18,14 +18,14 @@
             }
         },
         {
-            "name": "flex-ui-sample [android]",
+            "name": "flex-ui-sample [Android]",
             "type": "android-app",
             "workingDir": "$PROJECT_DIR$",
             "allowParallelRun": true,
             "module": "flex-ui.flex-ui-sample.main"
         },
         {
-            "name": "flex-ui-sample [ios]",
+            "name": "flex-ui-sample [IOS]",
             "type": "xcode-app",
             "workingDir": "$PROJECT_DIR$",
             "allowParallelRun": true,
@@ -34,6 +34,36 @@
                 "target": "iosApp"
             },
             "configuration": "Debug"
+        },
+        {
+            "name": "flex-ui-sample [WasmJs]",
+            "type": "gradle",
+            "workingDir": "$PROJECT_DIR$",
+            "tasks": [
+                "wasmJsBrowserDevelopmentRun"
+            ],
+            "args": [
+                "-p",
+                "$PROJECT_DIR$/flex-ui-sample"
+            ],
+            "initScripts": {
+                "flmapper": "ext.mapPath = { path -> path }"
+            }
+        },
+        {
+            "name": "flex-ui-sample [Js]",
+            "type": "gradle",
+            "workingDir": "$PROJECT_DIR$",
+            "tasks": [
+                "jsBrowserDevelopmentRun"
+            ],
+            "args": [
+                "-p",
+                "$PROJECT_DIR$/flex-ui-sample"
+            ],
+            "initScripts": {
+                "flmapper": "ext.mapPath = { path -> path }"
+            }
         }
     ]
 }

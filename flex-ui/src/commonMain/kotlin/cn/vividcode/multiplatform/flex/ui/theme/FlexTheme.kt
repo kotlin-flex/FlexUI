@@ -21,7 +21,7 @@ fun FlexTheme(
 		FlexThemeState.darkTheme = it
 	}
 	CompositionLocalProvider(
-		LocalInDarkTheme provides targetDarkTheme,
+		LocalDarkTheme provides targetDarkTheme,
 		LocalFlexConfig provides flexConfig
 	) {
 		MaterialTheme(

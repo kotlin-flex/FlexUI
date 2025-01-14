@@ -9,19 +9,19 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>[Fleet] flex-ui-sample [ios].xcscheme</key>
+		<key>[Fleet] flex-ui-sample [IOS].xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false />
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<key>[Fleet] iosApp.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false />
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 	</dict>
 </dict>

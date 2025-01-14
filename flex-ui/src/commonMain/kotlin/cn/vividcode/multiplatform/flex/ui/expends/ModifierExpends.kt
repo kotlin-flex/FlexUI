@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cn.vividcode.multiplatform.flex.ui.theme.CurrentPlatform
+import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 
 /**
  * 绘制虚线
@@ -45,3 +47,8 @@ internal fun Modifier.dashedBorder(
 		)
 	}
 }
+
+fun Modifier.multiplatform(
+	vararg platforms: FlexPlatform,
+	modifier: Modifier.() -> Modifier,
+): Modifier = if (CurrentPlatform in platforms) this.modifier() else this

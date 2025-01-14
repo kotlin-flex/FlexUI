@@ -2,7 +2,7 @@ package cn.vividcode.multiplatform.flex.ui.config.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import cn.vividcode.multiplatform.flex.ui.theme.LocalInDarkTheme
+import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 
 class FlexThemeColorSchemeConfig internal constructor() {
 	
@@ -26,7 +26,7 @@ class FlexThemeColorSchemeConfig internal constructor() {
 	
 	val current: FlexColorScheme
 		@Composable
-		get() = if (LocalInDarkTheme.current) this.darkScheme else this.lightScheme
+		get() = if (LocalDarkTheme.current) this.darkScheme else this.lightScheme
 }
 
 class FlexColorScheme internal constructor(
