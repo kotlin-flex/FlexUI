@@ -15,6 +15,7 @@ class FlexButtonConfig internal constructor(
 	var borderWidth: Dp,
 	var fontSize: TextUnit,
 	var fontWeight: FontWeight,
+	var letterSpacing: TextUnit,
 	var iconSize: Dp,
 	var iconInterval: Dp,
 ) {
@@ -30,7 +31,8 @@ class FlexButtonConfig internal constructor(
 				horizontalPadding = 8.dp,
 				borderWidth = 1.dp,
 				fontSize = 12.sp,
-				fontWeight = FontWeight.Normal,
+				fontWeight = FontWeight.Medium,
+				letterSpacing = TextUnit.Unspecified,
 				iconSize = 24.dp * 0.66f,
 				iconInterval = 4.dp
 			)
@@ -43,6 +45,7 @@ class FlexButtonConfig internal constructor(
 				borderWidth = 1.5.dp,
 				fontSize = 16.sp,
 				fontWeight = FontWeight.Medium,
+				letterSpacing = TextUnit.Unspecified,
 				iconSize = 32.dp * 0.66f,
 				iconInterval = 6.dp
 			)
@@ -55,6 +58,7 @@ class FlexButtonConfig internal constructor(
 				borderWidth = 1.5.dp,
 				fontSize = 20.sp,
 				fontWeight = FontWeight.Medium,
+				letterSpacing = TextUnit.Unspecified,
 				iconSize = 40.dp * 0.66f,
 				iconInterval = 8.dp
 			)
@@ -67,6 +71,7 @@ class FlexButtonConfig internal constructor(
 				borderWidth = 1.5.dp,
 				fontSize = 24.sp,
 				fontWeight = FontWeight.SemiBold,
+				letterSpacing = TextUnit.Unspecified,
 				iconSize = 48.dp * 0.66f,
 				iconInterval = 10.dp
 			)
@@ -79,6 +84,7 @@ class FlexButtonConfig internal constructor(
 				borderWidth = 2.dp,
 				fontSize = 28.sp,
 				fontWeight = FontWeight.SemiBold,
+				letterSpacing = TextUnit.Unspecified,
 				iconSize = 56.dp * 0.66f,
 				iconInterval = 12.dp
 			)

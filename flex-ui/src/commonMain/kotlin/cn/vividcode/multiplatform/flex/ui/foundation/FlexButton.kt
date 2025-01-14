@@ -30,7 +30,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.TextUnit
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.button.FlexButtonConfig
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
@@ -53,7 +52,6 @@ import cn.vividcode.multiplatform.flex.ui.expends.isDark
  * @param iconPosition 图标位置
  * @param iconRotation 图标旋转
  * @param enabledScale 启用缩放功能
- * @param letterSpacing 文本间距
  * @param enabled 是否禁用点击
  * @param onClick 点击事件
  */
@@ -69,7 +67,6 @@ fun FlexButton(
 	iconPosition: FlexButtonIconPosition = FlexButtons.DefaultIconDirection,
 	iconRotation: Float = FlexButtons.DefaultIconRotation,
 	enabledScale: Boolean = FlexButtons.DefaultEnabledScale,
-	letterSpacing: TextUnit = FlexButtons.DefaultLetterSpacing,
 	enabled: Boolean = true,
 	onClick: () -> Unit,
 ) {
@@ -169,7 +166,7 @@ fun FlexButton(
 					color = targetFontColor,
 					fontSize = config.fontSize,
 					fontWeight = config.fontWeight,
-					letterSpacing = letterSpacing,
+					letterSpacing = config.letterSpacing,
 					lineHeight = config.fontSize,
 					overflow = TextOverflow.Ellipsis,
 					maxLines = 1
@@ -272,8 +269,6 @@ object FlexButtons {
 	const val DefaultIconRotation = 0f
 	
 	const val DefaultEnabledScale = true
-	
-	val DefaultLetterSpacing = TextUnit.Unspecified
 }
 
 enum class FlexButtonIconPosition {

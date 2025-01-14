@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
 import cn.vividcode.multiplatform.flex.ui.foundation.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonType
@@ -37,7 +38,7 @@ import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 
-private val ItemWidth = 200.dp
+private val ItemWidth = 220.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -175,7 +176,7 @@ fun App() {
 		}
 		if (!FlexPlatform.isMobile) {
 			val foldOffsetX by animateDpAsState(
-				targetValue = if (showFoldButton) Dp.Hairline else -(52.dp)
+				targetValue = if (showFoldButton) Dp.Hairline else -(60.dp)
 			)
 			FlexButton(
 				modifier = Modifier
@@ -190,12 +191,13 @@ fun App() {
 					false -> Icons.AutoMirrored.Outlined.PlaylistPlay
 				},
 				colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
+				sizeType = FlexSizeType.Large,
 				buttonType = FlexButtonType.Primary,
 			) {
 				itemOffsetX = if (itemOffsetX == Dp.Hairline) -(ItemWidth) else Dp.Hairline
 			}
 			val switchThemeOffsetX by animateDpAsState(
-				targetValue = if (showSwitchThemeButton) Dp.Hairline else 52.dp
+				targetValue = if (showSwitchThemeButton) Dp.Hairline else 60.dp
 			)
 			val themeIconRotation by animateFloatAsState(
 				targetValue = if (LocalDarkTheme.current) -90f else 0f
@@ -209,6 +211,7 @@ fun App() {
 						bottom = 12.dp
 					)
 					.offset(x = switchThemeOffsetX),
+				sizeType = FlexSizeType.Large,
 				buttonType = FlexButtonType.Primary,
 				iconRotation = themeIconRotation
 			) {
