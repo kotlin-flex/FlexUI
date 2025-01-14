@@ -3,7 +3,6 @@ package cn.vividcode.multiplatform.flex.ui.sample
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -28,12 +27,15 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.theme.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
 import cn.vividcode.multiplatform.flex.ui.foundation.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.sample.FlexCompose.FlexButton
+import cn.vividcode.multiplatform.flex.ui.sample.FlexCompose.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexButtonPage
+import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexRadioPage
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
@@ -169,8 +171,15 @@ fun App() {
 					)
 				}
 			) {
-				when (flexComposeState.value) {
-					FlexButton -> FlexButtonPage(it)
+				Box(
+					modifier = Modifier
+						.fillMaxSize()
+						.padding(it)
+				) {
+					when (flexComposeState.value) {
+						FlexButton -> FlexButtonPage()
+						FlexRadio -> FlexRadioPage()
+					}
 				}
 			}
 		}
@@ -193,6 +202,7 @@ fun App() {
 				colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
 				sizeType = FlexSizeType.Large,
 				buttonType = FlexButtonType.Primary,
+				cornerType = FlexCornerType.Large,
 			) {
 				itemOffsetX = if (itemOffsetX == Dp.Hairline) -(ItemWidth) else Dp.Hairline
 			}
@@ -213,6 +223,7 @@ fun App() {
 					.offset(x = switchThemeOffsetX),
 				sizeType = FlexSizeType.Large,
 				buttonType = FlexButtonType.Primary,
+				cornerType = FlexCornerType.Large,
 				iconRotation = themeIconRotation
 			) {
 				FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
@@ -222,7 +233,8 @@ fun App() {
 }
 
 enum class FlexCompose {
-	FlexButton
+	FlexButton,
+	FlexRadio
 }
 
 @Composable
@@ -258,13 +270,11 @@ private fun ComposeItem(
 		if (state.value == current) {
 			Box(
 				modifier = Modifier
-					.size(14.dp)
-					.clip(CircleShape)
-					.border(
-						width = 2.5.dp,
-						color = MaterialTheme.colorScheme.onSurface,
+					.size(10.dp)
+					.background(
+						color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
 						shape = CircleShape
-					),
+					)
 			)
 		}
 	}

@@ -20,21 +20,20 @@ import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonType
 
 @Composable
-fun FlexButtonPage(
-	paddingValues: PaddingValues,
-) {
+fun FlexButtonPage() {
 	val verticalScrollState = rememberScrollState()
 	Column(
 		modifier = Modifier
-			.padding(paddingValues)
 			.fillMaxSize()
 			.verticalScroll(verticalScrollState)
 			.padding(vertical = 16.dp)
 	) {
 		FlexColorType.entries.forEachIndexed { colorTypeIndex, colorType ->
-			FlexSizeType.entries.forEach { sizeType ->
+			FlexSizeType.entries.forEachIndexed { sizeTypeIndex, sizeType ->
 				val horizontalScrollState = rememberScrollState()
-				Spacer(modifier = Modifier.height(16.dp))
+				if (colorTypeIndex != 0 || sizeTypeIndex != 0) {
+					Spacer(modifier = Modifier.height(16.dp))
+				}
 				Row(
 					modifier = Modifier
 						.fillMaxWidth()

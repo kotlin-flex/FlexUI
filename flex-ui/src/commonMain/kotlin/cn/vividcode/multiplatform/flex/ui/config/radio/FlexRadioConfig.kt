@@ -1,4 +1,4 @@
-package cn.vividcode.multiplatform.flex.ui.config.button
+package cn.vividcode.multiplatform.flex.ui.config.radio
 
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -7,9 +7,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 /**
- * 按钮配置
+ * 单选框组配置
  */
-class FlexButtonConfig internal constructor(
+class FlexRadioConfig internal constructor(
 	var height: Dp,
 	var horizontalPadding: Dp,
 	var borderWidth: Dp,
@@ -23,10 +23,10 @@ class FlexButtonConfig internal constructor(
 	internal companion object {
 		
 		/**
-		 * 默认超小尺寸按钮配置
+		 * 默认超小尺寸单选框配置
 		 */
-		val DefaultExtraSmallButton: FlexButtonConfig
-			get() = FlexButtonConfig(
+		val DefaultExtraSmallRadio: FlexRadioConfig
+			get() = FlexRadioConfig(
 				height = 24.dp,
 				horizontalPadding = 8.dp,
 				borderWidth = 1.dp,
@@ -38,10 +38,10 @@ class FlexButtonConfig internal constructor(
 			)
 		
 		/**
-		 * 默认小尺寸按钮配置
+		 * 默认小尺寸单选框配置
 		 */
-		val DefaultSmallButton: FlexButtonConfig
-			get() = FlexButtonConfig(
+		val DefaultSmallRadio: FlexRadioConfig
+			get() = FlexRadioConfig(
 				height = 32.dp,
 				horizontalPadding = 10.dp,
 				borderWidth = 1.5.dp,
@@ -53,10 +53,10 @@ class FlexButtonConfig internal constructor(
 			)
 		
 		/**
-		 * 默认中尺寸按钮配置
+		 * 默认中尺寸单选框配置
 		 */
-		val DefaultMediumButton: FlexButtonConfig
-			get() = FlexButtonConfig(
+		val DefaultMediumRadio: FlexRadioConfig
+			get() = FlexRadioConfig(
 				height = 40.dp,
 				horizontalPadding = 12.dp,
 				borderWidth = 1.5.dp,
@@ -68,10 +68,10 @@ class FlexButtonConfig internal constructor(
 			)
 		
 		/**
-		 * 默认大尺寸按钮配置
+		 * 默认大尺寸单选框配置
 		 */
-		val DefaultLargeButton: FlexButtonConfig
-			get() = FlexButtonConfig(
+		val DefaultLargeRadio: FlexRadioConfig
+			get() = FlexRadioConfig(
 				height = 48.dp,
 				horizontalPadding = 14.dp,
 				borderWidth = 1.5.dp,
@@ -83,10 +83,10 @@ class FlexButtonConfig internal constructor(
 			)
 		
 		/**
-		 * 默认大尺寸按钮配置
+		 * 默认大尺寸单选框配置
 		 */
-		val DefaultExtraLargeButton: FlexButtonConfig
-			get() = FlexButtonConfig(
+		val DefaultExtraLargeRadio: FlexRadioConfig
+			get() = FlexRadioConfig(
 				height = 56.dp,
 				horizontalPadding = 16.dp,
 				borderWidth = 2.dp,

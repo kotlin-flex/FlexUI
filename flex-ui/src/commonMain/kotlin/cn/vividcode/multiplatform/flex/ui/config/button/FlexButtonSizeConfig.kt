@@ -4,7 +4,7 @@ import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType.*
 
 /**
- * FlexButton 尺寸配置
+ * 按钮尺寸配置
  */
 class FlexButtonSizeConfig {
 	
@@ -38,7 +38,7 @@ class FlexButtonSizeConfig {
 		this.extraLarge.apply(config)
 	}
 	
-	fun getConfigBySize(size: FlexSizeType) = when (size) {
+	internal fun getConfigBySize(size: FlexSizeType) = when (size) {
 		ExtraSmall -> this.extraSmall
 		Small -> this.small
 		Medium -> this.medium

@@ -40,7 +40,7 @@ import cn.vividcode.multiplatform.flex.ui.expends.dashedBorder
 import cn.vividcode.multiplatform.flex.ui.expends.isDark
 
 /**
- * FlexButton
+ * 按钮
  *
  * @param modifier [Modifier]
  * @param text 文本
@@ -184,25 +184,25 @@ private fun Modifier.customStyle(
 	buttonType: FlexButtonType,
 	config: FlexButtonConfig,
 	cornerShape: Shape,
-	primaryColor: Color,
+	color: Color,
 ): Modifier {
 	return when (buttonType) {
 		FlexButtonType.Default -> this.border(
 			width = config.borderWidth,
-			color = primaryColor,
+			color = color,
 			shape = cornerShape
 		)
 		
 		FlexButtonType.Dashed -> this.dashedBorder(
 			width = config.borderWidth,
-			color = primaryColor,
+			color = color,
 			shape = cornerShape
 		)
 		
 		FlexButtonType.Link -> this
 		
 		else -> this.background(
-			color = primaryColor,
+			color = color,
 			shape = cornerShape
 		)
 	}

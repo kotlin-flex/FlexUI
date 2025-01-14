@@ -1,6 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.config
 
 import cn.vividcode.multiplatform.flex.ui.config.button.FlexButtonSizeConfig
+import cn.vividcode.multiplatform.flex.ui.config.radio.FlexRadioSizeConfig
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexThemeConfig
 
 /**
@@ -16,11 +17,17 @@ class FlexConfig internal constructor() {
 	
 	internal val button = FlexButtonSizeConfig()
 	
+	internal val radio = FlexRadioSizeConfig()
+	
 	fun theme(config: FlexThemeConfig.() -> Unit) {
 		this.theme.apply(config)
 	}
 	
 	fun button(config: FlexButtonSizeConfig.() -> Unit) {
 		this.button.apply(config)
+	}
+	
+	fun radio(config: FlexRadioSizeConfig.() -> Unit) {
+		this.radio.apply(config)
 	}
 }

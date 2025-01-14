@@ -20,7 +20,7 @@ fun main() = application {
 		title = "",
 		state = rememberWindowState(
 			position = WindowPosition.Aligned(Alignment.Center),
-			size = DpSize(800.dp, 600.dp)
+			size = DpSize(1000.dp, 750.dp)
 		),
 		resizable = true
 	) {
