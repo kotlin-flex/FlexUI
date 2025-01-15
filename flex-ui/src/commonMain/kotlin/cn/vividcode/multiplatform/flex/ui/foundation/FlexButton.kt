@@ -127,11 +127,27 @@ fun FlexButton(
 			horizontalArrangement = Arrangement.Center
 		) {
 			val fontColor = when (buttonType) {
-				FlexButtonType.Primary -> if (color.isDark) Color.White else Color.Black
-				FlexButtonType.Filled, FlexButtonType.Text -> color
-				else -> {
+				FlexButtonType.Primary -> when (color.isDark) {
+					true -> if (enabled) Color.White else Color.White.copy(alpha = 0.9f)
+					false -> if (enabled) Color.Black else Color.Black.copy(alpha = 0.9f)
+				}
+				
+				FlexButtonType.Filled, FlexButtonType.Text -> {
+					if (enabled) color else color.copy(alpha = 0.8f)
+				}
+				
+				FlexButtonType.Link -> {
 					when {
 						!enabled -> color.copy(alpha = 0.8f)
+						isPressed -> color.brightness(0.85f)
+						isHovered -> color.brightness(1.2f)
+						else -> color
+					}
+				}
+				
+				else -> {
+					when {
+						!enabled -> color.copy(alpha = 0.6f)
 						isPressed -> color.brightness(0.9f)
 						isHovered -> color.brightness(1.15f)
 						else -> color
@@ -217,7 +233,7 @@ private fun getTargetColor(
 ): Color = when (buttonType) {
 	FlexButtonType.Primary -> {
 		when {
-			!enabled -> originalColor.copy(alpha = 0.8f)
+			!enabled -> originalColor.copy(alpha = 0.6f)
 			isPressed -> originalColor.brightness(0.95f)
 			isHovered -> originalColor.brightness(1.1f)
 			else -> originalColor
@@ -226,7 +242,7 @@ private fun getTargetColor(
 	
 	FlexButtonType.Default, FlexButtonType.Dashed -> {
 		when {
-			!enabled -> originalColor.copy(alpha = 0.8f)
+			!enabled -> originalColor.copy(alpha = 0.6f)
 			isPressed -> originalColor.brightness(0.9f)
 			isHovered -> originalColor.brightness(1.15f)
 			else -> originalColor
@@ -235,17 +251,17 @@ private fun getTargetColor(
 	
 	FlexButtonType.Filled -> {
 		when {
-			!enabled -> originalColor.copy(alpha = 0.1f)
-			isPressed -> originalColor.copy(alpha = 0.25f)
-			isHovered -> originalColor.copy(alpha = 0.2f)
-			else -> originalColor.copy(alpha = 0.15f)
+			!enabled -> originalColor.copy(alpha = 0.08f)
+			isPressed -> originalColor.copy(alpha = 0.2f)
+			isHovered -> originalColor.copy(alpha = 0.15f)
+			else -> originalColor.copy(alpha = 0.1f)
 		}
 	}
 	
 	FlexButtonType.Text -> {
 		when {
-			isPressed -> originalColor.copy(alpha = 0.25f)
-			isHovered -> originalColor.copy(alpha = 0.15f)
+			isPressed -> originalColor.copy(alpha = 0.2f)
+			isHovered -> originalColor.copy(alpha = 0.1f)
 			else -> Color.Transparent
 		}
 	}
