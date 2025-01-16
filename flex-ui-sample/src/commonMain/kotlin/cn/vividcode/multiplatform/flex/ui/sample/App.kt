@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -39,8 +40,14 @@ import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexRadioPage
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import kotlin.math.min
+import kotlin.math.sqrt
 
 private val ItemWidth = 220.dp
+
+private const val VERSION_NAME = "v1.0.0-exp-02"
+
+private const val VERSION_TYPE = "EXP"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,7 +109,7 @@ fun App() {
 						fontWeight = FontWeight.Medium
 					)
 					Text(
-						text = "v1.0.0-exp-02",
+						text = VERSION_NAME,
 						fontSize = 13.sp,
 						color = MaterialTheme.colorScheme.onSurface
 					)
@@ -144,6 +151,30 @@ fun App() {
 							}
 						},
 						actions = {
+							var frame by remember { mutableLongStateOf(0) }
+							LaunchedEffect(Unit) {
+								var lastNanos = 0L
+								var total = 0L
+								while (true) {
+									withFrameNanos {
+										if (lastNanos != 0L) {
+											total += it - lastNanos
+											if (total > 500_000_000) {
+												total -= 500_000_000
+												frame = min(1_000_000_000 / (it - lastNanos), 120L)
+											}
+										}
+										lastNanos = it
+									}
+								}
+							}
+							FlexButton(
+								text = "$frame fps",
+								buttonType = FlexButtonType.Primary,
+								cornerType = FlexCornerType.Large,
+								colorType = FlexColorType.Primary
+							)
+							Spacer(modifier = Modifier.width(if (FlexPlatform.isMobile) 8.dp else 60.dp))
 							if (FlexPlatform.isMobile) {
 								FlexButton(
 									icon = when (itemOffsetX == Dp.Hairline) {
@@ -152,6 +183,7 @@ fun App() {
 									},
 									colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
 									buttonType = FlexButtonType.Primary,
+									cornerType = FlexCornerType.Large
 								) {
 									itemOffsetX = if (itemOffsetX == Dp.Hairline) -ItemWidth else Dp.Hairline
 								}
@@ -162,7 +194,8 @@ fun App() {
 								FlexButton(
 									icon = if (LocalDarkTheme.current) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
 									buttonType = FlexButtonType.Primary,
-									iconRotation = themeIconRotation
+									iconRotation = themeIconRotation,
+									cornerType = FlexCornerType.Large
 								) {
 									FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
 								}
@@ -228,6 +261,29 @@ fun App() {
 			) {
 				FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
 			}
+		}
+		Box(
+			modifier = Modifier
+				.align(Alignment.TopEnd)
+				.offset(
+					x = ((75f * sqrt(2f)) / 2f - (75f / 2f) * (5f / 6f)).dp,
+					y = ((75f / 2f) * (5f / 6f) - 25f * sqrt(2f) / 4f).dp
+				)
+				.rotate(45f)
+				.size(
+					width = (75 * sqrt(2f)).dp,
+					height = (sqrt(2f) / 2 * 25).dp
+				)
+				.background(color = Color(0xCCF1211C)),
+			contentAlignment = Alignment.Center
+		) {
+			Text(
+				text = VERSION_TYPE,
+				fontSize = 16.sp,
+				fontWeight = FontWeight.Bold,
+				color = Color.White,
+				lineHeight = 16.sp
+			)
 		}
 	}
 }

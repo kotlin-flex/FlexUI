@@ -68,7 +68,7 @@ fun FlexButton(
 	iconRotation: Float = FlexButtons.DefaultIconRotation,
 	enabledScale: Boolean = FlexButtons.DefaultEnabledScale,
 	enabled: Boolean = true,
-	onClick: () -> Unit,
+	onClick: () -> Unit = {},
 ) {
 	val current = LocalFlexConfig.current
 	val config = current.button.getConfigBySize(sizeType)
