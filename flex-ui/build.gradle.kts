@@ -81,23 +81,8 @@ kotlin {
 				implementation(compose.material3)
 				implementation(compose.ui)
 				implementation(compose.components.resources)
-				implementation(compose.components.uiToolingPreview)
 			}
 			kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-		}
-		androidMain {
-			dependencies {
-			
-			}
-		}
-		val desktopMain by getting
-		desktopMain.dependencies {
-		
-		}
-		iosMain {
-			dependencies {
-			
-			}
 		}
 	}
 }

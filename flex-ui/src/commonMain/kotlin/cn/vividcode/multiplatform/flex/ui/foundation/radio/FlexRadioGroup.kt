@@ -242,10 +242,10 @@ enum class FlexRadioType {
  */
 @JvmName("FlexRadioGroupWithPairOptions")
 @Composable
-inline fun FlexRadioGroup(
+fun FlexRadioGroup(
 	options: List<Pair<String, String>>,
 	selectedKey: String,
-	noinline onSelectedKeyChange: (String) -> Unit,
+	onSelectedKeyChange: (String) -> Unit,
 	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
@@ -275,10 +275,10 @@ inline fun FlexRadioGroup(
  */
 @JvmName("FlexRadioGroupWithStringOptions")
 @Composable
-inline fun FlexRadioGroup(
+fun FlexRadioGroup(
 	options: List<String>,
 	selectedKey: String,
-	noinline onSelectedKeyChange: (String) -> Unit,
+	onSelectedKeyChange: (String) -> Unit,
 	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,

@@ -1,6 +1,6 @@
 # Flex UI 组件库，基于 Kotlin Multiplatform
 
-[![Maven](https://img.shields.io/badge/Maven-Central-download.svg)](https://central.sonatype.com/search?q=ktorfitx)
+[![Maven](https://img.shields.io/badge/Maven-Central-download.svg)](https://central.sonatype.com/search?q=cn.vividcode.multiplatform:flex-ui)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vividcodex/flex-ui/blob/master/README.md)
 [![License](https://img.shields.io/badge/Apache-2.0-brightgreen.svg)](https://github.com/vividcodex/flex-ui/blob/master/LICENSE-2.0)
 
