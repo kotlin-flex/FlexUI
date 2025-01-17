@@ -1,10 +1,11 @@
-package cn.vividcode.multiplatform.flex.ui.config.button
+package cn.vividcode.multiplatform.flex.ui.config.foundation
 
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cn.vividcode.multiplatform.flex.ui.config.FlexDefaultSizeConfig
 
 /**
  * 按钮配置
@@ -20,12 +21,12 @@ class FlexButtonConfig internal constructor(
 	var iconInterval: Dp,
 ) {
 	
-	internal companion object {
+	internal companion object : FlexDefaultSizeConfig<FlexButtonConfig> {
 		
 		/**
 		 * 默认超小尺寸按钮配置
 		 */
-		val DefaultExtraSmallButton: FlexButtonConfig
+		override val DefaultExtraSmall: FlexButtonConfig
 			get() = FlexButtonConfig(
 				height = 24.dp,
 				horizontalPadding = 8.dp,
@@ -40,7 +41,7 @@ class FlexButtonConfig internal constructor(
 		/**
 		 * 默认小尺寸按钮配置
 		 */
-		val DefaultSmallButton: FlexButtonConfig
+		override val DefaultSmall: FlexButtonConfig
 			get() = FlexButtonConfig(
 				height = 32.dp,
 				horizontalPadding = 10.dp,
@@ -55,7 +56,7 @@ class FlexButtonConfig internal constructor(
 		/**
 		 * 默认中尺寸按钮配置
 		 */
-		val DefaultMediumButton: FlexButtonConfig
+		override val DefaultMedium: FlexButtonConfig
 			get() = FlexButtonConfig(
 				height = 40.dp,
 				horizontalPadding = 12.dp,
@@ -70,7 +71,7 @@ class FlexButtonConfig internal constructor(
 		/**
 		 * 默认大尺寸按钮配置
 		 */
-		val DefaultLargeButton: FlexButtonConfig
+		override val DefaultLarge: FlexButtonConfig
 			get() = FlexButtonConfig(
 				height = 48.dp,
 				horizontalPadding = 14.dp,
@@ -85,7 +86,7 @@ class FlexButtonConfig internal constructor(
 		/**
 		 * 默认大尺寸按钮配置
 		 */
-		val DefaultExtraLargeButton: FlexButtonConfig
+		override val DefaultExtraLarge: FlexButtonConfig
 			get() = FlexButtonConfig(
 				height = 56.dp,
 				horizontalPadding = 16.dp,

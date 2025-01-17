@@ -11,12 +11,12 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
-import cn.vividcode.multiplatform.flex.ui.config.theme.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.foundation.FlexButton
-import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonIconPosition
-import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
+import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
+import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 
 @Composable
 fun FlexButtonPage() {

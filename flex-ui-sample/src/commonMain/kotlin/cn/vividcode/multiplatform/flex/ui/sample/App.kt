@@ -27,12 +27,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cn.vividcode.multiplatform.flex.ui.config.theme.FlexColorType
-import cn.vividcode.multiplatform.flex.ui.config.theme.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.config.theme.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
-import cn.vividcode.multiplatform.flex.ui.foundation.FlexButton
-import cn.vividcode.multiplatform.flex.ui.foundation.FlexButtonType
+import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
+import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.sample.FlexCompose.FlexButton
 import cn.vividcode.multiplatform.flex.ui.sample.FlexCompose.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexButtonPage
@@ -78,7 +78,7 @@ fun App() {
 				}
 			}
 	) {
-		var itemOffsetX by remember { mutableStateOf(-ItemWidth) }
+		var itemOffsetX by remember { mutableStateOf(Dp.Hairline) }
 		Box(
 			modifier = Modifier.fillMaxSize()
 		) {
@@ -90,7 +90,7 @@ fun App() {
 				modifier = Modifier
 					.width(ItemWidth)
 					.fillMaxHeight()
-					.background(MaterialTheme.colorScheme.surface)
+					.background(MaterialTheme.colorScheme.surfaceContainerLow)
 					.padding(horizontal = 8.dp)
 					.offset(x = targetItemOffsetX)
 			) {
@@ -169,12 +169,17 @@ fun App() {
 								}
 							}
 							FlexButton(
-								text = "$frame fps",
-								buttonType = FlexButtonType.Primary,
-								cornerType = FlexCornerType.Large,
-								colorType = FlexColorType.Primary
+								text = "$frame FPS",
+								modifier = Modifier
+									.width(90.dp),
+								colorType = when {
+									frame >= 90 -> FlexColorType.Success
+									frame >= 60 -> FlexColorType.Warning
+									else -> FlexColorType.Error
+								},
+								sizeType = FlexSizeType.Small
 							)
-							Spacer(modifier = Modifier.width(if (FlexPlatform.isMobile) 8.dp else 60.dp))
+							Spacer(modifier = Modifier.width(if (FlexPlatform.isMobile) 8.dp else 70.dp))
 							if (FlexPlatform.isMobile) {
 								FlexButton(
 									icon = when (itemOffsetX == Dp.Hairline) {

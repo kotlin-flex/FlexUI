@@ -1,4 +1,4 @@
-package cn.vividcode.multiplatform.flex.ui.config.theme
+package cn.vividcode.multiplatform.flex.ui.config.type
 
 import androidx.compose.runtime.Stable
 

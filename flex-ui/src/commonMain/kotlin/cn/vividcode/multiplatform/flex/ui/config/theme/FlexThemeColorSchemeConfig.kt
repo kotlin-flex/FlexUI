@@ -2,6 +2,7 @@ package cn.vividcode.multiplatform.flex.ui.config.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 
 class FlexThemeColorSchemeConfig internal constructor() {

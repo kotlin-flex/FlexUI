@@ -1,10 +1,11 @@
-package cn.vividcode.multiplatform.flex.ui.config.radio
+package cn.vividcode.multiplatform.flex.ui.config.foundation
 
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cn.vividcode.multiplatform.flex.ui.config.FlexDefaultSizeConfig
 
 /**
  * 单选框组配置
@@ -16,85 +17,73 @@ class FlexRadioConfig internal constructor(
 	var fontSize: TextUnit,
 	var fontWeight: FontWeight,
 	var letterSpacing: TextUnit,
-	var iconSize: Dp,
-	var iconInterval: Dp,
 ) {
 	
-	internal companion object {
+	internal companion object : FlexDefaultSizeConfig<FlexRadioConfig> {
 		
 		/**
 		 * 默认超小尺寸单选框配置
 		 */
-		val DefaultExtraSmallRadio: FlexRadioConfig
+		override val DefaultExtraSmall: FlexRadioConfig
 			get() = FlexRadioConfig(
 				height = 24.dp,
 				horizontalPadding = 8.dp,
 				borderWidth = 1.dp,
-				fontSize = 12.sp,
+				fontSize = 10.sp,
 				fontWeight = FontWeight.Medium,
-				letterSpacing = TextUnit.Unspecified,
-				iconSize = 24.dp * 0.66f,
-				iconInterval = 4.dp
+				letterSpacing = TextUnit.Unspecified
 			)
 		
 		/**
 		 * 默认小尺寸单选框配置
 		 */
-		val DefaultSmallRadio: FlexRadioConfig
+		override val DefaultSmall: FlexRadioConfig
 			get() = FlexRadioConfig(
 				height = 32.dp,
 				horizontalPadding = 10.dp,
 				borderWidth = 1.5.dp,
-				fontSize = 16.sp,
+				fontSize = 13.sp,
 				fontWeight = FontWeight.Medium,
-				letterSpacing = TextUnit.Unspecified,
-				iconSize = 32.dp * 0.66f,
-				iconInterval = 6.dp
+				letterSpacing = TextUnit.Unspecified
 			)
 		
 		/**
 		 * 默认中尺寸单选框配置
 		 */
-		val DefaultMediumRadio: FlexRadioConfig
+		override val DefaultMedium: FlexRadioConfig
 			get() = FlexRadioConfig(
 				height = 40.dp,
 				horizontalPadding = 12.dp,
 				borderWidth = 1.5.dp,
-				fontSize = 20.sp,
+				fontSize = 16.sp,
 				fontWeight = FontWeight.Medium,
-				letterSpacing = TextUnit.Unspecified,
-				iconSize = 40.dp * 0.66f,
-				iconInterval = 8.dp
+				letterSpacing = TextUnit.Unspecified
 			)
 		
 		/**
 		 * 默认大尺寸单选框配置
 		 */
-		val DefaultLargeRadio: FlexRadioConfig
+		override val DefaultLarge: FlexRadioConfig
 			get() = FlexRadioConfig(
 				height = 48.dp,
 				horizontalPadding = 14.dp,
 				borderWidth = 1.5.dp,
-				fontSize = 24.sp,
+				fontSize = 19.sp,
 				fontWeight = FontWeight.SemiBold,
-				letterSpacing = TextUnit.Unspecified,
-				iconSize = 48.dp * 0.66f,
-				iconInterval = 10.dp
+				letterSpacing = TextUnit.Unspecified
 			)
 		
 		/**
 		 * 默认大尺寸单选框配置
 		 */
-		val DefaultExtraLargeRadio: FlexRadioConfig
+		override val DefaultExtraLarge: FlexRadioConfig
 			get() = FlexRadioConfig(
 				height = 56.dp,
 				horizontalPadding = 16.dp,
 				borderWidth = 2.dp,
-				fontSize = 28.sp,
+				fontSize = 22.5.sp,
 				fontWeight = FontWeight.SemiBold,
-				letterSpacing = TextUnit.Unspecified,
-				iconSize = 56.dp * 0.66f,
-				iconInterval = 12.dp
+				letterSpacing = TextUnit.Unspecified
 			)
 	}
 }
