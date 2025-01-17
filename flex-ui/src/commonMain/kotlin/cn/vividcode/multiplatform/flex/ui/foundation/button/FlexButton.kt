@@ -288,22 +288,46 @@ object FlexButtons {
 
 enum class FlexButtonIconPosition {
 	
+	/**
+	 * Ltr: 左，Rtl: 右
+	 */
 	Start,
 	
+	/**
+	 *  Ltr: 右，Rtl: 左
+	 */
 	End
 }
 
 enum class FlexButtonType {
 	
+	/**
+	 * 主要按钮
+	 */
 	Primary,
 	
+	/**
+	 * 默认（线框）
+	 */
 	Default,
 	
+	/**
+	 * 虚线框
+	 */
 	Dashed,
 	
+	/**
+	 * 填充
+	 */
 	Filled,
 	
+	/**
+	 * 文本
+	 */
 	Text,
 	
+	/**
+	 * 链接
+	 */
 	Link,
 }
