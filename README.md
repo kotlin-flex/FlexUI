@@ -14,10 +14,16 @@
 
 ## 最新变化
 
-当前版本：1.0.0-exp-01
+当前版本：1.0.0-exp-02
 
 项目处于早期阶段
 
 # 组件库
 
 ## FlexButton 按钮
+
+![FlexButton.png](image/FlexButton.png)
+
+## FlexRadioGroup 单选框
+
+![FlexRadioGroup.png](image/FlexRadioGroup.png)

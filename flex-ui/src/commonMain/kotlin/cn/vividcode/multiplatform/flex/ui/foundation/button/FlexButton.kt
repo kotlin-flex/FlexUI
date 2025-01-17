@@ -40,41 +40,26 @@ import cn.vividcode.multiplatform.flex.ui.expends.dashedBorder
 import cn.vividcode.multiplatform.flex.ui.expends.isDark
 
 /**
- * FlexButton 按钮组件，提供多种自定义选项，例如尺寸、颜色、形状和行为。
+ * FlexButton 按钮
  *
- * @param modifier 用于调整按钮布局的修饰符，例如设置内边距、外边距或大小。
- * @param text 按钮上显示的文本，默认值为空字符串。
- * @param icon 按钮上显示的可选图标，类型为 [ImageVector]，默认值为 `null`。
- * @param sizeType 按钮的尺寸类型，使用 [FlexSizeType] 枚举，默认值为 [FlexButtons.DefaultSizeType]。
- * @param colorType 按钮的颜色类型，使用 [FlexColorType] 枚举，默认值为 [FlexButtons.DefaultColorType]。
- * @param cornerType 按钮的圆角形状，使用 [FlexCornerType] 枚举，默认值为 [FlexButtons.DefaultCornerType]。
- * @param buttonType 按钮的样式类型（如凸起、填充、描边），使用 [FlexButtonType] 枚举，默认值为 [FlexButtons.DefaultButtonType]。
- * @param iconPosition 图标相对于文本的位置，使用 [FlexButtonIconPosition] 枚举，默认值为 [FlexButtons.DefaultIconDirection]。
- * @param iconRotation 图标的旋转角度（以度为单位），默认值为 [FlexButtons.DefaultIconRotation]。
- * @param enabledScale 是否启用按下按钮时的缩放动画效果，默认值为 [FlexButtons.DefaultEnabledScale]。
- * @param enabled 按钮是否可用，默认值为 `true`。
- * @param onClick 按钮被点击时触发的回调函数，默认值为空的 lambda 表达式。
- *
- * ### 使用示例
- * ```kotlin
- * FlexButton(
- *     text = "提交",
- *     icon = Icons.Default.Check,
- *     sizeType = FlexSizeType.Large,
- *     colorType = FlexColorType.Primary,
- *     cornerType = FlexCornerType.Large,
- *     buttonType = FlexButtonType.Filled,
- *     iconPosition = FlexButtonIconPosition.Start,
- *     enabled = true,
- *     onClick = { /* 处理点击事件 */ }
- * )
- * ```
+ * @param text 文本
+ * @param icon 图标
+ * @param modifier [Modifier]
+ * @param sizeType 尺寸类型
+ * @param colorType 颜色类型
+ * @param cornerType 圆角类型
+ * @param buttonType 按钮类型
+ * @param iconPosition 图标位置
+ * @param iconRotation 图标旋转
+ * @param enabledScale 启用悬停按下缩放
+ * @param enabled 是否禁用
+ * @param onClick 点击事件
  */
 @Composable
 fun FlexButton(
-	modifier: Modifier = Modifier,
 	text: String = "",
 	icon: ImageVector? = null,
+	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexButtons.DefaultSizeType,
 	colorType: FlexColorType = FlexButtons.DefaultColorType,
 	cornerType: FlexCornerType = FlexButtons.DefaultCornerType,

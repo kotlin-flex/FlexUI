@@ -35,7 +35,15 @@ import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.jvm.JvmName
 
 /**
- * 单选框组控件
+ * FlexRadioGroup 单选框组
+ *
+ * @param options 选项 [RadioOption] 类型
+ * @param selectedKey 选中的 key
+ * @param onSelectedKeyChange 当选中改变事件
+ * @param sizeType 尺寸类型
+ * @param colorType 颜色类型
+ * @param cornerType 圆角类型
+ * @param radioType 单选框组类型
  */
 @Composable
 fun FlexRadioGroup(
@@ -203,14 +211,6 @@ fun FlexRadioGroup(
 	}
 }
 
-private val BorderColor = Color.Gray.copy(alpha = 0.3f)
-
-private val UnselectedFontColor
-	@Composable
-	get() = if (LocalDarkTheme.current) Color.LightGray else Color.DarkGray
-
-private val DisabledBackgroundColor = Color.Gray.copy(alpha = 0.15f)
-
 object FlexRadioGroups {
 	
 	val DefaultSizeType = FlexSizeType.Medium
@@ -230,7 +230,15 @@ enum class FlexRadioType {
 }
 
 /**
- * 适配 key to value 形式的 options
+ * FlexRadioGroup 单选框组
+ *
+ * @param options 选项 [Pair] 类型
+ * @param selectedKey 选中的 key
+ * @param onSelectedKeyChange 当选中改变事件
+ * @param sizeType 尺寸类型
+ * @param colorType 颜色类型
+ * @param cornerType 圆角类型
+ * @param radioType 单选框组类型
  */
 @JvmName("FlexRadioGroupWithPairOptions")
 @Composable
@@ -255,7 +263,15 @@ inline fun FlexRadioGroup(
 }
 
 /**
- * 适配 String 形式的 options
+ * FlexRadioGroup 单选框组
+ *
+ * @param options 选项 [String] 列表
+ * @param selectedKey 选中的 key
+ * @param onSelectedKeyChange 当选中改变事件
+ * @param sizeType 尺寸类型
+ * @param colorType 颜色类型
+ * @param cornerType 圆角类型
+ * @param radioType 单选框组类型
  */
 @JvmName("FlexRadioGroupWithStringOptions")
 @Composable
@@ -284,3 +300,11 @@ data class RadioOption(
 	val value: String = key,
 	val enabled: Boolean = true,
 )
+
+private val BorderColor = Color.Gray.copy(alpha = 0.3f)
+
+private val UnselectedFontColor
+	@Composable
+	get() = if (LocalDarkTheme.current) Color.LightGray else Color.DarkGray
+
+private val DisabledBackgroundColor = Color.Gray.copy(alpha = 0.15f)
