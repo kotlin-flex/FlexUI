@@ -18,29 +18,29 @@ fun FlexRadioPage() {
 	LazyColumn(
 		modifier = Modifier.fillMaxSize(),
 	) {
-		val options = listOf(
-			RadioOption("option1", "Option 1"),
-			RadioOption("option2", "Option 2"),
-			RadioOption("option3", "Disabled", enabled = false),
-			RadioOption("option4", "Option 4"),
-		)
 		item {
 			Spacer(modifier = Modifier.height(16.dp))
 		}
 		FlexColorType.entries.forEachIndexed { colorTypeIndex, colorType ->
 			FlexSizeType.entries.forEach { sizeType ->
-				repeat(2) {
-					item {
-						LazyRow(
-							modifier = Modifier.fillMaxWidth()
-						) {
+				item {
+					LazyRow(
+						modifier = Modifier.fillMaxWidth()
+					) {
+						repeat(2) {
 							FlexRadioType.entries.forEachIndexed { index, radioType ->
-								if (index == 0) {
+								if (index == 0 && it == 0) {
 									item {
 										Spacer(modifier = Modifier.width(16.dp))
 									}
 								}
 								item {
+									val options = listOf(
+										RadioOption("option1", if (it % 2 == 0) "Option 1" else "Disabled 1", enabled = it % 2 == 0),
+										RadioOption("option2", "Option 2"),
+										RadioOption("option3", if (it % 2 == 0) "Option 3" else "Disabled 3", enabled = it % 2 == 0),
+										RadioOption("option4", "Option 4"),
+									)
 									var selectedKey by remember { mutableStateOf(options.first().key) }
 									FlexRadioGroup(
 										options = options,
@@ -49,8 +49,7 @@ fun FlexRadioPage() {
 										sizeType = sizeType,
 										colorType = colorType,
 										cornerType = FlexCornerType.entries[colorTypeIndex % FlexCornerType.entries.size],
-										radioType = radioType,
-										enabled = it % 2 == 0
+										radioType = radioType
 									)
 								}
 								item {
@@ -59,9 +58,9 @@ fun FlexRadioPage() {
 							}
 						}
 					}
-					item {
-						Spacer(modifier = Modifier.height(16.dp))
-					}
+				}
+				item {
+					Spacer(modifier = Modifier.height(16.dp))
 				}
 			}
 		}

@@ -33,8 +33,6 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
-import cn.vividcode.multiplatform.flex.ui.sample.FlexCompose.FlexButton
-import cn.vividcode.multiplatform.flex.ui.sample.FlexCompose.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexButtonPage
 import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexRadioPage
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
@@ -82,7 +80,7 @@ fun App() {
 		Box(
 			modifier = Modifier.fillMaxSize()
 		) {
-			val flexComposeState = remember { mutableStateOf(FlexButton) }
+			var currentFlexPage by remember { mutableStateOf(FlexPage.FlexButton) }
 			val targetItemOffsetX by animateDpAsState(
 				targetValue = itemOffsetX
 			)
@@ -121,10 +119,13 @@ fun App() {
 						.fillMaxSize()
 						.padding(bottom = 60.dp)
 				) {
-					FlexCompose.entries.forEach {
+					FlexPage.entries.forEach { flexPage ->
 						ComposeItem(
-							current = it,
-							state = flexComposeState
+							flexPage = flexPage,
+							value = currentFlexPage,
+							onValueChange = {
+								currentFlexPage = it
+							}
 						)
 					}
 				}
@@ -140,9 +141,8 @@ fun App() {
 								modifier = Modifier.fillMaxHeight(),
 								verticalAlignment = Alignment.CenterVertically,
 							) {
-								val current = flexComposeState.value
 								Text(
-									text = current.name,
+									text = currentFlexPage.name,
 									fontSize = 20.sp,
 									fontWeight = FontWeight.Medium,
 									color = MaterialTheme.colorScheme.onSurface,
@@ -214,9 +214,9 @@ fun App() {
 						.fillMaxSize()
 						.padding(it)
 				) {
-					when (flexComposeState.value) {
-						FlexButton -> FlexButtonPage()
-						FlexRadio -> FlexRadioPage()
+					when (currentFlexPage) {
+						FlexPage.FlexButton -> FlexButtonPage()
+						FlexPage.FlexRadioGroup -> FlexRadioPage()
 					}
 				}
 			}
@@ -293,15 +293,16 @@ fun App() {
 	}
 }
 
-enum class FlexCompose {
+enum class FlexPage {
 	FlexButton,
-	FlexRadio
+	FlexRadioGroup
 }
 
 @Composable
 private fun ComposeItem(
-	current: FlexCompose,
-	state: MutableState<FlexCompose>,
+	flexPage: FlexPage,
+	value: FlexPage,
+	onValueChange: (FlexPage) -> Unit,
 ) {
 	Row(
 		modifier = Modifier
@@ -309,18 +310,18 @@ private fun ComposeItem(
 			.height(40.dp)
 			.clip(RoundedCornerShape(10.dp))
 			.background(
-				color = if (state.value == current) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
+				color = if (value == flexPage) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
 				shape = RoundedCornerShape(10.dp)
 			)
 			.clickable {
-				state.value = current
+				onValueChange(flexPage)
 			}
 			.padding(horizontal = 16.dp),
 		verticalAlignment = Alignment.CenterVertically,
 		horizontalArrangement = Arrangement.SpaceBetween
 	) {
 		Text(
-			text = current.name,
+			text = flexPage.name,
 			modifier = Modifier.weight(1f),
 			fontSize = 15.sp,
 			color = MaterialTheme.colorScheme.onSurface,
@@ -328,12 +329,12 @@ private fun ComposeItem(
 			maxLines = 1,
 			overflow = TextOverflow.Ellipsis
 		)
-		if (state.value == current) {
+		if (value == flexPage) {
 			Box(
 				modifier = Modifier
 					.size(10.dp)
 					.background(
-						color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+						color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
 						shape = CircleShape
 					)
 			)
