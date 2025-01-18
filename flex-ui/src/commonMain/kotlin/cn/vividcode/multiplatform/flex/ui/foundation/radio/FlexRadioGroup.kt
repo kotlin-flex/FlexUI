@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
@@ -90,11 +91,17 @@ fun FlexRadioGroup(
 @Suppress("ConstPropertyName")
 object FlexRadioGroups {
 	
-	val DefaultSizeType = FlexSizeType.Medium
+	val DefaultSizeType: FlexSizeType
+		@Composable
+		get() = LocalFlexConfig.current.defaultType.sizeType
 	
-	val DefaultColorType = FlexColorType.Default
+	val DefaultColorType: FlexColorType
+		@Composable
+		get() = LocalFlexConfig.current.defaultType.colorType
 	
-	val DefaultCornerType = FlexCornerType.Default
+	val DefaultCornerType: FlexCornerType
+		@Composable
+		get() = LocalFlexConfig.current.defaultType.cornerType
 	
 	val DefaultRadioType = FlexRadioType.Default
 	

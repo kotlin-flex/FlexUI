@@ -271,15 +271,21 @@ private fun getTargetColor(
 @Suppress("ConstPropertyName")
 object FlexButtons {
 	
-	val DefaultSizeType = FlexSizeType.Medium
+	val DefaultSizeType: FlexSizeType
+		@Composable
+		get() = LocalFlexConfig.current.defaultType.sizeType
 	
-	val DefaultColorType = FlexColorType.Default
+	val DefaultColorType: FlexColorType
+		@Composable
+		get() = LocalFlexConfig.current.defaultType.colorType
 	
-	val DefaultCornerType = FlexCornerType.Default
-	
-	val DefaultIconDirection = FlexButtonIconPosition.End
+	val DefaultCornerType: FlexCornerType
+		@Composable
+		get() = LocalFlexConfig.current.defaultType.cornerType
 	
 	val DefaultButtonType = FlexButtonType.Default
+	
+	val DefaultIconDirection = FlexButtonIconPosition.End
 	
 	const val DefaultIconRotation = 0f
 	
