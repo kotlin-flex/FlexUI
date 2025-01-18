@@ -40,7 +40,7 @@ fun FlexRadioPage() {
 										val options = listOf(
 											RadioOption("option1", if (it % 2 == 0) "Option 1" else "Disabled", enabled = it % 2 == 0),
 											RadioOption("option2", "Option 2"),
-											RadioOption("option3", "Option 3"),
+											RadioOption("option3", "Long Text Option 3"),
 										)
 										var selectedKey by remember { mutableStateOf(options.first().key) }
 										FlexRadioGroup(

@@ -1,6 +1,8 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.radio
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,9 +11,7 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +27,8 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Default
 
 /**
  * FlexRadioGroup 单选框组，类型：默认
@@ -38,6 +40,7 @@ import cn.vividcode.multiplatform.flex.ui.expends.brightness
  * @param colorType 颜色类型
  * @param cornerType 圆角类型
  * @param radioType 单选框组类型
+ * @param scaleEffect 开启缩放效果
  */
 @Composable
 internal fun FlexDefaultRadioGroup(
@@ -86,27 +89,25 @@ internal fun FlexDefaultRadioGroup(
 			val interactionSource = remember { MutableInteractionSource() }
 			val isHovered by interactionSource.collectIsHoveredAsState()
 			val isPressed by interactionSource.collectIsPressedAsState()
+			var init by remember { mutableStateOf(true) }
 			val targetColor by animateColorAsState(
 				targetValue = when {
 					!option.enabled -> DisabledBackgroundColor
 					selectedKey != option.key -> Color.Transparent
-					radioType == FlexRadioType.Button -> {
-						when {
-							isPressed -> color.brightness(0.95f)
-							isHovered -> color.brightness(1.1f)
-							else -> color
-						}
-					}
-					
 					else -> {
+						val isButton = radioType == Button
 						when {
-							isPressed -> color.brightness(0.9f)
-							isHovered -> color.brightness(1.15f)
+							isPressed -> color.brightness(if (isButton) 0.95f else 1.1f)
+							isHovered -> color.brightness(if (isButton) 1.1f else 1.15f)
 							else -> color
 						}
 					}
-				}
+				},
+				animationSpec = if (init) colorDefaultSnap else colorDefaultSpring
 			)
+			if (option.key == selectedKey) {
+				init = false
+			}
 			if (index != 0) {
 				FlexRadioLine(
 					index = index,
@@ -130,14 +131,14 @@ internal fun FlexDefaultRadioGroup(
 					)
 					.then(
 						when {
-							!option.enabled || radioType == FlexRadioType.Button -> {
+							!option.enabled || radioType == Button -> {
 								Modifier.background(
 									color = targetColor,
 									shape = buttonCornerShape
 								)
 							}
 							
-							radioType == FlexRadioType.Default -> {
+							radioType == Default -> {
 								Modifier.border(
 									width = config.borderWidth,
 									color = targetColor,
@@ -172,3 +173,7 @@ internal fun FlexDefaultRadioGroup(
 		}
 	}
 }
+
+private val colorDefaultSnap = snap<Color>()
+
+private val colorDefaultSpring = spring<Color>()

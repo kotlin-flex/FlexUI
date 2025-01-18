@@ -88,8 +88,8 @@ fun FlexButton(
 	}
 	val targetScale by animateFloatAsState(
 		targetValue = if (!scaleEffect) 1f else when {
-			isPressed -> 0.99f
-			isHovered -> 1.015f
+			isPressed -> 0.992f
+			isHovered -> 1.012f
 			else -> 1f
 		}
 	)
