@@ -103,11 +103,7 @@ fun FlexButton(
 		Row(
 			modifier = modifier
 				.scale(targetScale)
-				.let {
-					if (text.isNotEmpty()) it else it.width(
-						width = config.height
-					)
-				}
+				.then(if (text.isEmpty()) Modifier.width(config.height) else Modifier)
 				.height(config.height)
 				.clip(cornerShape)
 				.customStyle(buttonType, config, cornerShape, targetColor)
@@ -116,13 +112,14 @@ fun FlexButton(
 					indication = null,
 					enabled = enabled,
 					onClick = onClick
-				)
-				.let {
-					if (text.isBlank()) it else it.padding(
-						start = horizontalPadding,
-						end = horizontalPadding
-					)
-				},
+				).then(
+					if (text.isNotBlank()) {
+						Modifier.padding(
+							start = horizontalPadding,
+							end = horizontalPadding,
+						)
+					} else Modifier
+				),
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.Center
 		) {
