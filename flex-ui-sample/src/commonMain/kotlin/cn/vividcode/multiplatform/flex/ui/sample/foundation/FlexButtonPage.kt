@@ -38,14 +38,11 @@ fun FlexButtonPage() {
 						LazyRow(
 							modifier = Modifier
 								.fillMaxWidth()
-								.padding(horizontal = 16.dp),
 						) {
 							val cornerType = FlexCornerType.entries[colorTypeIndex % FlexCornerType.entries.size]
 							FlexButtonType.entries.forEachIndexed { index, buttonType ->
-								if (index != 0) {
-									item {
-										Spacer(modifier = Modifier.width(16.dp))
-									}
+								item {
+									Spacer(modifier = Modifier.width(16.dp))
 								}
 								item {
 									FlexButton(
@@ -87,6 +84,9 @@ fun FlexButtonPage() {
 										enabled = it % 2 == 0
 									)
 								}
+							}
+							item {
+								Spacer(modifier = Modifier.width(16.dp))
 							}
 						}
 					}

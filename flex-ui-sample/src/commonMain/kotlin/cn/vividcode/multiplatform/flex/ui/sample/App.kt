@@ -151,7 +151,7 @@ fun App() {
 							}
 						},
 						actions = {
-							var frame by remember { mutableLongStateOf(0) }
+							var frame by remember { mutableLongStateOf(-1) }
 							LaunchedEffect(Unit) {
 								var lastNanos = 0L
 								var total = 0L
@@ -169,7 +169,7 @@ fun App() {
 								}
 							}
 							FlexButton(
-								text = "$frame FPS",
+								text = "${if (frame == -1L) "NaN" else frame} FPS",
 								modifier = Modifier
 									.width(90.dp),
 								colorType = when {

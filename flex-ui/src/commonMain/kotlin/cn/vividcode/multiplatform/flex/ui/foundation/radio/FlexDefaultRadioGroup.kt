@@ -8,9 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -29,7 +27,6 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
-import cn.vividcode.multiplatform.flex.ui.expends.isDark
 
 /**
  * FlexRadioGroup 单选框组，类型：默认
@@ -47,20 +44,17 @@ internal fun FlexDefaultRadioGroup(
 	options: List<RadioOption>,
 	selectedKey: String,
 	onSelectedKeyChange: (String) -> Unit,
-	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
-	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
-	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
-	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
+	sizeType: FlexSizeType,
+	colorType: FlexColorType,
+	cornerType: FlexCornerType,
+	radioType: FlexRadioType,
+	scaleEffect: Boolean,
 ) {
 	val current = LocalFlexConfig.current
 	val config = current.radio.getConfig(sizeType)
 	val color = current.theme.colorScheme.current.getColor(colorType)
 	val corner = config.height * cornerType.percent
-	val cornerShape = when (cornerType) {
-		FlexCornerType.None -> RectangleShape
-		FlexCornerType.Circle -> CircleShape
-		else -> RoundedCornerShape(corner)
-	}
+	val cornerShape = getCornerShape(cornerType, corner)
 	Row(
 		modifier = Modifier
 			.height(config.height)
@@ -114,21 +108,11 @@ internal fun FlexDefaultRadioGroup(
 				}
 			)
 			if (index != 0) {
-				val targetLineColor by animateColorAsState(
-					targetValue = when {
-						option.key != selectedKey && options[index - 1].key != selectedKey -> BorderColor
-						!options[index - 1].enabled || !option.enabled -> DisabledBackgroundColor
-						else -> Color.Transparent
-					}
-				)
-				Spacer(
-					modifier = Modifier
-						.width(config.borderWidth)
-						.fillMaxHeight()
-						.padding(
-							vertical = config.borderWidth
-						)
-						.background(targetLineColor)
+				FlexRadioLine(
+					index = index,
+					options = options,
+					selectedKey = selectedKey,
+					borderWidth = config.borderWidth,
 				)
 			}
 			Row(
@@ -173,28 +157,16 @@ internal fun FlexDefaultRadioGroup(
 				horizontalArrangement = Arrangement.Center,
 				verticalAlignment = Alignment.CenterVertically,
 			) {
-				val targetFontColor by animateColorAsState(
-					targetValue = when {
-						!option.enabled -> UnselectedFontColor.copy(alpha = 0.8f)
-						selectedKey == option.key -> {
-							when (radioType) {
-								FlexRadioType.Button -> if (color.isDark) Color.White else Color.Black
-								FlexRadioType.Default -> targetColor
-							}
-						}
-						
-						isPressed -> color.brightness(0.85f)
-						isHovered -> color
-						else -> UnselectedFontColor
-					}
-				)
-				Text(
-					text = option.value,
-					color = targetFontColor,
-					fontSize = config.fontSize,
-					fontWeight = config.fontWeight,
-					lineHeight = config.fontSize,
-					letterSpacing = config.letterSpacing,
+				FlexRadioText(
+					value = option.value,
+					enabled = option.enabled,
+					selected = option.key == selectedKey,
+					color = color,
+					config = config,
+					radioType = radioType,
+					isPressed = isPressed,
+					isHovered = isHovered,
+					scaleEffect = scaleEffect
 				)
 			}
 		}

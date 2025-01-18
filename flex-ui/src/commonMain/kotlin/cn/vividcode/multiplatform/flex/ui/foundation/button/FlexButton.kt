@@ -51,7 +51,7 @@ import cn.vividcode.multiplatform.flex.ui.expends.isDark
  * @param buttonType 按钮类型
  * @param iconPosition 图标位置
  * @param iconRotation 图标旋转
- * @param enabledScale 启用悬停按下缩放
+ * @param scaleEffect 启用悬停按下缩放
  * @param enabled 是否禁用
  * @param onClick 点击事件
  */
@@ -66,7 +66,7 @@ fun FlexButton(
 	buttonType: FlexButtonType = FlexButtons.DefaultButtonType,
 	iconPosition: FlexButtonIconPosition = FlexButtons.DefaultIconDirection,
 	iconRotation: Float = FlexButtons.DefaultIconRotation,
-	enabledScale: Boolean = FlexButtons.DefaultEnabledScale,
+	scaleEffect: Boolean = FlexButtons.DefaultScaleEffect,
 	enabled: Boolean = true,
 	onClick: () -> Unit = {},
 ) {
@@ -87,7 +87,7 @@ fun FlexButton(
 		else -> RoundedCornerShape(config.height * cornerType.percent)
 	}
 	val targetScale by animateFloatAsState(
-		targetValue = if (!enabledScale) 1f else when {
+		targetValue = if (!scaleEffect) 1f else when {
 			isPressed -> 0.99f
 			isHovered -> 1.015f
 			else -> 1f
@@ -283,7 +283,7 @@ object FlexButtons {
 	
 	const val DefaultIconRotation = 0f
 	
-	const val DefaultEnabledScale = true
+	const val DefaultScaleEffect = true
 }
 
 enum class FlexButtonIconPosition {
