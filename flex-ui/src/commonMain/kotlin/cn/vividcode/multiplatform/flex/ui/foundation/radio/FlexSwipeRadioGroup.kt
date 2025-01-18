@@ -176,7 +176,7 @@ internal fun FlexSwipeRadioGroup(
 						index = index,
 						options = options,
 						selectedKey = selectedKey,
-						borderWidth = config.borderWidth,
+						borderWidth = config.borderWidth
 					)
 				}
 				Row(

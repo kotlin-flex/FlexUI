@@ -216,7 +216,10 @@ internal val BorderColor = Color.Gray.copy(alpha = 0.3f)
 
 internal val UnselectedFontColor
 	@Composable
-	get() = if (LocalDarkTheme.current) Color.LightGray else Color.DarkGray
+	get() = when (LocalDarkTheme.current) {
+		true -> Color.LightGray.copy(alpha = 0.95f)
+		false -> Color.DarkGray.copy(alpha = 0.95f)
+	}
 
 internal val DisabledBackgroundColor = Color.Gray.copy(alpha = 0.15f)
 
