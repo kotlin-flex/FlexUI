@@ -51,7 +51,7 @@ fun FlexRadioPage() {
 											colorType = colorType,
 											cornerType = FlexCornerType.entries[colorTypeIndex % FlexCornerType.entries.size],
 											radioType = radioType,
-											switchType = switchType,
+											switchType = switchType
 										)
 									}
 									item {

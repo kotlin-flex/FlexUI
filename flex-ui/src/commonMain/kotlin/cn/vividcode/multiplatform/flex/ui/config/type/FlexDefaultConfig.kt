@@ -3,7 +3,7 @@ package cn.vividcode.multiplatform.flex.ui.config.type
 /**
  * 默认类型配置
  */
-class FlexDefaultTypeConfig internal constructor(
+class FlexDefaultConfig internal constructor(
 	var colorType: FlexColorType,
 	var cornerType: FlexCornerType,
 	var sizeType: FlexSizeType,
@@ -11,8 +11,8 @@ class FlexDefaultTypeConfig internal constructor(
 	
 	internal companion object {
 		
-		val DefaultTypeConfig: FlexDefaultTypeConfig
-			get() = FlexDefaultTypeConfig(
+		val DefaultConfig: FlexDefaultConfig
+			get() = FlexDefaultConfig(
 				colorType = FlexColorType.Default,
 				cornerType = FlexCornerType.Default,
 				sizeType = FlexSizeType.Medium

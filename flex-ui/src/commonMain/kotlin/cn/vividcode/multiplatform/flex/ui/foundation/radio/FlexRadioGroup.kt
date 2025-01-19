@@ -97,15 +97,15 @@ object FlexRadioGroups {
 	
 	val DefaultSizeType: FlexSizeType
 		@Composable
-		get() = LocalFlexConfig.current.defaultType.sizeType
+		get() = LocalFlexConfig.current.default.sizeType
 	
 	val DefaultColorType: FlexColorType
 		@Composable
-		get() = LocalFlexConfig.current.defaultType.colorType
+		get() = LocalFlexConfig.current.default.colorType
 	
 	val DefaultCornerType: FlexCornerType
 		@Composable
-		get() = LocalFlexConfig.current.defaultType.cornerType
+		get() = LocalFlexConfig.current.default.cornerType
 	
 	val DefaultRadioType = FlexRadioType.Default
 	

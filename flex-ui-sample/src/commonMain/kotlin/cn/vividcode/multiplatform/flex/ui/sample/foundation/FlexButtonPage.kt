@@ -81,7 +81,8 @@ fun FlexButtonPage() {
 											FlexButtonType.Dashed -> FlexButtonIconPosition.Start
 											else -> FlexButtonIconPosition.End
 										},
-										enabled = it % 2 == 0
+										enabled = it % 2 == 0,
+										scaleEffect = false
 									)
 								}
 							}
