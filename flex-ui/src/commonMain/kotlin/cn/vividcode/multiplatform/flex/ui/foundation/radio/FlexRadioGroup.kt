@@ -46,10 +46,10 @@ import kotlin.jvm.JvmName
  * @param scaleEffect 缩放效果
  */
 @Composable
-fun FlexRadioGroup(
-	options: List<RadioOption>,
-	selectedKey: String,
-	onSelectedKeyChange: (String) -> Unit,
+fun <Key> FlexRadioGroup(
+	options: List<RadioOption<Key>>,
+	selectedKey: Key,
+	onSelectedKeyChange: (Key) -> Unit,
 	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
@@ -57,22 +57,20 @@ fun FlexRadioGroup(
 	switchType: FlexSwitchType = FlexRadioGroups.DefaultSwitchType,
 	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
 ) {
-	val realSelectedKey by remember(options, selectedKey) {
+	val targetSelectedKey by remember(options, selectedKey) {
 		derivedStateOf {
 			val option = options.find { it.key == selectedKey }
-			if (option == null || !option.enabled) {
+			if (option?.enabled == true) option.key else {
 				options.find { it.enabled }?.key?.also {
 					onSelectedKeyChange(it)
 				} ?: selectedKey
-			} else {
-				option.key
 			}
 		}
 	}
 	when (switchType) {
 		Default -> FlexDefaultRadioGroup(
 			options = options,
-			selectedKey = realSelectedKey,
+			selectedKey = targetSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
 			sizeType = sizeType,
 			colorType = colorType,
@@ -83,7 +81,7 @@ fun FlexRadioGroup(
 		
 		Swipe -> FlexSwipeRadioGroup(
 			options = options,
-			selectedKey = realSelectedKey,
+			selectedKey = targetSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
 			sizeType = sizeType,
 			colorType = colorType,
@@ -155,10 +153,10 @@ enum class FlexSwitchType {
  */
 @JvmName("FlexRadioGroupWithPairOptions")
 @Composable
-fun FlexRadioGroup(
-	options: List<Pair<String, String>>,
-	selectedKey: String,
-	onSelectedKeyChange: (String) -> Unit,
+fun <Key> FlexRadioGroup(
+	options: List<Pair<Key, String>>,
+	selectedKey: Key,
+	onSelectedKeyChange: (Key) -> Unit,
 	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
@@ -180,48 +178,11 @@ fun FlexRadioGroup(
 }
 
 /**
- * FlexRadioGroup 单选框组
- *
- * @param options 选项 [String] 列表
- * @param selectedKey 选中的 key
- * @param onSelectedKeyChange 当选中改变事件
- * @param sizeType 尺寸类型
- * @param colorType 颜色类型
- * @param cornerType 圆角类型
- * @param radioType 单选框组类型
- */
-@JvmName("FlexRadioGroupWithStringOptions")
-@Composable
-fun FlexRadioGroup(
-	options: List<String>,
-	selectedKey: String,
-	onSelectedKeyChange: (String) -> Unit,
-	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
-	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
-	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
-	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
-	switchType: FlexSwitchType = FlexRadioGroups.DefaultSwitchType,
-	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
-) {
-	FlexRadioGroup(
-		options = options.map { RadioOption(it) },
-		selectedKey = selectedKey,
-		onSelectedKeyChange = onSelectedKeyChange,
-		sizeType = sizeType,
-		colorType = colorType,
-		cornerType = cornerType,
-		radioType = radioType,
-		switchType = switchType,
-		scaleEffect = scaleEffect,
-	)
-}
-
-/**
  * 选项
  */
-data class RadioOption(
-	val key: String,
-	val value: String = key,
+class RadioOption<Key>(
+	val key: Key,
+	val value: String,
 	val enabled: Boolean = true,
 )
 
@@ -300,10 +261,10 @@ internal fun FlexRadioText(
  * 单选框竖线
  */
 @Composable
-internal fun FlexRadioLine(
+internal fun <Key> FlexRadioLine(
 	index: Int,
-	options: List<RadioOption>,
-	selectedKey: String,
+	options: List<RadioOption<Key>>,
+	selectedKey: Key,
 	borderWidth: Dp,
 ) {
 	val targetLineColor by animateColorAsState(

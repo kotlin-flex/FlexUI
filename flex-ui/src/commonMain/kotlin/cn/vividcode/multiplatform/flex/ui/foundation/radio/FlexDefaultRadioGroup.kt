@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package cn.vividcode.multiplatform.flex.ui.foundation.radio
 
 import androidx.compose.animation.animateColorAsState
@@ -42,10 +44,10 @@ import cn.vividcode.multiplatform.flex.ui.expends.brightness
  * @param scaleEffect 开启缩放效果
  */
 @Composable
-internal fun FlexDefaultRadioGroup(
-	options: List<RadioOption>,
-	selectedKey: String,
-	onSelectedKeyChange: (String) -> Unit,
+internal fun <Key> FlexDefaultRadioGroup(
+	options: List<RadioOption<Key>>,
+	selectedKey: Key,
+	onSelectedKeyChange: (Key) -> Unit,
 	sizeType: FlexSizeType,
 	colorType: FlexColorType,
 	cornerType: FlexCornerType,
