@@ -13,10 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -70,29 +67,6 @@ fun FlexButton(
 	enabled: Boolean = true,
 	onClick: () -> Unit = {},
 ) {
-	val current = LocalFlexConfig.current
-	val config = current.button.getConfig(sizeType)
-	val colorScheme = current.theme.colorScheme.current
-	val color = colorScheme.getColor(colorType)
-	val interactionSource = remember { MutableInteractionSource() }
-	val isHovered by interactionSource.collectIsHoveredAsState()
-	val isPressed by interactionSource.collectIsPressedAsState()
-	val targetColor by animateColorAsState(
-		targetValue = getTargetColor(color, buttonType, enabled, isPressed, isHovered)
-	)
-	val horizontalPadding = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
-	val cornerShape = when (cornerType) {
-		FlexCornerType.None -> RectangleShape
-		FlexCornerType.Circle -> CircleShape
-		else -> RoundedCornerShape(config.height * cornerType.percent)
-	}
-	val targetScale by animateFloatAsState(
-		targetValue = if (!scaleEffect) 1f else when {
-			isPressed -> 0.992f
-			isHovered -> 1.012f
-			else -> 1f
-		}
-	)
 	val layoutDirection = LocalLayoutDirection.current
 	CompositionLocalProvider(
 		LocalLayoutDirection provides when {
@@ -100,10 +74,49 @@ fun FlexButton(
 			else -> if (layoutDirection == LayoutDirection.Ltr) LayoutDirection.Rtl else LayoutDirection.Ltr
 		}
 	) {
+		val current = LocalFlexConfig.current
+		val config = current.button.getConfig(sizeType)
+		val colorScheme = current.theme.colorScheme.current
+		val color = colorScheme.getColor(colorType)
+		val interactionSource = remember { MutableInteractionSource() }
+		val isHovered by interactionSource.collectIsHoveredAsState()
+		val isPressed by interactionSource.collectIsPressedAsState()
+		val targetColor by animateColorAsState(
+			targetValue = getTargetColor(color, buttonType, enabled, isPressed, isHovered)
+		)
+		val horizontalPadding = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
+		val cornerShape by remember(cornerType, config.height) {
+			derivedStateOf {
+				when (cornerType) {
+					FlexCornerType.None -> RectangleShape
+					FlexCornerType.Circle -> CircleShape
+					else -> RoundedCornerShape(config.height * cornerType.percent)
+				}
+			}
+		}
+		val targetScale by remember(scaleEffect, isPressed, isHovered) {
+			derivedStateOf {
+				when {
+					!scaleEffect -> 1f
+					isPressed -> 0.992f
+					isHovered -> 1.012f
+					else -> 1f
+				}
+			}
+		}
+		val scale by animateFloatAsState(
+			targetValue = targetScale
+		)
+		val targetText by remember(text) {
+			mutableStateOf(text.trim())
+		}
+		val isTextEmpty by remember(text) {
+			derivedStateOf { targetText.isEmpty() }
+		}
 		Row(
 			modifier = modifier
-				.scale(targetScale)
-				.then(if (text.isEmpty()) Modifier.width(config.height) else Modifier)
+				.scale(scale)
+				.then(if (isTextEmpty) Modifier.width(config.height) else Modifier)
 				.height(config.height)
 				.clip(cornerShape)
 				.customStyle(buttonType, config, cornerShape, targetColor)
@@ -113,45 +126,48 @@ fun FlexButton(
 					enabled = enabled,
 					onClick = onClick
 				).then(
-					if (text.isNotBlank()) {
-						Modifier.padding(
-							start = horizontalPadding,
-							end = horizontalPadding,
-						)
-					} else Modifier
+					if (isTextEmpty) Modifier else Modifier.padding(
+						start = horizontalPadding,
+						end = horizontalPadding,
+					)
 				),
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.Center
 		) {
-			val targetFontColor by animateColorAsState(
-				targetValue = when (buttonType) {
-					FlexButtonType.Primary -> when (color.isDark) {
-						true -> if (enabled) Color.White else Color.White.copy(alpha = 0.9f)
-						false -> if (enabled) Color.Black else Color.Black.copy(alpha = 0.9f)
-					}
-					
-					FlexButtonType.Filled, FlexButtonType.Text -> {
-						if (enabled) color else color.copy(alpha = 0.8f)
-					}
-					
-					FlexButtonType.Link -> {
-						when {
-							!enabled -> color.copy(alpha = 0.8f)
-							isPressed -> color.brightness(0.85f)
-							isHovered -> color.brightness(1.2f)
-							else -> color
+			val targetFontColor by remember(buttonType, enabled) {
+				derivedStateOf {
+					when (buttonType) {
+						FlexButtonType.Primary -> when (color.isDark) {
+							true -> if (enabled) Color.White else Color.White.copy(alpha = 0.9f)
+							false -> if (enabled) Color.Black else Color.Black.copy(alpha = 0.9f)
 						}
-					}
-					
-					else -> {
-						when {
-							!enabled -> color.copy(alpha = 0.6f)
-							isPressed -> color.brightness(0.9f)
-							isHovered -> color.brightness(1.15f)
-							else -> color
+						
+						FlexButtonType.Filled, FlexButtonType.Text -> {
+							if (enabled) color else color.copy(alpha = 0.8f)
+						}
+						
+						FlexButtonType.Link -> {
+							when {
+								!enabled -> color.copy(alpha = 0.8f)
+								isPressed -> color.brightness(0.85f)
+								isHovered -> color.brightness(1.2f)
+								else -> color
+							}
+						}
+						
+						else -> {
+							when {
+								!enabled -> color.copy(alpha = 0.6f)
+								isPressed -> color.brightness(0.9f)
+								isHovered -> color.brightness(1.15f)
+								else -> color
+							}
 						}
 					}
 				}
+			}
+			val fontColor by animateColorAsState(
+				targetValue = targetFontColor
 			)
 			if (icon != null) {
 				CompositionLocalProvider(
@@ -159,7 +175,7 @@ fun FlexButton(
 				) {
 					Icon(
 						imageVector = icon,
-						tint = targetFontColor,
+						tint = fontColor,
 						contentDescription = null,
 						modifier = Modifier
 							.padding(
@@ -174,8 +190,8 @@ fun FlexButton(
 				LocalLayoutDirection provides layoutDirection,
 			) {
 				Text(
-					text = text.trim(),
-					color = targetFontColor,
+					text = targetText,
+					color = fontColor,
 					fontSize = config.fontSize,
 					fontWeight = config.fontWeight,
 					letterSpacing = config.letterSpacing,
