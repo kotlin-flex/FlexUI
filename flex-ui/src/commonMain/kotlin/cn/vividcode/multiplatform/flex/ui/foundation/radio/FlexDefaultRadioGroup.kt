@@ -1,8 +1,6 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.radio
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,7 +9,10 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,8 +28,6 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Default
 
 /**
  * FlexRadioGroup 单选框组，类型：默认
@@ -77,37 +76,48 @@ internal fun FlexDefaultRadioGroup(
 			}
 	) {
 		options.forEachIndexed { index, option ->
-			val buttonCornerShape = when {
-				cornerType == FlexCornerType.None || index in 1 ..< options.lastIndex -> RectangleShape
-				else -> RoundedCornerShape(
-					topStart = if (index == 0) corner else Dp.Hairline,
-					bottomStart = if (index == 0) corner else Dp.Hairline,
-					topEnd = if (index == options.lastIndex) corner else Dp.Hairline,
-					bottomEnd = if (index == options.lastIndex) corner else Dp.Hairline,
-				)
+			val buttonCornerShape by remember(cornerType, options, index) {
+				derivedStateOf {
+					when {
+						cornerType == FlexCornerType.None || index in 1 ..< options.lastIndex -> RectangleShape
+						else -> RoundedCornerShape(
+							topStart = if (index == 0) corner else Dp.Hairline,
+							bottomStart = if (index == 0) corner else Dp.Hairline,
+							topEnd = if (index == options.lastIndex) corner else Dp.Hairline,
+							bottomEnd = if (index == options.lastIndex) corner else Dp.Hairline,
+						)
+					}
+				}
 			}
 			val interactionSource = remember { MutableInteractionSource() }
 			val isHovered by interactionSource.collectIsHoveredAsState()
 			val isPressed by interactionSource.collectIsPressedAsState()
-			var init by remember { mutableStateOf(true) }
-			val targetColor by animateColorAsState(
-				targetValue = when {
-					!option.enabled -> DisabledBackgroundColor
-					selectedKey != option.key -> Color.Transparent
-					else -> {
-						val isButton = radioType == Button
-						when {
-							isPressed -> color.brightness(if (isButton) 0.95f else 1.1f)
-							isHovered -> color.brightness(if (isButton) 1.1f else 1.15f)
-							else -> color
+			val targetButtonColor by remember(option, selectedKey, radioType) {
+				derivedStateOf {
+					when {
+						!option.enabled -> DisabledBackgroundColor
+						selectedKey != option.key -> Color.Transparent
+						radioType == FlexRadioType.Button -> {
+							when {
+								isPressed -> color.brightness(0.95f)
+								isHovered -> color.brightness(1.1f)
+								else -> color
+							}
+						}
+						
+						else -> {
+							when {
+								isPressed -> color.brightness(1.1f)
+								isHovered -> color.brightness(1.15f)
+								else -> color
+							}
 						}
 					}
-				},
-				animationSpec = if (init) colorDefaultSnap else colorDefaultSpring
-			)
-			if (option.key == selectedKey) {
-				init = false
+				}
 			}
+			val buttonColor by animateColorAsState(
+				targetValue = targetButtonColor
+			)
 			if (index != 0) {
 				FlexRadioLine(
 					index = index,
@@ -131,25 +141,20 @@ internal fun FlexDefaultRadioGroup(
 					)
 					.then(
 						when {
-							!option.enabled || radioType == Button -> {
+							!option.enabled || radioType == FlexRadioType.Button -> {
 								Modifier.background(
-									color = targetColor,
+									color = buttonColor,
 									shape = buttonCornerShape
 								)
 							}
 							
-							radioType == Default -> {
+							else -> {
 								Modifier.border(
 									width = config.borderWidth,
-									color = targetColor,
+									color = buttonColor,
 									shape = buttonCornerShape
 								)
 							}
-							
-							else -> Modifier.background(
-								color = targetColor,
-								shape = buttonCornerShape
-							)
 						}
 					)
 					.padding(
@@ -173,7 +178,3 @@ internal fun FlexDefaultRadioGroup(
 		}
 	}
 }
-
-private val colorDefaultSnap = snap<Color>()
-
-private val colorDefaultSpring = spring<Color>()

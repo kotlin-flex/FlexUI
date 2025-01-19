@@ -11,8 +11,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -56,17 +57,22 @@ fun FlexRadioGroup(
 	switchType: FlexSwitchType = FlexRadioGroups.DefaultSwitchType,
 	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
 ) {
-	LaunchedEffect(options) {
-		val defaultOption = options.find { it.key == selectedKey }
-		if (defaultOption == null || !defaultOption.enabled) {
-			val resetSelectedKey = options.find { it.enabled }?.key ?: return@LaunchedEffect
-			onSelectedKeyChange(resetSelectedKey)
+	val realSelectedKey by remember(options, selectedKey) {
+		derivedStateOf {
+			val option = options.find { it.key == selectedKey }
+			if (option == null || !option.enabled) {
+				options.find { it.enabled }?.key?.also {
+					onSelectedKeyChange(it)
+				} ?: selectedKey
+			} else {
+				option.key
+			}
 		}
 	}
 	when (switchType) {
 		Default -> FlexDefaultRadioGroup(
 			options = options,
-			selectedKey = selectedKey,
+			selectedKey = realSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
 			sizeType = sizeType,
 			colorType = colorType,
@@ -77,7 +83,7 @@ fun FlexRadioGroup(
 		
 		Swipe -> FlexSwipeRadioGroup(
 			options = options,
-			selectedKey = selectedKey,
+			selectedKey = realSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
 			sizeType = sizeType,
 			colorType = colorType,
@@ -224,8 +230,8 @@ internal val BorderColor = Color.Gray.copy(alpha = 0.3f)
 internal val UnselectedFontColor
 	@Composable
 	get() = when (LocalDarkTheme.current) {
-		true -> Color.LightGray.copy(alpha = 0.95f)
-		false -> Color.DarkGray.copy(alpha = 0.95f)
+		true -> Color.LightGray
+		false -> Color.DarkGray
 	}
 
 internal val DisabledBackgroundColor = Color.Gray.copy(alpha = 0.15f)
@@ -266,13 +272,18 @@ internal fun FlexRadioText(
 			else -> UnselectedFontColor
 		}
 	)
-	val scale by animateFloatAsState(
-		targetValue = when {
-			!enabled || !scaleEffect -> 1f
-			isPressed -> 0.98f
-			isHovered -> 1.02f
-			else -> 1f
+	val targetScale by remember(enabled, scaleEffect, isPressed, isHovered) {
+		derivedStateOf {
+			when {
+				!enabled || !scaleEffect -> 1f
+				isPressed -> 0.98f
+				isHovered -> 1.02f
+				else -> 1f
+			}
 		}
+	}
+	val scale by animateFloatAsState(
+		targetValue = targetScale
 	)
 	Text(
 		text = value,

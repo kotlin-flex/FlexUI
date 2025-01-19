@@ -1,10 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.radio
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -84,51 +81,61 @@ internal fun FlexSwipeRadioGroup(
 		val currentIndex = options.indexOfFirst { it.key == selectedKey }
 		var buttonIsPressed by remember { mutableStateOf(false) }
 		var buttonIsHovered by remember { mutableStateOf(false) }
-		if (currentIndex != -1) {
-			var init by remember { mutableStateOf(true) }
-			val width = buttonWidths[currentIndex]
-			val dpAnimationSpec = if (init) dpDefaultSnap else dpDefaultSpring
+		if (currentIndex != -1 && buttonWidths.all { it != Dp.Hairline }) {
 			val targetWidth by animateDpAsState(
-				targetValue = buttonWidths[currentIndex],
-				animationSpec = dpAnimationSpec
+				targetValue = buttonWidths[currentIndex]
 			)
+			val targetOffsetX by remember(buttonWidths, currentIndex, config.borderWidth) {
+				derivedStateOf { buttonWidths.take(currentIndex).sum() + config.borderWidth * currentIndex }
+			}
 			val offsetX by animateDpAsState(
-				targetValue = buttonWidths.take(currentIndex).sum() + config.borderWidth * currentIndex,
-				animationSpec = dpAnimationSpec
+				targetValue = targetOffsetX
 			)
 			val startCorner by animateDpAsState(
 				targetValue = if (currentIndex == 0) corner else Dp.Hairline,
-				animationSpec = dpAnimationSpec
 			)
 			val endCorner by animateDpAsState(
 				targetValue = if (currentIndex == options.lastIndex) corner else Dp.Hairline,
-				animationSpec = dpAnimationSpec
 			)
-			val buttonCornerShape = when {
-				startCorner == Dp.Hairline && endCorner == Dp.Hairline -> RectangleShape
-				else -> RoundedCornerShape(
-					topStart = startCorner,
-					topEnd = endCorner,
-					bottomEnd = endCorner,
-					bottomStart = startCorner,
-				)
-			}
-			if (width != Dp.Hairline) {
-				init = false
+			val buttonCornerShape by remember(startCorner, endCorner) {
+				derivedStateOf {
+					when {
+						startCorner == Dp.Hairline && endCorner == Dp.Hairline -> RectangleShape
+						else -> RoundedCornerShape(
+							topStart = startCorner,
+							topEnd = endCorner,
+							bottomEnd = endCorner,
+							bottomStart = startCorner,
+						)
+					}
+				}
 			}
 			val option = options[currentIndex]
-			val targetColor by animateColorAsState(
-				targetValue = when {
-					!option.enabled -> DisabledBackgroundColor
-					else -> {
-						val isButton = radioType == Button
-						when {
-							buttonIsPressed -> color.brightness(if (isButton) 0.95f else 1.1f)
-							buttonIsHovered -> color.brightness(if (isButton) 1.1f else 1.15f)
-							else -> color
+			val targetButtonColor by remember(option.enabled, radioType, buttonIsPressed, buttonIsHovered) {
+				derivedStateOf {
+					when {
+						!option.enabled -> DisabledBackgroundColor
+						
+						radioType == Button -> {
+							when {
+								buttonIsPressed -> color.brightness(0.95f)
+								buttonIsHovered -> color.brightness(1.1f)
+								else -> color
+							}
+						}
+						
+						else -> {
+							when {
+								buttonIsPressed -> color.brightness(1.1f)
+								buttonIsHovered -> color.brightness(1.15f)
+								else -> color
+							}
 						}
 					}
 				}
+			}
+			val buttonColor by animateColorAsState(
+				targetValue = targetButtonColor
 			)
 			Box(
 				modifier = Modifier
@@ -139,7 +146,7 @@ internal fun FlexSwipeRadioGroup(
 						when (radioType) {
 							Button -> {
 								Modifier.background(
-									color = targetColor,
+									color = buttonColor,
 									shape = buttonCornerShape
 								)
 							}
@@ -147,7 +154,7 @@ internal fun FlexSwipeRadioGroup(
 							Default -> {
 								Modifier.border(
 									width = config.borderWidth,
-									color = targetColor,
+									color = buttonColor,
 									shape = buttonCornerShape
 								)
 							}
@@ -222,7 +229,3 @@ internal fun FlexSwipeRadioGroup(
 		}
 	}
 }
-
-private val dpDefaultSnap = snap<Dp>()
-
-private val dpDefaultSpring = spring(visibilityThreshold = Dp.VisibilityThreshold)
