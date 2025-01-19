@@ -111,7 +111,7 @@ internal fun FlexSwipeRadioGroup(
 				}
 			}
 			val option = options[currentIndex]
-			val targetButtonColor by remember(option.enabled, radioType, buttonIsPressed, buttonIsHovered) {
+			val targetButtonColor by remember(color, option.enabled, radioType, buttonIsPressed, buttonIsHovered) {
 				derivedStateOf {
 					when {
 						!option.enabled -> DisabledBackgroundColor

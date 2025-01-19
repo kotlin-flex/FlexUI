@@ -92,7 +92,7 @@ internal fun FlexDefaultRadioGroup(
 			val interactionSource = remember { MutableInteractionSource() }
 			val isHovered by interactionSource.collectIsHoveredAsState()
 			val isPressed by interactionSource.collectIsPressedAsState()
-			val targetButtonColor by remember(option, selectedKey, radioType) {
+			val targetButtonColor by remember(color, option, selectedKey, radioType) {
 				derivedStateOf {
 					when {
 						!option.enabled -> DisabledBackgroundColor
