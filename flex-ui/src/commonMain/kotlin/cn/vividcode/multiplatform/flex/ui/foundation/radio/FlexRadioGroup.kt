@@ -35,9 +35,9 @@ import kotlin.jvm.JvmName
 /**
  * FlexRadioGroup 单选框组
  *
- * @param options 选项 [RadioOption] 类型
  * @param selectedKey 选中的 key
  * @param onSelectedKeyChange 当选中改变事件
+ * @param options 选项 [RadioOption] 类型
  * @param sizeType 尺寸类型
  * @param colorType 颜色类型
  * @param cornerType 圆角类型
@@ -47,9 +47,9 @@ import kotlin.jvm.JvmName
  */
 @Composable
 fun <Key> FlexRadioGroup(
-	options: List<RadioOption<Key>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
+	options: List<RadioOption<Key>>,
 	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
@@ -143,9 +143,9 @@ enum class FlexSwitchType {
 /**
  * FlexRadioGroup 单选框组
  *
- * @param options 选项 [Pair] 类型
  * @param selectedKey 选中的 key
  * @param onSelectedKeyChange 当选中改变事件
+ * @param options 选项 [Pair] 类型
  * @param sizeType 尺寸类型
  * @param colorType 颜色类型
  * @param cornerType 圆角类型
@@ -154,9 +154,9 @@ enum class FlexSwitchType {
 @JvmName("FlexRadioGroupWithPairOptions")
 @Composable
 fun <Key> FlexRadioGroup(
-	options: List<Pair<Key, String>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
+	options: List<Pair<Key, String>>,
 	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,

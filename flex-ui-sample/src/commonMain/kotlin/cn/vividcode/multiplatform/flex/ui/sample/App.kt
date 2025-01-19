@@ -43,7 +43,7 @@ import kotlin.math.sqrt
 
 private val ItemWidth = 220.dp
 
-private const val VERSION_NAME = "v1.0.0-exp-03"
+private const val VERSION_NAME = "v1.0.0-exp-04"
 
 private const val VERSION_TYPE = "EXP"
 

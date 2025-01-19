@@ -44,9 +44,9 @@ fun FlexRadioPage() {
 										)
 										var selectedKey by remember { mutableStateOf(options.first().key) }
 										FlexRadioGroup(
-											options = options,
 											selectedKey = selectedKey,
 											onSelectedKeyChange = { selectedKey = it },
+											options = options,
 											sizeType = sizeType,
 											colorType = colorType,
 											cornerType = FlexCornerType.entries[colorTypeIndex % FlexCornerType.entries.size],
