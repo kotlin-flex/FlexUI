@@ -81,8 +81,13 @@ fun FlexButton(
 		val interactionSource = remember { MutableInteractionSource() }
 		val isHovered by interactionSource.collectIsHoveredAsState()
 		val isPressed by interactionSource.collectIsPressedAsState()
-		val targetColor by animateColorAsState(
-			targetValue = getTargetColor(color, buttonType, enabled, isPressed, isHovered)
+		val targetButtonColor by remember(color, buttonType, enabled, isPressed, isHovered) {
+			derivedStateOf {
+				getTargetColor(color, buttonType, enabled, isPressed, isHovered)
+			}
+		}
+		val buttonColor by animateColorAsState(
+			targetValue = targetButtonColor
 		)
 		val horizontalPadding = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
 		val cornerShape by remember(cornerType, config.height) {
@@ -119,7 +124,7 @@ fun FlexButton(
 				.then(if (isTextEmpty) Modifier.width(config.height) else Modifier)
 				.height(config.height)
 				.clip(cornerShape)
-				.customStyle(buttonType, config, cornerShape, targetColor)
+				.customStyle(buttonType, config, cornerShape, buttonColor)
 				.clickable(
 					interactionSource = interactionSource,
 					indication = null,
@@ -134,7 +139,7 @@ fun FlexButton(
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.Center
 		) {
-			val targetFontColor by remember(buttonType, enabled) {
+			val targetFontColor by remember(color, buttonType, enabled) {
 				derivedStateOf {
 					when (buttonType) {
 						FlexButtonType.Primary -> when (color.isDark) {
