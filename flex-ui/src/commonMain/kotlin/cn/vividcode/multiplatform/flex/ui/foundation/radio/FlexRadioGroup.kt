@@ -97,15 +97,21 @@ object FlexRadioGroups {
 	
 	val DefaultSizeType: FlexSizeType
 		@Composable
-		get() = LocalFlexConfig.current.default.sizeType
+		get() = LocalFlexConfig.current.default.let {
+			it.radio?.sizeType ?: it.common.sizeType ?: FlexSizeType.Medium
+		}
 	
 	val DefaultColorType: FlexColorType
 		@Composable
-		get() = LocalFlexConfig.current.default.colorType
+		get() = LocalFlexConfig.current.default.let {
+			it.radio?.colorType ?: it.common.colorType ?: FlexColorType.Default
+		}
 	
 	val DefaultCornerType: FlexCornerType
 		@Composable
-		get() = LocalFlexConfig.current.default.cornerType
+		get() = LocalFlexConfig.current.default.let {
+			it.radio?.cornerType ?: it.common.cornerType ?: FlexCornerType.Default
+		}
 	
 	val DefaultRadioType = FlexRadioType.Default
 	
@@ -151,7 +157,7 @@ enum class FlexSwitchType {
  * @param cornerType 圆角类型
  * @param radioType 单选框组类型
  */
-@JvmName("FlexRadioGroupWithPairOptions")
+@JvmName("FlexRadioGroupWithPairOption")
 @Composable
 fun <Key> FlexRadioGroup(
 	selectedKey: Key,
@@ -165,9 +171,46 @@ fun <Key> FlexRadioGroup(
 	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
 ) {
 	FlexRadioGroup(
-		options = options.map { RadioOption(it.first, it.second) },
 		selectedKey = selectedKey,
 		onSelectedKeyChange = onSelectedKeyChange,
+		options = options.map { RadioOption(it.first, it.second) },
+		sizeType = sizeType,
+		colorType = colorType,
+		cornerType = cornerType,
+		radioType = radioType,
+		switchType = switchType,
+		scaleEffect = scaleEffect,
+	)
+}
+
+/**
+ * FlexRadioGroup 单选框组
+ *
+ * @param selectedKey 选中的 key
+ * @param onSelectedKeyChange 当选中改变事件
+ * @param options 选项 [Pair] 类型
+ * @param sizeType 尺寸类型
+ * @param colorType 颜色类型
+ * @param cornerType 圆角类型
+ * @param radioType 单选框组类型
+ */
+@JvmName("FlexRadioGroupWithStringOption")
+@Composable
+fun FlexRadioGroup(
+	selectedKey: String,
+	onSelectedKeyChange: (String) -> Unit,
+	options: List<String>,
+	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
+	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
+	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
+	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
+	switchType: FlexSwitchType = FlexRadioGroups.DefaultSwitchType,
+	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
+) {
+	FlexRadioGroup(
+		selectedKey = selectedKey,
+		onSelectedKeyChange = onSelectedKeyChange,
+		options = options.map { RadioOption(it, it) },
 		sizeType = sizeType,
 		colorType = colorType,
 		cornerType = cornerType,

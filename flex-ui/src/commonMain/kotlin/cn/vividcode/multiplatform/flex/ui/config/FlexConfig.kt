@@ -1,9 +1,8 @@
 package cn.vividcode.multiplatform.flex.ui.config
 
-import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexButtonConfig
-import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.*
 import cn.vividcode.multiplatform.flex.ui.config.theme.FlexThemeConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexDefaultConfig
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexComposeDefaultConfig
 
 /**
  * Flex 配置
@@ -16,11 +15,13 @@ class FlexConfig internal constructor() {
 	
 	internal val theme = FlexThemeConfig()
 	
-	internal val default = FlexDefaultConfig.DefaultConfig
+	internal val default = FlexComposeDefaultConfig()
 	
-	internal val button = FlexSizeConfig(FlexButtonConfig)
+	internal val button = FlexSizeConfig(FlexButtonSizeDefaults)
 	
-	internal val radio = FlexSizeConfig(FlexRadioConfig)
+	internal val radio = FlexSizeConfig(FlexRadioSizeDefaults)
+	
+	internal val input = FlexSizeConfig(FlexInputSizeDefaults)
 	
 	/**
 	 * 主题配置
@@ -32,7 +33,7 @@ class FlexConfig internal constructor() {
 	/**
 	 * 默认类型配置
 	 */
-	fun default(config: FlexDefaultConfig.() -> Unit) {
+	fun default(config: FlexComposeDefaultConfig.() -> Unit) {
 		this.default.apply(config)
 	}
 	
@@ -48,5 +49,12 @@ class FlexConfig internal constructor() {
 	 */
 	fun radio(config: FlexSizeConfig<FlexRadioConfig>.() -> Unit) {
 		this.radio.apply(config)
+	}
+	
+	/**
+	 * 输入框配置
+	 */
+	fun input(config: FlexSizeConfig<FlexInputConfig>.() -> Unit) {
+		this.input.apply(config)
 	}
 }

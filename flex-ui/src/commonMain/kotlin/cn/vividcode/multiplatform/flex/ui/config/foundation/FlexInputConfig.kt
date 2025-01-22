@@ -8,9 +8,9 @@ import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 
 /**
- * 按钮配置
+ * 输入框配置
  */
-class FlexButtonConfig internal constructor(
+class FlexInputConfig internal constructor(
 	var height: Dp,
 	var horizontalPadding: Dp,
 	var borderWidth: Dp,
@@ -21,15 +21,15 @@ class FlexButtonConfig internal constructor(
 	var iconInterval: Dp,
 )
 
-internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
+internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig> {
 	
 	private const val ICON_HEIGHT_SCALE = 2f / 3f
 	
 	/**
-	 * 默认超小尺寸按钮配置
+	 * 默认超小尺寸输入框配置
 	 */
-	override val DefaultExtraSmall: FlexButtonConfig
-		get() = FlexButtonConfig(
+	override val DefaultExtraSmall: FlexInputConfig
+		get() = FlexInputConfig(
 			height = 24.dp,
 			horizontalPadding = 8.dp,
 			borderWidth = 1.dp,
@@ -41,10 +41,10 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 		)
 	
 	/**
-	 * 默认小尺寸按钮配置
+	 * 默认小尺寸输入框配置
 	 */
-	override val DefaultSmall: FlexButtonConfig
-		get() = FlexButtonConfig(
+	override val DefaultSmall: FlexInputConfig
+		get() = FlexInputConfig(
 			height = 32.dp,
 			horizontalPadding = 10.dp,
 			borderWidth = 1.5.dp,
@@ -56,10 +56,10 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 		)
 	
 	/**
-	 * 默认中尺寸按钮配置
+	 * 默认中尺寸输入框配置
 	 */
-	override val DefaultMedium: FlexButtonConfig
-		get() = FlexButtonConfig(
+	override val DefaultMedium: FlexInputConfig
+		get() = FlexInputConfig(
 			height = 40.dp,
 			horizontalPadding = 12.dp,
 			borderWidth = 1.5.dp,
@@ -71,10 +71,10 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 		)
 	
 	/**
-	 * 默认大尺寸按钮配置
+	 * 默认大尺寸输入框配置
 	 */
-	override val DefaultLarge: FlexButtonConfig
-		get() = FlexButtonConfig(
+	override val DefaultLarge: FlexInputConfig
+		get() = FlexInputConfig(
 			height = 48.dp,
 			horizontalPadding = 14.dp,
 			borderWidth = 1.5.dp,
@@ -86,10 +86,10 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 		)
 	
 	/**
-	 * 默认大尺寸按钮配置
+	 * 默认大尺寸输入框配置
 	 */
-	override val DefaultExtraLarge: FlexButtonConfig
-		get() = FlexButtonConfig(
+	override val DefaultExtraLarge: FlexInputConfig
+		get() = FlexInputConfig(
 			height = 56.dp,
 			horizontalPadding = 16.dp,
 			borderWidth = 2.dp,

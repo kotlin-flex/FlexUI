@@ -7,18 +7,18 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType.*
  * 尺寸配置
  */
 class FlexSizeConfig<Config> internal constructor(
-	config: FlexDefaultSizeConfig<Config>,
+	sizeDefaults: FlexSizeDefaults<Config>,
 ) {
 	
-	private val extraSmall = config.DefaultExtraSmall
+	private val extraSmall = sizeDefaults.DefaultExtraSmall
 	
-	private val small = config.DefaultSmall
+	private val small = sizeDefaults.DefaultSmall
 	
-	private val medium = config.DefaultMedium
+	private val medium = sizeDefaults.DefaultMedium
 	
-	private val large = config.DefaultLarge
+	private val large = sizeDefaults.DefaultLarge
 	
-	private val extraLarge = config.DefaultExtraLarge
+	private val extraLarge = sizeDefaults.DefaultExtraLarge
 	
 	fun extraSmall(config: Config.() -> Unit) {
 		this.extraSmall.apply(config)
@@ -50,7 +50,7 @@ class FlexSizeConfig<Config> internal constructor(
 }
 
 @Suppress("PropertyName")
-internal interface FlexDefaultSizeConfig<Config> {
+internal interface FlexSizeDefaults<Config> {
 	
 	val DefaultExtraSmall: Config
 	

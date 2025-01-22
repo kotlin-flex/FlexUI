@@ -34,11 +34,11 @@ import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexButtonPage
+import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexInputPage
 import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexRadioPage
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
-import kotlin.math.min
 import kotlin.math.sqrt
 
 private val ItemWidth = 220.dp
@@ -80,7 +80,7 @@ fun App() {
 		Box(
 			modifier = Modifier.fillMaxSize()
 		) {
-			var currentFlexPage by remember { mutableStateOf(FlexPage.FlexButton) }
+			var currentFlexType by remember { mutableStateOf(FlexType.FlexButton) }
 			val targetItemOffsetX by animateDpAsState(
 				targetValue = itemOffsetX
 			)
@@ -119,12 +119,12 @@ fun App() {
 						.fillMaxSize()
 						.padding(bottom = 60.dp)
 				) {
-					FlexPage.entries.forEach { flexPage ->
+					FlexType.entries.forEach { flexPage ->
 						ComposeItem(
-							flexPage = flexPage,
-							value = currentFlexPage,
+							flexType = flexPage,
+							value = currentFlexType,
 							onValueChange = {
-								currentFlexPage = it
+								currentFlexType = it
 							}
 						)
 					}
@@ -142,7 +142,7 @@ fun App() {
 								verticalAlignment = Alignment.CenterVertically,
 							) {
 								Text(
-									text = currentFlexPage.name,
+									text = currentFlexType.name,
 									fontSize = 20.sp,
 									fontWeight = FontWeight.Medium,
 									color = MaterialTheme.colorScheme.onSurface,
@@ -151,30 +151,30 @@ fun App() {
 							}
 						},
 						actions = {
-							var frame by remember { mutableLongStateOf(-1) }
+							var refreshRate by remember { mutableLongStateOf(-1) }
 							LaunchedEffect(Unit) {
-								var lastNanos = 0L
+								var lastFrameTime = 0L
 								var total = 0L
 								while (true) {
-									withFrameNanos {
-										if (lastNanos != 0L) {
-											total += it - lastNanos
+									withFrameNanos { currentFrameTime ->
+										if (lastFrameTime != 0L) {
+											total += currentFrameTime - lastFrameTime
 											if (total > 500_000_000) {
-												total -= 500_000_000
-												frame = min(1_000_000_000 / (it - lastNanos), 120L)
+												total %= 500_000_000
+												refreshRate = 1_000_000_000 / (currentFrameTime - lastFrameTime)
 											}
 										}
-										lastNanos = it
+										lastFrameTime = currentFrameTime
 									}
 								}
 							}
 							FlexButton(
-								text = "${if (frame == -1L) "NaN" else frame} FPS",
+								text = "${if (refreshRate == -1L) "NaN" else refreshRate} FPS",
 								modifier = Modifier
 									.width(90.dp),
 								colorType = when {
-									frame >= 90 -> FlexColorType.Success
-									frame >= 60 -> FlexColorType.Warning
+									refreshRate >= 60 -> FlexColorType.Success
+									refreshRate >= 30 -> FlexColorType.Warning
 									else -> FlexColorType.Error
 								},
 								sizeType = FlexSizeType.Small
@@ -182,10 +182,7 @@ fun App() {
 							Spacer(modifier = Modifier.width(if (FlexPlatform.isMobile) 8.dp else 70.dp))
 							if (FlexPlatform.isMobile) {
 								FlexButton(
-									icon = when (itemOffsetX == Dp.Hairline) {
-										true -> Icons.Outlined.PlaylistRemove
-										false -> Icons.AutoMirrored.Outlined.PlaylistPlay
-									},
+									icon = if (itemOffsetX == Dp.Hairline) Icons.Outlined.PlaylistRemove else Icons.AutoMirrored.Outlined.PlaylistPlay,
 									colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
 									buttonType = FlexButtonType.Primary,
 									cornerType = FlexCornerType.Large
@@ -214,9 +211,10 @@ fun App() {
 						.fillMaxSize()
 						.padding(it)
 				) {
-					when (currentFlexPage) {
-						FlexPage.FlexButton -> FlexButtonPage()
-						FlexPage.FlexRadioGroup -> FlexRadioPage()
+					when (currentFlexType) {
+						FlexType.FlexButton -> FlexButtonPage()
+						FlexType.FlexRadioGroup -> FlexRadioPage()
+						FlexType.FlexInput -> FlexInputPage()
 					}
 				}
 			}
@@ -293,16 +291,17 @@ fun App() {
 	}
 }
 
-enum class FlexPage {
+enum class FlexType {
 	FlexButton,
-	FlexRadioGroup
+	FlexRadioGroup,
+	FlexInput
 }
 
 @Composable
 private fun ComposeItem(
-	flexPage: FlexPage,
-	value: FlexPage,
-	onValueChange: (FlexPage) -> Unit,
+	flexType: FlexType,
+	value: FlexType,
+	onValueChange: (FlexType) -> Unit,
 ) {
 	Row(
 		modifier = Modifier
@@ -310,18 +309,18 @@ private fun ComposeItem(
 			.height(40.dp)
 			.clip(RoundedCornerShape(10.dp))
 			.background(
-				color = if (value == flexPage) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
+				color = if (value == flexType) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
 				shape = RoundedCornerShape(10.dp)
 			)
 			.clickable {
-				onValueChange(flexPage)
+				onValueChange(flexType)
 			}
 			.padding(horizontal = 16.dp),
 		verticalAlignment = Alignment.CenterVertically,
 		horizontalArrangement = Arrangement.SpaceBetween
 	) {
 		Text(
-			text = flexPage.name,
+			text = flexType.name,
 			modifier = Modifier.weight(1f),
 			fontSize = 15.sp,
 			color = MaterialTheme.colorScheme.onSurface,
@@ -329,7 +328,7 @@ private fun ComposeItem(
 			maxLines = 1,
 			overflow = TextOverflow.Ellipsis
 		)
-		if (value == flexPage) {
+		if (value == flexType) {
 			Box(
 				modifier = Modifier
 					.size(10.dp)

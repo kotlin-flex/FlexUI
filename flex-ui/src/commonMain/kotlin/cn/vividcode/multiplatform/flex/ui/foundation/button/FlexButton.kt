@@ -291,15 +291,21 @@ object FlexButtons {
 	
 	val DefaultSizeType: FlexSizeType
 		@Composable
-		get() = LocalFlexConfig.current.default.sizeType
+		get() = LocalFlexConfig.current.default.let {
+			it.button?.sizeType ?: it.common.sizeType ?: FlexSizeType.Medium
+		}
 	
 	val DefaultColorType: FlexColorType
 		@Composable
-		get() = LocalFlexConfig.current.default.colorType
+		get() = LocalFlexConfig.current.default.let {
+			it.button?.colorType ?: it.common.colorType ?: FlexColorType.Default
+		}
 	
 	val DefaultCornerType: FlexCornerType
 		@Composable
-		get() = LocalFlexConfig.current.default.cornerType
+		get() = LocalFlexConfig.current.default.let {
+			it.button?.cornerType ?: it.common.cornerType ?: FlexCornerType.Default
+		}
 	
 	val DefaultButtonType = FlexButtonType.Default
 	
