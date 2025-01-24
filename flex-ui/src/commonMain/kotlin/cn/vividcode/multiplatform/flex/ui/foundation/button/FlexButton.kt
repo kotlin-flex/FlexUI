@@ -1,6 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.button
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,7 +10,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -27,6 +27,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexButtonConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
@@ -90,14 +92,15 @@ fun FlexButton(
 			targetValue = targetButtonColor
 		)
 		val horizontalPadding = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
-		val cornerShape by remember(cornerType, config.height) {
-			derivedStateOf {
-				when (cornerType) {
-					FlexCornerType.None -> RectangleShape
-					FlexCornerType.Circle -> CircleShape
-					else -> RoundedCornerShape(config.height * cornerType.percent)
-				}
-			}
+		val height by animateDpAsState(
+			targetValue = config.height
+		)
+		val corner by animateDpAsState(
+			targetValue = height * cornerType.percent
+		)
+		val cornerShape = when (corner) {
+			Dp.Hairline -> RectangleShape
+			else -> RoundedCornerShape(corner)
 		}
 		val targetScale by remember(scaleEffect, isPressed, isHovered) {
 			derivedStateOf {
@@ -121,8 +124,8 @@ fun FlexButton(
 		Row(
 			modifier = modifier
 				.scale(scale)
-				.then(if (isTextEmpty) Modifier.width(config.height) else Modifier)
-				.height(config.height)
+				.then(if (isTextEmpty) Modifier.width(height) else Modifier)
+				.height(height)
 				.clip(cornerShape)
 				.customStyle(buttonType, config, cornerShape, buttonColor)
 				.clickable(
@@ -178,29 +181,47 @@ fun FlexButton(
 				CompositionLocalProvider(
 					LocalLayoutDirection provides layoutDirection
 				) {
+					val iconSize by animateDpAsState(
+						targetValue = config.iconSize
+					)
+					val rotation by animateFloatAsState(
+						targetValue = iconRotation
+					)
 					Icon(
 						imageVector = icon,
 						tint = fontColor,
 						contentDescription = null,
 						modifier = Modifier
-							.padding(
-								start = if (text.isBlank()) Dp.Hairline else config.iconInterval
-							)
-							.rotate(iconRotation)
-							.size(config.iconSize)
+							.rotate(rotation)
+							.size(iconSize)
 					)
+					val internal by remember(text) {
+						derivedStateOf {
+							if (text.isBlank()) Dp.Hairline else config.iconInterval
+						}
+					}
+					Spacer(modifier = Modifier.width(internal))
 				}
 			}
 			CompositionLocalProvider(
 				LocalLayoutDirection provides layoutDirection,
 			) {
+				val fontSize by animateFloatAsState(
+					targetValue = config.fontSize.value
+				)
+				val letterSpacing by animateFloatAsState(
+					targetValue = config.letterSpacing.value
+				)
 				Text(
 					text = targetText,
 					color = fontColor,
-					fontSize = config.fontSize,
+					fontSize = fontSize.sp,
 					fontWeight = config.fontWeight,
-					letterSpacing = config.letterSpacing,
-					lineHeight = config.fontSize,
+					letterSpacing = when (config.letterSpacing) {
+						TextUnit.Unspecified -> config.letterSpacing
+						else -> letterSpacing.sp
+					},
+					lineHeight = fontSize.sp,
 					overflow = TextOverflow.Ellipsis,
 					maxLines = 1
 				)

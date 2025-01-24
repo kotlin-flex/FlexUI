@@ -1,4 +1,4 @@
-package cn.vividcode.multiplatform.flex.ui.sample.foundation
+package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,7 +22,7 @@ fun FlexRadioPage() {
 		item {
 			Spacer(modifier = Modifier.height(16.dp))
 		}
-		FlexColorType.entries.forEachIndexed { colorTypeIndex, colorType ->
+		FlexColorType.defaultColorTypes.forEachIndexed { colorTypeIndex, colorType ->
 			FlexSizeType.entries.forEach { sizeType ->
 				FlexSwitchType.entries.forEach { switchType ->
 					item {

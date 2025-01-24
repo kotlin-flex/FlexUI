@@ -28,14 +28,13 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
-import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexButtonPage
-import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexInputPage
-import cn.vividcode.multiplatform.flex.ui.sample.foundation.FlexRadioPage
+import cn.vividcode.multiplatform.flex.ui.sample.page.FlexButtonPage
+import cn.vividcode.multiplatform.flex.ui.sample.page.FlexInputPage
+import cn.vividcode.multiplatform.flex.ui.sample.page.FlexRadioPage
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
@@ -50,8 +49,7 @@ private const val VERSION_TYPE = "EXP"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-	var showFoldButton by remember { mutableStateOf(false) }
-	var showSwitchThemeButton by remember { mutableStateOf(false) }
+	var showToolbar by remember { mutableStateOf(false) }
 	var screenSize by remember { mutableStateOf(IntSize.Zero) }
 	Box(
 		modifier = Modifier
@@ -67,10 +65,8 @@ fun App() {
 							val position = event.changes.first().position
 							val threshold = ItemWidth.toPx()
 							val inStart = position.x < threshold
-							val inEnd = position.x > screenSize.width - threshold
 							val inBottom = position.y > screenSize.height - threshold
-							showFoldButton = inStart && inBottom
-							showSwitchThemeButton = inEnd && inBottom
+							showToolbar = inStart && inBottom
 						}
 					}
 				}
@@ -184,20 +180,15 @@ fun App() {
 								FlexButton(
 									icon = if (itemOffsetX == Dp.Hairline) Icons.Outlined.PlaylistRemove else Icons.AutoMirrored.Outlined.PlaylistPlay,
 									colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
-									buttonType = FlexButtonType.Primary,
-									cornerType = FlexCornerType.Large
+									buttonType = FlexButtonType.Primary
 								) {
 									itemOffsetX = if (itemOffsetX == Dp.Hairline) -ItemWidth else Dp.Hairline
 								}
-								val themeIconRotation by animateFloatAsState(
-									targetValue = if (LocalDarkTheme.current) -90f else 0f
-								)
 								Spacer(modifier = Modifier.width(8.dp))
 								FlexButton(
 									icon = if (LocalDarkTheme.current) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
 									buttonType = FlexButtonType.Primary,
-									iconRotation = themeIconRotation,
-									cornerType = FlexCornerType.Large
+									iconRotation = if (LocalDarkTheme.current) -90f else 0f
 								) {
 									FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
 								}
@@ -206,7 +197,7 @@ fun App() {
 					)
 				}
 			) {
-				Box(
+				Column(
 					modifier = Modifier
 						.fillMaxSize()
 						.padding(it)
@@ -220,49 +211,41 @@ fun App() {
 			}
 		}
 		if (!FlexPlatform.isMobile) {
-			val foldOffsetX by animateDpAsState(
-				targetValue = if (showFoldButton) Dp.Hairline else -(60.dp)
+			val toolbarOffsetX by animateDpAsState(
+				targetValue = if (showToolbar) Dp.Hairline else -(60.dp)
 			)
-			FlexButton(
+			Column(
 				modifier = Modifier
 					.align(Alignment.BottomStart)
 					.padding(
 						start = 12.dp,
 						bottom = 12.dp
 					)
-					.offset(x = foldOffsetX),
-				icon = when (itemOffsetX == Dp.Hairline) {
-					true -> Icons.Outlined.PlaylistRemove
-					false -> Icons.AutoMirrored.Outlined.PlaylistPlay
-				},
-				colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
-				sizeType = FlexSizeType.Large,
-				buttonType = FlexButtonType.Primary,
-				cornerType = FlexCornerType.Large,
+					.offset(x = toolbarOffsetX)
 			) {
-				itemOffsetX = if (itemOffsetX == Dp.Hairline) -(ItemWidth) else Dp.Hairline
-			}
-			val switchThemeOffsetX by animateDpAsState(
-				targetValue = if (showSwitchThemeButton) Dp.Hairline else 60.dp
-			)
-			val themeIconRotation by animateFloatAsState(
-				targetValue = if (LocalDarkTheme.current) -90f else 0f
-			)
-			FlexButton(
-				icon = if (LocalDarkTheme.current) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
-				modifier = Modifier
-					.align(Alignment.BottomEnd)
-					.padding(
-						end = 12.dp,
-						bottom = 12.dp
-					)
-					.offset(x = switchThemeOffsetX),
-				sizeType = FlexSizeType.Large,
-				buttonType = FlexButtonType.Primary,
-				cornerType = FlexCornerType.Large,
-				iconRotation = themeIconRotation
-			) {
-				FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
+				val themeIconRotation by animateFloatAsState(
+					targetValue = if (LocalDarkTheme.current) -90f else 0f
+				)
+				FlexButton(
+					icon = if (LocalDarkTheme.current) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
+					sizeType = FlexSizeType.Large,
+					buttonType = FlexButtonType.Primary,
+					iconRotation = themeIconRotation
+				) {
+					FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
+				}
+				Spacer(modifier = Modifier.height(12.dp))
+				FlexButton(
+					icon = when (itemOffsetX == Dp.Hairline) {
+						true -> Icons.Outlined.PlaylistRemove
+						false -> Icons.AutoMirrored.Outlined.PlaylistPlay
+					},
+					colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
+					sizeType = FlexSizeType.Large,
+					buttonType = FlexButtonType.Primary
+				) {
+					itemOffsetX = if (itemOffsetX == Dp.Hairline) -(ItemWidth) else Dp.Hairline
+				}
 			}
 		}
 		Box(

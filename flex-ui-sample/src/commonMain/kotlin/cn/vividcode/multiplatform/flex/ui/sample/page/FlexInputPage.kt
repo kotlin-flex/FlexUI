@@ -1,4 +1,4 @@
-package cn.vividcode.multiplatform.flex.ui.sample.foundation
+package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.runtime.*
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
