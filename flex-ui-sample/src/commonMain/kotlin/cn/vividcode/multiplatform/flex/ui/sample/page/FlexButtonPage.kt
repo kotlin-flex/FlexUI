@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
@@ -24,6 +25,9 @@ import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
 
+/**
+ * FlexButton 展示页
+ */
 @Composable
 fun ColumnScope.FlexButtonPage() {
 	var buttonType by remember { mutableStateOf(FlexButtonType.Default) }
@@ -38,7 +42,8 @@ fun ColumnScope.FlexButtonPage() {
 		modifier = Modifier
 			.fillMaxWidth()
 			.weight(1f)
-			.padding(16.dp)
+			.padding(16.dp),
+		contentAlignment = Alignment.Center
 	) {
 		FlexButton(
 			text = "TestButton",
@@ -56,7 +61,7 @@ fun ColumnScope.FlexButtonPage() {
 	val verticalScrollState = rememberScrollState()
 	Column(
 		modifier = Modifier
-			.height(304.dp)
+			.height(352.dp)
 			.padding(8.dp)
 			.verticalScroll(verticalScrollState)
 			.padding(8.dp)

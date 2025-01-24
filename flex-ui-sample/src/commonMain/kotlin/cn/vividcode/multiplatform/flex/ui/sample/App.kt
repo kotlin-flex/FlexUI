@@ -24,7 +24,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
@@ -44,29 +43,28 @@ private val ItemWidth = 220.dp
 
 private const val VERSION_NAME = "v1.0.0-exp-04"
 
-private const val VERSION_TYPE = "EXP"
+private val versionType = VersionType.EXP
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
 	var showToolbar by remember { mutableStateOf(false) }
-	var screenSize by remember { mutableStateOf(IntSize.Zero) }
+	var screenHeight by remember { mutableStateOf(0) }
 	Box(
 		modifier = Modifier
 			.fillMaxSize()
 			.background(MaterialTheme.colorScheme.surface)
 			.multiplatform(FlexPlatform.Web, FlexPlatform.Desktop) {
 				this.onGloballyPositioned {
-					screenSize = it.size
+					screenHeight = it.size.height
 				}.pointerInput(Unit) {
 					awaitPointerEventScope {
+						val thresholdX = 104.dp.toPx()
+						val thresholdY = 152.dp.toPx()
 						while (true) {
 							val event = awaitPointerEvent()
 							val position = event.changes.first().position
-							val threshold = ItemWidth.toPx()
-							val inStart = position.x < threshold
-							val inBottom = position.y > screenSize.height - threshold
-							showToolbar = inStart && inBottom
+							showToolbar = position.x < thresholdX && position.y > screenHeight - thresholdY
 						}
 					}
 				}
@@ -212,14 +210,14 @@ fun App() {
 		}
 		if (!FlexPlatform.isMobile) {
 			val toolbarOffsetX by animateDpAsState(
-				targetValue = if (showToolbar) Dp.Hairline else -(60.dp)
+				targetValue = if (showToolbar) Dp.Hairline else -(48.dp)
 			)
 			Column(
 				modifier = Modifier
 					.align(Alignment.BottomStart)
 					.padding(
-						start = 12.dp,
-						bottom = 12.dp
+						start = 8.dp,
+						bottom = 8.dp
 					)
 					.offset(x = toolbarOffsetX)
 			) {
@@ -228,49 +226,25 @@ fun App() {
 				)
 				FlexButton(
 					icon = if (LocalDarkTheme.current) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
-					sizeType = FlexSizeType.Large,
 					buttonType = FlexButtonType.Primary,
 					iconRotation = themeIconRotation
 				) {
 					FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
 				}
-				Spacer(modifier = Modifier.height(12.dp))
+				Spacer(modifier = Modifier.height(8.dp))
 				FlexButton(
 					icon = when (itemOffsetX == Dp.Hairline) {
 						true -> Icons.Outlined.PlaylistRemove
 						false -> Icons.AutoMirrored.Outlined.PlaylistPlay
 					},
 					colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
-					sizeType = FlexSizeType.Large,
 					buttonType = FlexButtonType.Primary
 				) {
 					itemOffsetX = if (itemOffsetX == Dp.Hairline) -(ItemWidth) else Dp.Hairline
 				}
 			}
 		}
-		Box(
-			modifier = Modifier
-				.align(Alignment.TopEnd)
-				.offset(
-					x = ((75f * sqrt(2f)) / 2f - (75f / 2f) * (5f / 6f)).dp,
-					y = ((75f / 2f) * (5f / 6f) - 25f * sqrt(2f) / 4f).dp
-				)
-				.rotate(45f)
-				.size(
-					width = (75 * sqrt(2f)).dp,
-					height = (sqrt(2f) / 2 * 25).dp
-				)
-				.background(color = Color(0xCCF1211C)),
-			contentAlignment = Alignment.Center
-		) {
-			Text(
-				text = VERSION_TYPE,
-				fontSize = 16.sp,
-				fontWeight = FontWeight.Bold,
-				color = Color.White,
-				lineHeight = 16.sp
-			)
-		}
+		VersionType()
 	}
 }
 
@@ -321,5 +295,47 @@ private fun ComposeItem(
 					)
 			)
 		}
+	}
+}
+
+enum class VersionType {
+	
+	RELEASE,
+	
+	DEBUG,
+	
+	EXP
+}
+
+@Composable
+private fun BoxScope.VersionType() {
+	Box(
+		modifier = Modifier
+			.align(Alignment.TopEnd)
+			.offset(
+				x = ((75f * sqrt(2f)) / 2f - (75f / 2f) * (5f / 6f)).dp,
+				y = ((75f / 2f) * (5f / 6f) - 25f * sqrt(2f) / 4f).dp
+			)
+			.rotate(45f)
+			.size(
+				width = (75 * sqrt(2f)).dp,
+				height = (sqrt(2f) / 2 * 25).dp
+			)
+			.background(
+				color = when (versionType) {
+					VersionType.RELEASE -> Color(0xCC52C41A)
+					VersionType.DEBUG -> Color(0xCCF9AC13)
+					VersionType.EXP -> Color(0xCCF1211C)
+				}
+			),
+		contentAlignment = Alignment.Center
+	) {
+		Text(
+			text = versionType.toString(),
+			fontSize = 14.sp,
+			fontWeight = FontWeight.Bold,
+			color = Color.White,
+			lineHeight = 14.sp
+		)
 	}
 }
