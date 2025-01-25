@@ -45,7 +45,7 @@ fun ColumnScope.FlexButtonPage() {
 		modifier = Modifier
 			.fillMaxWidth()
 			.weight(1f)
-			.padding(16.dp),
+			.padding(12.dp),
 	) {
 		Box(
 			modifier = Modifier
@@ -90,8 +90,8 @@ fun ColumnScope.FlexButtonPage() {
 	val verticalScrollState = rememberScrollState()
 	Column(
 		modifier = Modifier
-			.height(352.dp)
-			.padding(8.dp)
+			.height(276.dp)
+			.padding(4.dp)
 			.verticalScroll(verticalScrollState)
 			.padding(8.dp)
 	) {
@@ -108,7 +108,7 @@ fun ColumnScope.FlexButtonPage() {
 				switchType = FlexSwitchType.Swipe
 			)
 		}
-		Spacer(modifier = Modifier.height(16.dp))
+		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Size Type") }
 		) {
@@ -122,7 +122,7 @@ fun ColumnScope.FlexButtonPage() {
 				switchType = FlexSwitchType.Swipe
 			)
 		}
-		Spacer(modifier = Modifier.height(16.dp))
+		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Color Type") }
 		) {
@@ -136,7 +136,7 @@ fun ColumnScope.FlexButtonPage() {
 				switchType = FlexSwitchType.Swipe
 			)
 		}
-		Spacer(modifier = Modifier.height(16.dp))
+		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Corner Type") }
 		) {
@@ -150,7 +150,7 @@ fun ColumnScope.FlexButtonPage() {
 				switchType = FlexSwitchType.Swipe
 			)
 		}
-		Spacer(modifier = Modifier.height(16.dp))
+		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Icon Visible") }
 		) {
@@ -164,7 +164,7 @@ fun ColumnScope.FlexButtonPage() {
 				switchType = FlexSwitchType.Swipe
 			)
 		}
-		Spacer(modifier = Modifier.height(16.dp))
+		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Icon Position") }
 		) {
@@ -178,7 +178,7 @@ fun ColumnScope.FlexButtonPage() {
 				switchType = FlexSwitchType.Swipe
 			)
 		}
-		Spacer(modifier = Modifier.height(16.dp))
+		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Scale Effect") }
 		) {
@@ -192,7 +192,7 @@ fun ColumnScope.FlexButtonPage() {
 				switchType = FlexSwitchType.Swipe
 			)
 		}
-		Spacer(modifier = Modifier.height(16.dp))
+		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Enabled") }
 		) {

@@ -83,15 +83,66 @@ fun FlexButton(
 		val interactionSource = remember { MutableInteractionSource() }
 		val isHovered by interactionSource.collectIsHoveredAsState()
 		val isPressed by interactionSource.collectIsPressedAsState()
-		val targetButtonColor by remember(color, buttonType, enabled, isPressed, isHovered) {
+		val targetBorderColor by remember(color, buttonType, enabled, isPressed, isHovered) {
 			derivedStateOf {
-				getTargetColor(color, buttonType, enabled, isPressed, isHovered)
+				when (buttonType) {
+					FlexButtonType.Default, FlexButtonType.Dashed -> {
+						when {
+							!enabled -> color.copy(alpha = 0.6f)
+							isPressed -> color.brightness(0.9f)
+							isHovered -> color.brightness(1.15f)
+							else -> color
+						}
+					}
+					
+					else -> color.copy(alpha = 0f)
+				}
 			}
 		}
-		val buttonColor by animateColorAsState(
-			targetValue = targetButtonColor
+		val targetBackgroundColor by remember(color, buttonType, enabled, isPressed, isHovered) {
+			derivedStateOf {
+				when (buttonType) {
+					FlexButtonType.Primary -> {
+						when {
+							!enabled -> color.copy(alpha = 0.6f)
+							isPressed -> color.brightness(0.95f)
+							isHovered -> color.brightness(1.1f)
+							else -> color
+						}
+					}
+					
+					FlexButtonType.Filled -> {
+						when {
+							!enabled -> color.copy(alpha = 0.08f)
+							isPressed -> color.copy(alpha = 0.2f)
+							isHovered -> color.copy(alpha = 0.15f)
+							else -> color.copy(alpha = 0.1f)
+						}
+					}
+					
+					FlexButtonType.Text -> {
+						when {
+							isPressed -> color.copy(alpha = 0.2f)
+							isHovered -> color.copy(alpha = 0.1f)
+							else -> color.copy(alpha = 0f)
+						}
+					}
+					
+					else -> color.copy(alpha = 0f)
+				}
+			}
+		}
+		val borderColor by animateColorAsState(
+			targetValue = targetBorderColor
 		)
-		val horizontalPadding = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
+		val backgroundColor by animateColorAsState(
+			targetValue = targetBackgroundColor
+		)
+		val horizontalPadding by remember(text, config) {
+			derivedStateOf {
+				if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
+			}
+		}
 		val height by animateDpAsState(
 			targetValue = config.height
 		)
@@ -127,7 +178,7 @@ fun FlexButton(
 				.then(if (isTextEmpty) Modifier.width(height) else Modifier)
 				.height(height)
 				.clip(cornerShape)
-				.customStyle(buttonType, config, cornerShape, buttonColor)
+				.backgroundBorderStyle(buttonType, config, cornerShape, backgroundColor, borderColor)
 				.clickable(
 					interactionSource = interactionSource,
 					indication = null,
@@ -234,31 +285,47 @@ fun FlexButton(
  * 设置按钮样式
  */
 @Composable
-private fun Modifier.customStyle(
+private fun Modifier.backgroundBorderStyle(
 	buttonType: FlexButtonType,
 	config: FlexButtonConfig,
 	cornerShape: Shape,
-	color: Color,
+	backgroundColor: Color,
+	borderColor: Color,
 ): Modifier {
 	return when (buttonType) {
-		FlexButtonType.Default -> this.border(
-			width = config.borderWidth,
-			color = color,
-			shape = cornerShape
-		)
+		FlexButtonType.Default -> this
+			.background(
+				color = backgroundColor,
+				shape = cornerShape,
+			)
+			.border(
+				width = config.borderWidth,
+				color = borderColor,
+				shape = cornerShape
+			)
 		
-		FlexButtonType.Dashed -> this.dashedBorder(
-			width = config.borderWidth,
-			color = color,
-			shape = cornerShape
-		)
+		FlexButtonType.Dashed -> this
+			.background(
+				color = backgroundColor,
+				shape = cornerShape,
+			)
+			.dashedBorder(
+				width = config.borderWidth,
+				color = borderColor,
+				shape = cornerShape
+			)
 		
 		FlexButtonType.Link -> this
+			.background(
+				color = backgroundColor,
+				shape = cornerShape,
+			)
 		
-		else -> this.background(
-			color = color,
-			shape = cornerShape
-		)
+		else -> this
+			.background(
+				color = backgroundColor,
+				shape = cornerShape
+			)
 	}
 }
 
@@ -300,11 +367,11 @@ private fun getTargetColor(
 		when {
 			isPressed -> color.copy(alpha = 0.2f)
 			isHovered -> color.copy(alpha = 0.1f)
-			else -> Color.Transparent
+			else -> color.copy(alpha = 0f)
 		}
 	}
 	
-	else -> Color.Transparent
+	else -> color.copy(alpha = 0f)
 }
 
 @Suppress("ConstPropertyName")

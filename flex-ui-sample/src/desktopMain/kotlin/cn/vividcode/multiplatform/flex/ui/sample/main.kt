@@ -27,7 +27,7 @@ fun main() = application {
 		LaunchedEffect(Unit) {
 			window.rootPane.putClientProperty("apple.awt.fullWindowContent", true)
 			window.rootPane.putClientProperty("apple.awt.transparentTitleBar", true)
-			window.minimumSize = Dimension(800, 600)
+			window.minimumSize = Dimension(1000, 750)
 		}
 		FlexTheme {
 			val backgroundColor = MaterialTheme.colorScheme.background
