@@ -27,8 +27,8 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 import cn.vividcode.multiplatform.flex.ui.expends.isDark
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexSwitchType.Default
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexSwitchType.Swipe
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType.Default
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType.Swipe
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.jvm.JvmName
 
@@ -54,7 +54,7 @@ fun <Key> FlexRadioGroup(
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
 	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
-	switchType: FlexSwitchType = FlexRadioGroups.DefaultSwitchType,
+	switchType: FlexRadioSwitchType = FlexRadioGroups.DefaultSwitchType,
 	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
 ) {
 	val targetSelectedKey by remember(options, selectedKey) {
@@ -133,7 +133,7 @@ enum class FlexRadioType {
 	Default,
 }
 
-enum class FlexSwitchType {
+enum class FlexRadioSwitchType {
 	
 	/**
 	 * 默认（直接切换）
@@ -167,7 +167,7 @@ fun <Key> FlexRadioGroup(
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
 	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
-	switchType: FlexSwitchType = FlexRadioGroups.DefaultSwitchType,
+	switchType: FlexRadioSwitchType = FlexRadioGroups.DefaultSwitchType,
 	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
 ) {
 	FlexRadioGroup(
@@ -204,7 +204,7 @@ fun FlexRadioGroup(
 	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
 	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
-	switchType: FlexSwitchType = FlexRadioGroups.DefaultSwitchType,
+	switchType: FlexRadioSwitchType = FlexRadioGroups.DefaultSwitchType,
 	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
 ) {
 	FlexRadioGroup(

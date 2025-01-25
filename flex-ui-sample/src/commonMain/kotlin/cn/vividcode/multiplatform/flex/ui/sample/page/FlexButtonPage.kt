@@ -19,7 +19,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPositi
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexSwitchType
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.layout.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.*
@@ -82,7 +82,7 @@ fun ColumnScope.FlexButtonPage() {
 				"iconRotation" assign 0f,
 				"scaleEffect" assign scaleEffect,
 				"enabled" assign enabled,
-				"onClick" assign SymbolT("{") + SpaceT() + SymbolT("}")
+				"onClick" assign LeftBraceT + SpaceT() + RightBraceT
 			)
 		)
 	}
@@ -105,7 +105,7 @@ fun ColumnScope.FlexButtonPage() {
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
-				switchType = FlexSwitchType.Swipe
+				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
@@ -119,7 +119,7 @@ fun ColumnScope.FlexButtonPage() {
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
-				switchType = FlexSwitchType.Swipe
+				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
@@ -133,7 +133,7 @@ fun ColumnScope.FlexButtonPage() {
 				sizeType = FlexSizeType.Small,
 				colorType = colorType,
 				radioType = FlexRadioType.Button,
-				switchType = FlexSwitchType.Swipe
+				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
@@ -147,7 +147,7 @@ fun ColumnScope.FlexButtonPage() {
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
-				switchType = FlexSwitchType.Swipe
+				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
@@ -161,7 +161,7 @@ fun ColumnScope.FlexButtonPage() {
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
-				switchType = FlexSwitchType.Swipe
+				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
@@ -175,7 +175,7 @@ fun ColumnScope.FlexButtonPage() {
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
-				switchType = FlexSwitchType.Swipe
+				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
@@ -189,7 +189,7 @@ fun ColumnScope.FlexButtonPage() {
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
-				switchType = FlexSwitchType.Swipe
+				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
@@ -203,7 +203,7 @@ fun ColumnScope.FlexButtonPage() {
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
-				switchType = FlexSwitchType.Swipe
+				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 	}

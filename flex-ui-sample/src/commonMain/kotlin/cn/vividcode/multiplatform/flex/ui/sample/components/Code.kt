@@ -21,6 +21,7 @@ import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 @Composable
 fun Code(
 	methodName: String,
+	variables: List<Any> = emptyList(),
 	assigns: List<AssignT>,
 ) {
 	Box(
@@ -35,6 +36,22 @@ fun Code(
 		val horizontalScrollState = rememberScrollState()
 		val verticalScrollState = rememberScrollState()
 		val string = buildAnnotatedString {
+			if (variables.isNotEmpty()) {
+				variables.forEach {
+					@Suppress("UNCHECKED_CAST")
+					var codes = it as? List<CodeT>
+					if (codes == null) {
+						check(it is CodeT)
+						codes = listOf(it)
+					}
+					codes.forEach {
+						withStyle(it.spanStyle) {
+							append(it.code)
+						}
+					}
+					append("\n")
+				}
+			}
 			withStyle(MethodStyle) {
 				append(methodName)
 			}
@@ -115,7 +132,18 @@ sealed interface CodeT {
 		get
 }
 
-open class SymbolT(
+data class MethodT(
+	val name: String,
+) : CodeT {
+	
+	override val code = name
+	
+	override val spanStyle: SpanStyle
+		@Composable
+		get() = MethodStyle
+}
+
+abstract class SymbolT(
 	override val code: String,
 ) : CodeT {
 	
@@ -134,7 +162,13 @@ data object LeftBraceT : SymbolT("{")
 
 data object RightBraceT : SymbolT("}")
 
+data object LeftParenthesesT : SymbolT("(")
+
+data object RightParenthesesT : SymbolT(")")
+
 data object CommaT : SymbolT(",")
+
+data object EqualsT : SymbolT("=")
 
 data object DoubleQuotesT : SymbolT("\"")
 
@@ -198,6 +232,17 @@ data class KeywordT(
 	override val spanStyle: SpanStyle
 		@Composable
 		get() = KeywordStyle
+}
+
+data class VariableT(
+	val name: String,
+) : CodeT {
+	
+	override val code = name
+	
+	override val spanStyle: SpanStyle
+		@Composable
+		get() = VariableStyle
 }
 
 data class StringT(
@@ -273,6 +318,10 @@ private val KeywordStyle: SpanStyle
 	@Composable
 	get() = if (LocalDarkTheme.current) KeywordDarkStyle else KeywordLightStyle
 
+private val VariableStyle: SpanStyle
+	@Composable
+	get() = if (LocalDarkTheme.current) VariableDarkStyle else VariableLightStyle
+
 private val MethodDarkStyle = SpanStyle(
 	color = Color(0xFF56B6C2)
 )
@@ -286,7 +335,7 @@ private val NumberDarkStyle = SpanStyle(
 )
 
 private val SymbolDarkStyle = SpanStyle(
-	color = Color(0xffBBBBBB)
+	color = Color(0xFFBBBBBB)
 )
 
 private val PropertyNameDarkStyle = SpanStyle(
@@ -303,6 +352,10 @@ private val StringDarkStyle = SpanStyle(
 
 private val KeywordDarkStyle = SpanStyle(
 	color = Color(0xFFE06C75)
+)
+
+private val VariableDarkStyle = SpanStyle(
+	color = Color(0xFFCCCCCC)
 )
 
 private val MethodLightStyle = SpanStyle(
@@ -335,4 +388,8 @@ private val StringLightStyle = SpanStyle(
 
 private val KeywordLightStyle = SpanStyle(
 	color = Color(0xFFB03050)
+)
+
+private val VariableLightStyle = SpanStyle(
+	color = Color(0xFF333333)
 )
