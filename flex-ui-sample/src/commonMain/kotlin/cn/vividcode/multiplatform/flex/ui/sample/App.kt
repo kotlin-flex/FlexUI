@@ -114,7 +114,7 @@ fun App() {
 						.padding(bottom = 60.dp)
 				) {
 					FlexType.entries.forEach { flexPage ->
-						ComposeItem(
+						ComponentItem(
 							flexType = flexPage,
 							value = currentFlexType,
 							onValueChange = {
@@ -255,7 +255,7 @@ enum class FlexType {
 }
 
 @Composable
-private fun ComposeItem(
+private fun ComponentItem(
 	flexType: FlexType,
 	value: FlexType,
 	onValueChange: (FlexType) -> Unit,

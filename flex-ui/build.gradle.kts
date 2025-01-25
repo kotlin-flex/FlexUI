@@ -142,29 +142,29 @@ mavenPublishing {
 	coordinates("cn.vividcode.multiplatform", "flex-ui", flexUiVersion)
 	
 	pom {
-		name.set("flex-ui")
-		description.set("FlexUi 基于 Kotlin Multiplatform 的 UI 组件库")
-		inceptionYear.set("2025")
-		url.set("https://github.com/vividcodex/flex-ui")
+		name = "flex-ui"
+		description = "FlexUi 基于 Kotlin Multiplatform 的 UI 组件库"
+		inceptionYear = "2025"
+		url = "https://github.com/vividcodex/flex-ui"
+		
 		licenses {
 			license {
-				name.set("The Apache License, Version 2.0")
-				url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-				distribution.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+				name = "The Apache License, Version 2.0"
+				url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+				distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
 			}
 		}
 		developers {
 			developer {
-				id.set("li-jia-wei")
-				name.set("li-jia-wei")
-				url.set("https://github.com/vividcodex/flex-ui")
+				id = "li-jia-wei"
+				name = "li-jia-wei"
+				url = "https://github.com/vividcodex/flex-ui"
 			}
 		}
-		
 		scm {
-			url.set("https://github.com/vividcodex/flex-ui")
-			connection.set("scm:git:git://github.com/vividcodex/flex-ui.git")
-			developerConnection.set("scm:git:ssh://git@github.com:vividcodex/flex-ui.git")
+			url = "https://github.com/vividcodex/flex-ui"
+			connection = "scm:git:git://github.com/vividcodex/flex-ui.git"
+			developerConnection = "scm:git:ssh://git@github.com:vividcodex/flex-ui.git"
 		}
 	}
 }

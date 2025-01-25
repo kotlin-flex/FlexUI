@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +21,8 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
+import cn.vividcode.multiplatform.flex.ui.layout.TitleLayout
+import cn.vividcode.multiplatform.flex.ui.sample.components.*
 import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
@@ -38,23 +41,49 @@ fun ColumnScope.FlexButtonPage() {
 	var iconPosition by remember { mutableStateOf(FlexButtonIconPosition.End) }
 	var scaleEffect by remember { mutableStateOf(true) }
 	var enabled by remember { mutableStateOf(true) }
-	Box(
+	Row(
 		modifier = Modifier
 			.fillMaxWidth()
 			.weight(1f)
 			.padding(16.dp),
-		contentAlignment = Alignment.Center
 	) {
-		FlexButton(
-			text = "TestButton",
-			icon = if (showIcon) Icons.Rounded.Search else null,
-			sizeType = sizeType,
-			colorType = colorType,
-			cornerType = cornerType,
-			buttonType = buttonType,
-			iconPosition = iconPosition,
-			scaleEffect = scaleEffect,
-			enabled = enabled
+		Box(
+			modifier = Modifier
+				.weight(1f)
+				.fillMaxHeight(),
+			contentAlignment = Alignment.Center
+		) {
+			FlexButton(
+				text = "Button",
+				icon = if (showIcon) Icons.Rounded.Search else null,
+				sizeType = sizeType,
+				colorType = colorType,
+				cornerType = cornerType,
+				buttonType = buttonType,
+				iconPosition = iconPosition,
+				iconRotation = 0f,
+				scaleEffect = scaleEffect,
+				enabled = enabled
+			)
+		}
+		val isDefaultColorType by remember {
+			derivedStateOf { colorType in FlexColorType.defaultColorTypes }
+		}
+		Code(
+			methodName = "FlexButton",
+			assigns = listOf(
+				"text" assign "Button",
+				"icon" assign if (showIcon) ClassT("Icons") + DotT + ClassT("Rounded") + DotT + ParameterT("Search") else KeywordT("null"),
+				"sizeType" assign ClassT("FlexSizeType") + DotT + ClassT(sizeType),
+				"colorType" assign if (isDefaultColorType) ClassT("FlexColorType") + DotT + ClassT(colorType) else ClassT(colorType),
+				"cornerType" assign ClassT("FlexCornerType") + DotT + ClassT(cornerType),
+				"buttonType" assign ClassT("FlexButtonType") + DotT + ClassT(buttonType),
+				"iconPosition" assign ClassT("FlexButtonIconPosition") + DotT + ClassT(iconPosition),
+				"iconRotation" assign 0f,
+				"scaleEffect" assign scaleEffect,
+				"enabled" assign enabled,
+				"onClick" assign SymbolT("{") + SpaceT() + SymbolT("}")
+			)
 		)
 	}
 	HorizontalDivider()
@@ -66,8 +95,8 @@ fun ColumnScope.FlexButtonPage() {
 			.verticalScroll(verticalScrollState)
 			.padding(8.dp)
 	) {
-		TitleRadio(
-			title = "Button Type"
+		TitleLayout(
+			title = { Text("Button Type") }
 		) {
 			FlexRadioGroup(
 				selectedKey = buttonType,
@@ -80,8 +109,8 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(modifier = Modifier.height(16.dp))
-		TitleRadio(
-			title = "Size Type"
+		TitleLayout(
+			title = { Text("Size Type") }
 		) {
 			FlexRadioGroup(
 				selectedKey = sizeType,
@@ -94,8 +123,8 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(modifier = Modifier.height(16.dp))
-		TitleRadio(
-			title = "Color Type"
+		TitleLayout(
+			title = { Text("Color Type") }
 		) {
 			FlexRadioGroup(
 				selectedKey = colorType,
@@ -108,8 +137,8 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(modifier = Modifier.height(16.dp))
-		TitleRadio(
-			title = "Corner Type"
+		TitleLayout(
+			title = { Text("Corner Type") }
 		) {
 			FlexRadioGroup(
 				selectedKey = cornerType,
@@ -122,8 +151,8 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(modifier = Modifier.height(16.dp))
-		TitleRadio(
-			title = "Icon Visible"
+		TitleLayout(
+			title = { Text("Icon Visible") }
 		) {
 			FlexRadioGroup(
 				selectedKey = showIcon,
@@ -136,8 +165,8 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(modifier = Modifier.height(16.dp))
-		TitleRadio(
-			title = "Icon Position"
+		TitleLayout(
+			title = { Text("Icon Position") }
 		) {
 			FlexRadioGroup(
 				selectedKey = iconPosition,
@@ -150,8 +179,8 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(modifier = Modifier.height(16.dp))
-		TitleRadio(
-			title = "Scale Effect"
+		TitleLayout(
+			title = { Text("Scale Effect") }
 		) {
 			FlexRadioGroup(
 				selectedKey = scaleEffect,
@@ -164,8 +193,8 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(modifier = Modifier.height(16.dp))
-		TitleRadio(
-			title = "Enabled"
+		TitleLayout(
+			title = { Text("Enabled") }
 		) {
 			FlexRadioGroup(
 				selectedKey = enabled,
