@@ -9,7 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -38,7 +38,7 @@ fun Code(
 ) {
 	Box(
 		modifier = Modifier
-			.width(320.dp)
+			.width(340.dp)
 			.fillMaxHeight()
 			.background(
 				color = MaterialTheme.colorScheme.surfaceContainer,
@@ -119,19 +119,19 @@ fun Code(
 					end = 12.dp
 				),
 			sizeType = FlexSizeType.Small,
-			buttonType = FlexButtonType.Primary
+			buttonType = FlexButtonType.Filled
 		) {
 			clipboardManager.setText(string)
 		}
-		val isTop by remember {
-			derivedStateOf { verticalScrollState.value == 0 }
+		val isStartTop by remember {
+			derivedStateOf { horizontalScrollState.value == 0 && verticalScrollState.value == 0 }
 		}
 		val alpha by animateFloatAsState(
-			targetValue = if (isTop) 0f else 1f
+			targetValue = if (isStartTop) 0f else 1f
 		)
 		val coroutineScope = rememberCoroutineScope()
 		FlexButton(
-			icon = Icons.Rounded.KeyboardArrowUp,
+			icon = Icons.Rounded.RestartAlt,
 			modifier = Modifier
 				.align(Alignment.BottomEnd)
 				.padding(
@@ -142,10 +142,17 @@ fun Code(
 			sizeType = FlexSizeType.Small,
 			cornerType = FlexCornerType.Circle,
 			buttonType = FlexButtonType.Primary,
-			enabled = !isTop
+			enabled = !isStartTop
 		) {
-			coroutineScope.launch {
-				verticalScrollState.animateScrollTo(0)
+			if (!horizontalScrollState.isScrollInProgress) {
+				coroutineScope.launch {
+					horizontalScrollState.animateScrollTo(0)
+				}
+			}
+			if (!verticalScrollState.isScrollInProgress) {
+				coroutineScope.launch {
+					verticalScrollState.animateScrollTo(0)
+				}
 			}
 		}
 	}

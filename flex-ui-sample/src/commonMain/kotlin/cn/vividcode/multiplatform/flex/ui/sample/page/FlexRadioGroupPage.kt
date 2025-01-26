@@ -31,6 +31,7 @@ fun ColumnScope.FlexRadioPage() {
 	var cornerType by remember { mutableStateOf(FlexCornerType.Default) }
 	var switchType by remember { mutableStateOf(FlexRadioSwitchType.Default) }
 	var scaleEffect by remember { mutableStateOf(true) }
+	var disabledOption by remember { mutableStateOf(3) }
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -47,11 +48,9 @@ fun ColumnScope.FlexRadioPage() {
 			FlexRadioGroup(
 				selectedKey = selectedKey,
 				onSelectedKeyChange = { selectedKey = it },
-				options = listOf(
-					RadioOption("option1", "Option 1"),
-					RadioOption("option2", "Option 2", false),
-					RadioOption("option3", "Option 3")
-				),
+				options = (1 .. 3).map {
+					RadioOption("option$it", "Option $it", it != disabledOption)
+				},
 				sizeType = sizeType,
 				colorType = colorType,
 				cornerType = cornerType,
@@ -73,13 +72,13 @@ fun ColumnScope.FlexRadioPage() {
 			assigns = listOf(
 				"selectedKey" assign VariableT("selectedKey"),
 				"onSelectedKeyChange" assign LeftBraceT + SpaceT() + VariableT("selectedKey") + SpaceT() + EqualsT + SpaceT() + VariableT("it") + SpaceT() + RightBraceT,
-				"options" assign arrayOf(1, 2, 3).map {
+				"options" assign (1 .. 3).map {
 					val codes =
 						ClassT("RadioOption") + LeftParenthesesT + DoubleQuotesT + StringT("option$it") + DoubleQuotesT + CommaT + SpaceT() + DoubleQuotesT + StringT("Option $it") + DoubleQuotesT
-					if (it % 2 != 0) {
-						codes + RightParenthesesT
-					} else {
+					if (it == disabledOption) {
 						codes + CommaT + SpaceT() + KeywordT("false") + RightParenthesesT
+					} else {
+						codes + RightParenthesesT
 					}
 				},
 				"sizeType" assign ClassT("FlexSizeType") + DotT + ClassT(sizeType),
@@ -183,9 +182,25 @@ fun ColumnScope.FlexRadioPage() {
 				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
+			title = { Text("Option Disabled") }
+		) {
+			FlexRadioGroup(
+				selectedKey = disabledOption,
+				onSelectedKeyChange = { disabledOption = it },
+				options = disabledOptions,
+				sizeType = FlexSizeType.Small,
+				colorType = FlexColorType.Primary,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
 	}
 }
 
 private val radioTypeOptions = FlexRadioType.entries.map { RadioOption(it, it.toString()) }
 
 private val switchTypeOptions = FlexRadioSwitchType.entries.map { RadioOption(it, it.toString()) }
+
+private val disabledOptions = (1 .. 4).map { RadioOption(it, if (it < 4) "Option $it" else "Cancel") }
