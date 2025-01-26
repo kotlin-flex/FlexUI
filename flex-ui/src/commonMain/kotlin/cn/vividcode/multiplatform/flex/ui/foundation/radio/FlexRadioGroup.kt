@@ -1,6 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.radio
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
@@ -286,16 +288,15 @@ internal fun FlexRadioText(
 			}
 		}
 	}
-	val scale by animateFloatAsState(
-		targetValue = targetScale
-	)
+	val scale by animateFloatAsState(targetScale)
+	val fontSize by animateFloatAsState(config.fontSize.value)
 	Text(
 		text = value,
 		modifier = Modifier.scale(scale),
 		color = targetFontColor,
-		fontSize = config.fontSize,
+		fontSize = fontSize.sp,
 		fontWeight = config.fontWeight,
-		lineHeight = config.fontSize,
+		lineHeight = fontSize.sp,
 		letterSpacing = config.letterSpacing,
 	)
 }
@@ -310,21 +311,22 @@ internal fun <Key> FlexRadioLine(
 	selectedKey: Key,
 	borderWidth: Dp,
 ) {
-	val targetLineColor by animateColorAsState(
+	val lineColor by animateColorAsState(
 		targetValue = when {
 			options[index].key != selectedKey && options[index - 1].key != selectedKey -> BorderColor
 			!options[index].enabled || !options[index - 1].enabled -> DisabledBackgroundColor
 			else -> Color.Transparent
 		}
 	)
+	val width by animateDpAsState(borderWidth)
 	Spacer(
 		modifier = Modifier
-			.width(borderWidth)
+			.width(width)
 			.fillMaxHeight()
 			.padding(
-				vertical = borderWidth
+				vertical = width
 			)
-			.background(targetLineColor)
+			.background(lineColor)
 	)
 }
 

@@ -132,23 +132,15 @@ fun FlexButton(
 				}
 			}
 		}
-		val borderColor by animateColorAsState(
-			targetValue = targetBorderColor
-		)
-		val backgroundColor by animateColorAsState(
-			targetValue = targetBackgroundColor
-		)
+		val borderColor by animateColorAsState(targetBorderColor)
+		val backgroundColor by animateColorAsState(targetBackgroundColor)
 		val horizontalPadding by remember(text, config) {
 			derivedStateOf {
 				if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
 			}
 		}
-		val height by animateDpAsState(
-			targetValue = config.height
-		)
-		val corner by animateDpAsState(
-			targetValue = height * cornerType.percent
-		)
+		val height by animateDpAsState(config.height)
+		val corner by animateDpAsState(height * cornerType.percent)
 		val cornerShape = when (corner) {
 			Dp.Hairline -> RectangleShape
 			else -> RoundedCornerShape(corner)
@@ -163,9 +155,7 @@ fun FlexButton(
 				}
 			}
 		}
-		val scale by animateFloatAsState(
-			targetValue = targetScale
-		)
+		val scale by animateFloatAsState(targetScale)
 		val targetText by remember(text) {
 			mutableStateOf(text.trim())
 		}
@@ -225,19 +215,13 @@ fun FlexButton(
 					}
 				}
 			}
-			val fontColor by animateColorAsState(
-				targetValue = targetFontColor
-			)
+			val fontColor by animateColorAsState(targetFontColor)
 			if (icon != null) {
 				CompositionLocalProvider(
 					LocalLayoutDirection provides layoutDirection
 				) {
-					val iconSize by animateDpAsState(
-						targetValue = config.iconSize
-					)
-					val rotation by animateFloatAsState(
-						targetValue = iconRotation
-					)
+					val iconSize by animateDpAsState(config.iconSize)
+					val rotation by animateFloatAsState(iconRotation)
 					Icon(
 						imageVector = icon,
 						tint = fontColor,
@@ -257,12 +241,8 @@ fun FlexButton(
 			CompositionLocalProvider(
 				LocalLayoutDirection provides layoutDirection,
 			) {
-				val fontSize by animateFloatAsState(
-					targetValue = config.fontSize.value
-				)
-				val letterSpacing by animateFloatAsState(
-					targetValue = config.letterSpacing.value
-				)
+				val fontSize by animateFloatAsState(config.fontSize.value)
+				val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 				Text(
 					text = targetText,
 					color = fontColor,

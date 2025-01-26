@@ -1,22 +1,34 @@
 package cn.vividcode.multiplatform.flex.ui.sample.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
+import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun Code(
@@ -26,7 +38,7 @@ fun Code(
 ) {
 	Box(
 		modifier = Modifier
-			.width(340.dp)
+			.width(320.dp)
 			.fillMaxHeight()
 			.background(
 				color = MaterialTheme.colorScheme.surfaceContainer,
@@ -92,36 +104,104 @@ fun Code(
 				.verticalScroll(verticalScrollState)
 				.padding(
 					horizontal = 12.dp,
-					vertical = 8.5.dp
+					vertical = 7.dp
 				),
-			fontSize = 15.sp,
-			lineHeight = 22.sp
+			fontSize = 14.sp,
+			lineHeight = 24.sp
 		)
+		val clipboardManager = LocalClipboardManager.current
+		FlexButton(
+			icon = Icons.Rounded.ContentCopy,
+			modifier = Modifier
+				.align(Alignment.TopEnd)
+				.padding(
+					top = 12.dp,
+					end = 12.dp
+				),
+			sizeType = FlexSizeType.Small,
+			buttonType = FlexButtonType.Primary
+		) {
+			clipboardManager.setText(string)
+		}
+		val isTop by remember {
+			derivedStateOf { verticalScrollState.value == 0 }
+		}
+		val alpha by animateFloatAsState(
+			targetValue = if (isTop) 0f else 1f
+		)
+		val coroutineScope = rememberCoroutineScope()
+		FlexButton(
+			icon = Icons.Rounded.KeyboardArrowUp,
+			modifier = Modifier
+				.align(Alignment.BottomEnd)
+				.padding(
+					bottom = 12.dp,
+					end = 12.dp
+				)
+				.alpha(alpha),
+			sizeType = FlexSizeType.Small,
+			cornerType = FlexCornerType.Circle,
+			buttonType = FlexButtonType.Primary,
+			enabled = !isTop
+		) {
+			coroutineScope.launch {
+				verticalScrollState.animateScrollTo(0)
+			}
+		}
 	}
 }
 
+@Suppress("UNCHECKED_CAST")
 infix fun String.assign(code: Any): AssignT = when (code) {
 	is String -> AssignT(this, DoubleQuotesT + StringT(code) + DoubleQuotesT)
-	is Float -> AssignT(this, listOf(FloatT(code)))
-	is Double -> AssignT(this, listOf(DoubleT(code)))
-	is Short -> AssignT(this, listOf(ShortT(code)))
-	is Int -> AssignT(this, listOf(IntT(code)))
-	is Long -> AssignT(this, listOf(LongT(code)))
-	is Boolean -> AssignT(this, listOf(KeywordT(code.toString())))
-	else -> {
-		@Suppress("UNCHECKED_CAST")
-		val codes = code as? List<CodeT>
-		if (codes == null) {
-			check(code is CodeT)
-			AssignT(this, listOf(code))
-		} else AssignT(this, codes)
+	is Number -> AssignT(this, NumberT(code))
+	is Boolean -> AssignT(this, KeywordT(code.toString()))
+	is CodeT -> AssignT(this, code)
+	is List<*> -> {
+		check(code.isNotEmpty())
+		when (code[0]) {
+			is CodeT -> {
+				val codes = code as? List<CodeT>
+				if (codes == null) {
+					AssignT(this, code as CodeT)
+				} else AssignT(this, codes)
+			}
+			
+			is List<*> -> {
+				val codes = mutableListOf<CodeT>()
+				codes += MethodT("listOf") + LeftParenthesesT + LineFeed
+				code.forEachIndexed { index, it ->
+					codes += SpaceT(8)
+					when (it) {
+						is CodeT -> codes += it
+						is List<*> -> codes += it as List<CodeT>
+					}
+					if (index != code.lastIndex) {
+						codes += CommaT
+					}
+					codes += LineFeed
+				}
+				codes += SpaceT(4) + RightParenthesesT
+				AssignT(this, codes)
+			}
+			
+			else -> AssignT.Empty
+		}
 	}
+	
+	else -> AssignT.Empty
 }
 
 data class AssignT(
 	val name: String,
 	val codes: List<CodeT>,
-)
+) {
+	constructor(name: String, code: CodeT) : this(name, listOf(code))
+	
+	companion object {
+		val Empty = AssignT("", emptyList())
+	}
+}
 
 sealed interface CodeT {
 	
@@ -166,61 +246,27 @@ data object LeftParenthesesT : SymbolT("(")
 
 data object RightParenthesesT : SymbolT(")")
 
+data object LineFeed : SymbolT("\n")
+
 data object CommaT : SymbolT(",")
 
 data object EqualsT : SymbolT("=")
 
 data object DoubleQuotesT : SymbolT("\"")
 
-interface NumberT<T> : CodeT {
+data class NumberT<T : Number>(
+	val number: T,
+) : CodeT {
 	
-	val number: T
+	override val code = when (number) {
+		is Float -> "${number}f"
+		is Long -> "${number}L"
+		else -> number.toString()
+	}
 	
 	override val spanStyle: SpanStyle
 		@Composable
 		get() = NumberStyle
-}
-
-data class FloatT(
-	override val number: Float,
-) : NumberT<Float> {
-	
-	override val code: String = "${number}f"
-}
-
-data class DoubleT(
-	override val number: Double,
-) : NumberT<Double> {
-	
-	override val code: String = number.toString()
-}
-
-data class ByteT(
-	override val number: Byte,
-) : NumberT<Byte> {
-	
-	override val code: String = number.toString()
-}
-
-data class ShortT(
-	override val number: Short,
-) : NumberT<Short> {
-	
-	override val code: String = number.toString()
-}
-
-data class IntT(
-	override val number: Int,
-) : NumberT<Int> {
-	
-	override val code: String = number.toString()
-}
-
-data class LongT(
-	override val number: Long,
-) : NumberT<Long> {
-	
-	override val code: String = "${number}L"
 }
 
 data class KeywordT(
@@ -355,7 +401,7 @@ private val KeywordDarkStyle = SpanStyle(
 )
 
 private val VariableDarkStyle = SpanStyle(
-	color = Color(0xFFCCCCCC)
+	color = Color(0xFFDDDDDD)
 )
 
 private val MethodLightStyle = SpanStyle(
@@ -391,5 +437,5 @@ private val KeywordLightStyle = SpanStyle(
 )
 
 private val VariableLightStyle = SpanStyle(
-	color = Color(0xFF333333)
+	color = Color(0xFF222222)
 )

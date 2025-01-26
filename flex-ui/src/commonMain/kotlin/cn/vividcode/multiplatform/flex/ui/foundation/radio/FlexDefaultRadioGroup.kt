@@ -3,6 +3,7 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.radio
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -57,11 +58,12 @@ internal fun <Key> FlexDefaultRadioGroup(
 	val current = LocalFlexConfig.current
 	val config = current.radio.getConfig(sizeType)
 	val color = current.theme.colorScheme.current.getColor(colorType)
-	val corner = config.height * cornerType.percent
+	val corner by animateDpAsState(config.height * cornerType.percent)
 	val cornerShape = getCornerShape(cornerType, corner)
+	val height by animateDpAsState(config.height)
 	Row(
 		modifier = Modifier
-			.height(config.height)
+			.height(height)
 			.clip(cornerShape)
 			.drawBehind {
 				val borderWidth = config.borderWidth.toPx()
@@ -94,7 +96,23 @@ internal fun <Key> FlexDefaultRadioGroup(
 			val interactionSource = remember { MutableInteractionSource() }
 			val isHovered by interactionSource.collectIsHoveredAsState()
 			val isPressed by interactionSource.collectIsPressedAsState()
-			val targetButtonColor by remember(color, option, selectedKey, radioType) {
+			val targetBorderColor by remember(color, option, selectedKey, radioType) {
+				derivedStateOf {
+					when {
+						!option.enabled -> color.copy(alpha = 0f)
+						selectedKey != option.key -> color.copy(alpha = 0f)
+						radioType == FlexRadioType.Button -> color.copy(alpha = 0f)
+						else -> {
+							when {
+								isPressed -> color.brightness(1.1f)
+								isHovered -> color.brightness(1.15f)
+								else -> color
+							}
+						}
+					}
+				}
+			}
+			val targetBackgroundColor by remember(color, option, selectedKey, radioType) {
 				derivedStateOf {
 					when {
 						!option.enabled -> DisabledBackgroundColor
@@ -107,19 +125,12 @@ internal fun <Key> FlexDefaultRadioGroup(
 							}
 						}
 						
-						else -> {
-							when {
-								isPressed -> color.brightness(1.1f)
-								isHovered -> color.brightness(1.15f)
-								else -> color
-							}
-						}
+						else -> color.copy(alpha = 0f)
 					}
 				}
 			}
-			val buttonColor by animateColorAsState(
-				targetValue = targetButtonColor
-			)
+			val borderColor by animateColorAsState(targetBorderColor)
+			val backgroundColor by animateColorAsState(targetBackgroundColor)
 			if (index != 0) {
 				FlexRadioLine(
 					index = index,
@@ -141,23 +152,14 @@ internal fun <Key> FlexDefaultRadioGroup(
 					.padding(
 						vertical = if (!option.enabled) config.borderWidth else Dp.Hairline
 					)
-					.then(
-						when {
-							!option.enabled || radioType == FlexRadioType.Button -> {
-								Modifier.background(
-									color = buttonColor,
-									shape = buttonCornerShape
-								)
-							}
-							
-							else -> {
-								Modifier.border(
-									width = config.borderWidth,
-									color = buttonColor,
-									shape = buttonCornerShape
-								)
-							}
-						}
+					.background(
+						color = backgroundColor,
+						shape = buttonCornerShape
+					)
+					.border(
+						width = config.borderWidth,
+						color = borderColor,
+						shape = buttonCornerShape
 					)
 					.padding(
 						horizontal = config.horizontalPadding,

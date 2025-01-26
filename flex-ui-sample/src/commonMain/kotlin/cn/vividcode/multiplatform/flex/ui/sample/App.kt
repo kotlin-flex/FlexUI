@@ -75,9 +75,7 @@ fun App() {
 			modifier = Modifier.fillMaxSize()
 		) {
 			var currentFlexType by remember { mutableStateOf(FlexType.FlexButton) }
-			val targetItemOffsetX by animateDpAsState(
-				targetValue = itemOffsetX
-			)
+			val targetItemOffsetX by animateDpAsState(itemOffsetX)
 			Column(
 				modifier = Modifier
 					.width(ItemWidth)

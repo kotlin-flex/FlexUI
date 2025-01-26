@@ -66,14 +66,22 @@ fun ColumnScope.FlexRadioPage() {
 		Code(
 			methodName = "FlexRadioGroup",
 			variables = listOf(
-				KeywordT("var") + SpaceT() + VariableT("selectedKey") + SpaceT() + KeywordT("by") + MethodT("remember") + SpaceT() + LeftBraceT,
+				KeywordT("var") + SpaceT() + VariableT("selectedKey") + SpaceT() + KeywordT("by") + SpaceT() + MethodT("remember") + SpaceT() + LeftBraceT,
 				SpaceT(4) + MethodT("mutableStateOf") + LeftParenthesesT + DoubleQuotesT + StringT("option1") + DoubleQuotesT + RightParenthesesT,
 				RightBraceT
 			),
 			assigns = listOf(
 				"selectedKey" assign VariableT("selectedKey"),
 				"onSelectedKeyChange" assign LeftBraceT + SpaceT() + VariableT("selectedKey") + SpaceT() + EqualsT + SpaceT() + VariableT("it") + SpaceT() + RightBraceT,
-				"options" assign "",
+				"options" assign arrayOf(1, 2, 3).map {
+					val codes =
+						ClassT("RadioOption") + LeftParenthesesT + DoubleQuotesT + StringT("option$it") + DoubleQuotesT + CommaT + SpaceT() + DoubleQuotesT + StringT("Option $it") + DoubleQuotesT
+					if (it % 2 != 0) {
+						codes + RightParenthesesT
+					} else {
+						codes + CommaT + SpaceT() + KeywordT("false") + RightParenthesesT
+					}
+				},
 				"sizeType" assign ClassT("FlexSizeType") + DotT + ClassT(sizeType),
 				"colorType" assign if (isDefaultColorType) ClassT("FlexColorType") + DotT + ClassT(colorType) else ClassT(colorType),
 				"cornerType" assign ClassT("FlexCornerType") + DotT + ClassT(cornerType),
