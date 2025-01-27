@@ -23,15 +23,18 @@ import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
 
+/**
+ * 单选框展示页
+ */
 @Composable
 fun ColumnScope.FlexRadioPage() {
 	var radioType by remember { mutableStateOf(FlexRadioType.Default) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
 	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Default) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Default) }
-	var switchType by remember { mutableStateOf(FlexRadioSwitchType.Default) }
+	var switchType by remember { mutableStateOf(FlexRadioSwitchType.None) }
 	var scaleEffect by remember { mutableStateOf(true) }
-	var disabledOption by remember { mutableStateOf(3) }
+	var disabledOption by remember { mutableStateOf(4) }
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -59,6 +62,7 @@ fun ColumnScope.FlexRadioPage() {
 				scaleEffect = scaleEffect,
 			)
 		}
+		Spacer(modifier = Modifier.width(12.dp))
 		val isDefaultColorType by remember {
 			derivedStateOf { colorType in FlexColorType.defaultColorTypes }
 		}

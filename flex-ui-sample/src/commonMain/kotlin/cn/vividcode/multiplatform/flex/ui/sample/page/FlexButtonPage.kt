@@ -29,7 +29,7 @@ import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
 
 /**
- * FlexButton 展示页
+ * 按钮展示页
  */
 @Composable
 fun ColumnScope.FlexButtonPage() {
@@ -54,7 +54,7 @@ fun ColumnScope.FlexButtonPage() {
 			contentAlignment = Alignment.Center
 		) {
 			FlexButton(
-				text = "Button",
+				text = "FlexButton",
 				icon = if (showIcon) Icons.Rounded.Search else null,
 				sizeType = sizeType,
 				colorType = colorType,
@@ -66,13 +66,14 @@ fun ColumnScope.FlexButtonPage() {
 				enabled = enabled
 			)
 		}
+		Spacer(Modifier.width(12.dp))
 		val isDefaultColorType by remember {
 			derivedStateOf { colorType in FlexColorType.defaultColorTypes }
 		}
 		Code(
 			methodName = "FlexButton",
 			assigns = listOf(
-				"text" assign "Button",
+				"text" assign "FlexButton",
 				"icon" assign if (showIcon) ClassT("Icons") + DotT + ClassT("Rounded") + DotT + ParameterT("Search") else KeywordT("null"),
 				"sizeType" assign ClassT("FlexSizeType") + DotT + ClassT(sizeType),
 				"colorType" assign if (isDefaultColorType) ClassT("FlexColorType") + DotT + ClassT(colorType) else ClassT(colorType),

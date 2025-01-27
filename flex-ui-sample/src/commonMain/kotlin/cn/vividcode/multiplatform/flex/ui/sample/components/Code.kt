@@ -1,17 +1,17 @@
 package cn.vividcode.multiplatform.flex.ui.sample.components
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.DoneAll
 import androidx.compose.material.icons.rounded.RestartAlt
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,49 +20,53 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
+import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun Code(
+fun RowScope.Code(
 	methodName: String,
 	variables: List<Any> = emptyList(),
 	assigns: List<AssignT>,
 ) {
-	Box(
+	Column(
 		modifier = Modifier
-			.width(340.dp)
+			.weight(0.8f)
 			.fillMaxHeight()
 			.background(
 				color = MaterialTheme.colorScheme.surfaceContainer,
 				shape = RoundedCornerShape(12.dp)
 			)
+			.border(
+				width = 1.dp,
+				color = MaterialTheme.colorScheme.outlineVariant,
+				shape = RoundedCornerShape(12.dp)
+			)
 	) {
-		val horizontalScrollState = rememberScrollState()
-		val verticalScrollState = rememberScrollState()
-		val string = buildAnnotatedString {
-			if (variables.isNotEmpty()) {
-				variables.forEach {
-					@Suppress("UNCHECKED_CAST")
-					var codes = it as? List<CodeT>
-					if (codes == null) {
-						check(it is CodeT)
-						codes = listOf(it)
-					}
-					codes.forEach {
-						withStyle(it.spanStyle) {
-							append(it.code)
-						}
-					}
-					append("\n")
+		val codeString = buildAnnotatedString {
+			variables.forEach {
+				@Suppress("UNCHECKED_CAST")
+				var codes = it as? List<CodeT>
+				if (codes == null) {
+					check(it is CodeT)
+					codes = listOf(it)
 				}
+				codes.forEach {
+					withStyle(it.spanStyle) {
+						append(it.code)
+					}
+				}
+				append("\n")
 			}
 			withStyle(MethodStyle) {
 				append(methodName)
@@ -95,63 +99,114 @@ fun Code(
 				append(")")
 			}
 		}
-		Text(
-			text = string,
+		Row(
 			modifier = Modifier
-				.fillMaxSize()
-				.padding(4.dp)
-				.horizontalScroll(horizontalScrollState)
-				.verticalScroll(verticalScrollState)
-				.padding(
-					horizontal = 12.dp,
-					vertical = 7.dp
-				),
-			fontSize = 14.sp,
-			lineHeight = 24.sp
-		)
-		val clipboardManager = LocalClipboardManager.current
-		FlexButton(
-			icon = Icons.Rounded.ContentCopy,
-			modifier = Modifier
-				.align(Alignment.TopEnd)
-				.padding(
-					top = 12.dp,
-					end = 12.dp
-				),
-			sizeType = FlexSizeType.Small,
-			buttonType = FlexButtonType.Filled
+				.fillMaxWidth()
+				.height(32.dp)
+				.padding(horizontal = 4.dp),
+			verticalAlignment = Alignment.CenterVertically,
 		) {
-			clipboardManager.setText(string)
-		}
-		val isStartTop by remember {
-			derivedStateOf { horizontalScrollState.value == 0 && verticalScrollState.value == 0 }
-		}
-		val alpha by animateFloatAsState(
-			targetValue = if (isStartTop) 0f else 1f
-		)
-		val coroutineScope = rememberCoroutineScope()
-		FlexButton(
-			icon = Icons.Rounded.RestartAlt,
-			modifier = Modifier
-				.align(Alignment.BottomEnd)
-				.padding(
-					bottom = 12.dp,
-					end = 12.dp
-				)
-				.alpha(alpha),
-			sizeType = FlexSizeType.Small,
-			cornerType = FlexCornerType.Circle,
-			buttonType = FlexButtonType.Primary,
-			enabled = !isStartTop
-		) {
-			if (!horizontalScrollState.isScrollInProgress) {
+			FlexButton(
+				text = "Kotlin",
+				sizeType = FlexSizeType.ExtraSmall,
+				buttonType = FlexButtonType.Link,
+				scaleEffect = false
+			)
+			Spacer(modifier = Modifier.weight(1f))
+			val clipboardManager = LocalClipboardManager.current
+			var copied by remember { mutableStateOf(false) }
+			val coroutineScope = rememberCoroutineScope()
+			FlexButton(
+				text = if (copied) "Copied!" else "Copy",
+				icon = if (copied) Icons.Rounded.DoneAll else Icons.Rounded.ContentCopy,
+				sizeType = FlexSizeType.ExtraSmall,
+				cornerType = FlexCornerType.Large,
+				buttonType = FlexButtonType.Text,
+				iconPosition = FlexButtonIconPosition.Start,
+				enabled = !copied
+			) {
+				copied = true
+				clipboardManager.setText(codeString)
 				coroutineScope.launch {
-					horizontalScrollState.animateScrollTo(0)
+					delay(5000)
+					copied = false
 				}
 			}
-			if (!verticalScrollState.isScrollInProgress) {
-				coroutineScope.launch {
-					verticalScrollState.animateScrollTo(0)
+		}
+		HorizontalDivider()
+		Box(
+			modifier = Modifier
+				.fillMaxWidth()
+				.weight(1f)
+		) {
+			val horizontalScrollState = rememberScrollState()
+			val verticalScrollState = rememberScrollState()
+			Row(
+				modifier = Modifier
+					.fillMaxSize()
+			) {
+				Text(
+					text = codeString.lines().mapIndexed { index, _ -> index + 1 }.joinToString("\n"),
+					modifier = Modifier
+						.fillMaxHeight()
+						.padding(4.dp)
+						.verticalScroll(verticalScrollState)
+						.padding(
+							start = 8.dp,
+							top = 3.dp,
+							bottom = 8.dp,
+							end = 8.dp
+						),
+					fontSize = 13.sp,
+					lineHeight = 24.sp,
+					color = if (LocalDarkTheme.current) Color.LightGray else Color.DarkGray,
+					textAlign = TextAlign.Center,
+				)
+				VerticalDivider()
+				Text(
+					text = codeString,
+					modifier = Modifier
+						.weight(1f)
+						.fillMaxHeight()
+						.padding(4.dp)
+						.horizontalScroll(horizontalScrollState)
+						.verticalScroll(verticalScrollState)
+						.padding(
+							start = 8.dp,
+							top = 3.dp,
+							bottom = 8.dp,
+						),
+					fontSize = 14.sp,
+					lineHeight = 24.sp
+				)
+			}
+			val isStartTop by remember {
+				derivedStateOf { horizontalScrollState.value == 0 && verticalScrollState.value == 0 }
+			}
+			val alpha by animateFloatAsState(
+				targetValue = if (isStartTop) 0f else 1f
+			)
+			val coroutineScope = rememberCoroutineScope()
+			FlexButton(
+				icon = Icons.Rounded.RestartAlt,
+				modifier = Modifier
+					.align(Alignment.BottomEnd)
+					.padding(12.dp)
+					.alpha(alpha),
+				sizeType = FlexSizeType.Small,
+				cornerType = FlexCornerType.Circle,
+				buttonType = FlexButtonType.Filled,
+				enabled = !isStartTop
+			) {
+				if (!horizontalScrollState.isScrollInProgress) {
+					coroutineScope.launch {
+						horizontalScrollState.animateScrollTo(0)
+					}
+				}
+				if (!verticalScrollState.isScrollInProgress) {
+					coroutineScope.launch {
+						verticalScrollState.animateScrollTo(0)
+					}
 				}
 			}
 		}

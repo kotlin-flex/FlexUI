@@ -20,7 +20,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -78,8 +77,7 @@ fun FlexButton(
 	) {
 		val current = LocalFlexConfig.current
 		val config = current.button.getConfig(sizeType)
-		val colorScheme = current.theme.colorScheme.current
-		val color = colorScheme.getColor(colorType)
+		val color = current.theme.colorScheme.current.getColor(colorType)
 		val interactionSource = remember { MutableInteractionSource() }
 		val isHovered by interactionSource.collectIsHoveredAsState()
 		val isPressed by interactionSource.collectIsPressedAsState()
@@ -141,9 +139,10 @@ fun FlexButton(
 		}
 		val height by animateDpAsState(config.height)
 		val corner by animateDpAsState(height * cornerType.percent)
-		val cornerShape = when (corner) {
-			Dp.Hairline -> RectangleShape
-			else -> RoundedCornerShape(corner)
+		val cornerShape by remember(cornerType, corner) {
+			derivedStateOf {
+				RoundedCornerShape(corner)
+			}
 		}
 		val targetScale by remember(scaleEffect, isPressed, isHovered) {
 			derivedStateOf {
@@ -307,51 +306,6 @@ private fun Modifier.backgroundBorderStyle(
 				shape = cornerShape
 			)
 	}
-}
-
-private fun getTargetColor(
-	color: Color,
-	buttonType: FlexButtonType,
-	enabled: Boolean,
-	isPressed: Boolean,
-	isHovered: Boolean,
-): Color = when (buttonType) {
-	FlexButtonType.Primary -> {
-		when {
-			!enabled -> color.copy(alpha = 0.6f)
-			isPressed -> color.brightness(0.95f)
-			isHovered -> color.brightness(1.1f)
-			else -> color
-		}
-	}
-	
-	FlexButtonType.Default, FlexButtonType.Dashed -> {
-		when {
-			!enabled -> color.copy(alpha = 0.6f)
-			isPressed -> color.brightness(0.9f)
-			isHovered -> color.brightness(1.15f)
-			else -> color
-		}
-	}
-	
-	FlexButtonType.Filled -> {
-		when {
-			!enabled -> color.copy(alpha = 0.08f)
-			isPressed -> color.copy(alpha = 0.2f)
-			isHovered -> color.copy(alpha = 0.15f)
-			else -> color.copy(alpha = 0.1f)
-		}
-	}
-	
-	FlexButtonType.Text -> {
-		when {
-			isPressed -> color.copy(alpha = 0.2f)
-			isHovered -> color.copy(alpha = 0.1f)
-			else -> color.copy(alpha = 0f)
-		}
-	}
-	
-	else -> color.copy(alpha = 0f)
 }
 
 @Suppress("ConstPropertyName")

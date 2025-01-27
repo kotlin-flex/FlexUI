@@ -68,13 +68,13 @@ class FlexColorScheme internal constructor(
 	/**
 	 * 获取颜色s
 	 */
-	fun getColor(type: FlexColorType) = when (type) {
+	fun getColor(colorType: FlexColorType) = when (colorType) {
 		FlexColorType.Default -> default
 		FlexColorType.Primary -> primary
 		FlexColorType.Secondary -> secondary
 		FlexColorType.Success -> success
 		FlexColorType.Warning -> warning
 		FlexColorType.Error -> error
-		else -> customs[type] ?: default
+		else -> customs[colorType] ?: default
 	}
 }

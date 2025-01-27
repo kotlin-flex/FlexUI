@@ -57,7 +57,11 @@ internal fun <Key> FlexSwipeRadioGroup(
 	val config = current.radio.getConfig(sizeType)
 	val color = current.theme.colorScheme.current.getColor(colorType)
 	val corner by animateDpAsState(config.height * cornerType.percent)
-	val cornerShape = getCornerShape(cornerType, corner)
+	val cornerShape by remember(cornerType, corner) {
+		derivedStateOf {
+			RoundedCornerShape(corner)
+		}
+	}
 	val height by animateDpAsState(config.height)
 	Box(
 		modifier = Modifier
@@ -94,15 +98,12 @@ internal fun <Key> FlexSwipeRadioGroup(
 			)
 			val buttonCornerShape by remember(startCorner, endCorner) {
 				derivedStateOf {
-					when {
-						startCorner == Dp.Hairline && endCorner == Dp.Hairline -> RectangleShape
-						else -> RoundedCornerShape(
-							topStart = startCorner,
-							topEnd = endCorner,
-							bottomEnd = endCorner,
-							bottomStart = startCorner,
-						)
-					}
+					RoundedCornerShape(
+						topStart = startCorner,
+						topEnd = endCorner,
+						bottomEnd = endCorner,
+						bottomStart = startCorner,
+					)
 				}
 			}
 			val option = options[currentIndex]

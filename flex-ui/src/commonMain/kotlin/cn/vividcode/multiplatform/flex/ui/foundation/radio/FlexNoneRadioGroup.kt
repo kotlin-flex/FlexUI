@@ -33,7 +33,7 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 
 /**
- * FlexRadioGroup 单选框组，类型：默认
+ * FlexRadioGroup 单选框组，类型：无效果
  *
  * @param options 选项 [RadioOption] 类型
  * @param selectedKey 选中的 key
@@ -45,7 +45,7 @@ import cn.vividcode.multiplatform.flex.ui.expends.brightness
  * @param scaleEffect 开启缩放效果
  */
 @Composable
-internal fun <Key> FlexDefaultRadioGroup(
+internal fun <Key> FlexNoneRadioGroup(
 	options: List<RadioOption<Key>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
@@ -58,9 +58,13 @@ internal fun <Key> FlexDefaultRadioGroup(
 	val current = LocalFlexConfig.current
 	val config = current.radio.getConfig(sizeType)
 	val color = current.theme.colorScheme.current.getColor(colorType)
-	val corner by animateDpAsState(config.height * cornerType.percent)
-	val cornerShape = getCornerShape(cornerType, corner)
 	val height by animateDpAsState(config.height)
+	val corner by animateDpAsState(config.height * cornerType.percent)
+	val cornerShape by remember(cornerType, corner) {
+		derivedStateOf {
+			RoundedCornerShape(corner)
+		}
+	}
 	Row(
 		modifier = Modifier
 			.height(height)
@@ -80,10 +84,10 @@ internal fun <Key> FlexDefaultRadioGroup(
 			}
 	) {
 		options.forEachIndexed { index, option ->
-			val buttonCornerShape by remember(cornerType, options, index) {
+			val buttonCornerShape by remember(corner, options.lastIndex) {
 				derivedStateOf {
 					when {
-						cornerType == FlexCornerType.None || index in 1 ..< options.lastIndex -> RectangleShape
+						index in 1 ..< options.lastIndex -> RectangleShape
 						else -> RoundedCornerShape(
 							topStart = if (index == 0) corner else Dp.Hairline,
 							bottomStart = if (index == 0) corner else Dp.Hairline,

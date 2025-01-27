@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -18,8 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
@@ -29,8 +25,6 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 import cn.vividcode.multiplatform.flex.ui.expends.isDark
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType.Default
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType.Swipe
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.jvm.JvmName
 
@@ -70,7 +64,7 @@ fun <Key> FlexRadioGroup(
 		}
 	}
 	when (switchType) {
-		Default -> FlexDefaultRadioGroup(
+		FlexRadioSwitchType.None -> FlexNoneRadioGroup(
 			options = options,
 			selectedKey = targetSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
@@ -81,7 +75,7 @@ fun <Key> FlexRadioGroup(
 			scaleEffect = scaleEffect
 		)
 		
-		Swipe -> FlexSwipeRadioGroup(
+		FlexRadioSwitchType.Swipe -> FlexSwipeRadioGroup(
 			options = options,
 			selectedKey = targetSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
@@ -117,7 +111,7 @@ object FlexRadioGroups {
 	
 	val DefaultRadioType = FlexRadioType.Default
 	
-	val DefaultSwitchType = Default
+	val DefaultSwitchType = FlexRadioSwitchType.None
 	
 	const val DefaultScaleEffect = true
 }
@@ -138,9 +132,9 @@ enum class FlexRadioType {
 enum class FlexRadioSwitchType {
 	
 	/**
-	 * 默认（直接切换）
+	 * 默认（无切换）
 	 */
-	Default,
+	None,
 	
 	/**
 	 * 滑动切换
@@ -328,13 +322,4 @@ internal fun <Key> FlexRadioLine(
 			)
 			.background(lineColor)
 	)
-}
-
-internal fun getCornerShape(
-	cornerType: FlexCornerType,
-	corner: Dp,
-): Shape = when (cornerType) {
-	FlexCornerType.None -> RectangleShape
-	FlexCornerType.Circle -> CircleShape
-	else -> RoundedCornerShape(corner)
 }
