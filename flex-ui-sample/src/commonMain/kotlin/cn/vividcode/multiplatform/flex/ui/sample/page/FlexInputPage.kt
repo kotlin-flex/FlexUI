@@ -3,6 +3,9 @@ package cn.vividcode.multiplatform.flex.ui.sample.page
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -13,11 +16,12 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
+import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputs
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.layout.TitleLayout
-import cn.vividcode.multiplatform.flex.ui.sample.components.*
+import cn.vividcode.multiplatform.flex.ui.sample.components.Code2
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
@@ -48,29 +52,36 @@ fun ColumnScope.FlexInputPage() {
 				onValueChange = { value = it },
 				sizeType = sizeType,
 				colorType = colorType,
-				cornerType = cornerType
+				cornerType = cornerType,
+				prefix = FlexInputs.icon(
+					icon = Icons.Rounded.Lock
+				),
+				suffix = FlexInputs.icon(
+					icon = Icons.Rounded.Visibility,
+				)
 			)
 		}
 		Spacer(Modifier.width(12.dp))
 		val isDefaultColorType by remember {
 			derivedStateOf { colorType in FlexColorType.defaultColorTypes }
 		}
-		Code(
-			methodName = "FlexInput",
-			variables = listOf(
-				KeywordT("var") + SpaceT() + VariableT("value") + SpaceT() + KeywordT("by") + SpaceT() + MethodT("remember") + SpaceT() + LeftBraceT +
-					SpaceT() + MethodT("mutableStateOf") + LeftParenthesesT + DoubleQuotesT + DoubleQuotesT + RightParenthesesT + SpaceT() + RightBraceT
-			),
-			assigns = listOf(
-				"value" assign VariableT("value"),
-				"onValueChange" assign LeftBraceT + SpaceT() + VariableT("value") + SpaceT() + EqualsT + SpaceT() + VariableT("it") + SpaceT() + RightBraceT,
-				"sizeType" assign ClassT("FlexSizeType") + DotT + ClassT(sizeType),
-				"colorType" assign if (isDefaultColorType) ClassT("FlexColorType") + DotT + ClassT(colorType) else ClassT(colorType),
-				"cornerType" assign ClassT("FlexCornerType") + DotT + ClassT(cornerType),
-				"prefix" assign KeywordT("null"),
-				"suffix" assign KeywordT("null"),
+		val code = """
+			val value by remember { mutableStateOf("") }
+			FlexInput(
+				value = value,
+				onValueChange = { value = it },
+				sizeType = FlexSizeType.${sizeType},
+				colorType = FlexColorType.${colorType},
+				cornerType = FlexCornerType.${cornerType},
+				prefix = FlexInputs.icon(
+					icon = Icons.Rounded.Lock
+				),
+				suffix = FlexInputs.icon(
+					icon = Icons.Rounded.Visibility,
+				)
 			)
-		)
+			""".trimIndent()
+		Code2(code)
 	}
 	HorizontalDivider()
 	val verticalScrollState = rememberScrollState()

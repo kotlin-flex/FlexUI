@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexButtonConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
@@ -132,11 +131,9 @@ fun FlexButton(
 		}
 		val borderColor by animateColorAsState(targetBorderColor)
 		val backgroundColor by animateColorAsState(targetBackgroundColor)
-		val horizontalPadding by remember(text, config) {
-			derivedStateOf {
-				if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
-			}
-		}
+		val horizontalPadding by animateDpAsState(
+			targetValue = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
+		)
 		val height by animateDpAsState(config.height)
 		val corner by animateDpAsState(height * cornerType.percent)
 		val cornerShape by remember(cornerType, corner) {
@@ -161,13 +158,14 @@ fun FlexButton(
 		val isTextEmpty by remember(text) {
 			derivedStateOf { targetText.isEmpty() }
 		}
+		val borderWidth by animateDpAsState(config.borderWidth)
 		Row(
 			modifier = modifier
 				.scale(scale)
 				.then(if (isTextEmpty) Modifier.width(height) else Modifier)
 				.height(height)
 				.clip(cornerShape)
-				.backgroundBorderStyle(buttonType, config, cornerShape, backgroundColor, borderColor)
+				.backgroundBorderStyle(buttonType, borderWidth, cornerShape, backgroundColor, borderColor)
 				.clickable(
 					interactionSource = interactionSource,
 					indication = null,
@@ -266,7 +264,7 @@ fun FlexButton(
 @Composable
 private fun Modifier.backgroundBorderStyle(
 	buttonType: FlexButtonType,
-	config: FlexButtonConfig,
+	borderWidth: Dp,
 	cornerShape: Shape,
 	backgroundColor: Color,
 	borderColor: Color,
@@ -278,7 +276,7 @@ private fun Modifier.backgroundBorderStyle(
 				shape = cornerShape,
 			)
 			.border(
-				width = config.borderWidth,
+				width = borderWidth,
 				color = borderColor,
 				shape = cornerShape
 			)
@@ -289,7 +287,7 @@ private fun Modifier.backgroundBorderStyle(
 				shape = cornerShape,
 			)
 			.dashedBorder(
-				width = config.borderWidth,
+				width = borderWidth,
 				color = borderColor,
 				shape = cornerShape
 			)

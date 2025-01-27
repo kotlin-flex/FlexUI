@@ -4,19 +4,18 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
@@ -24,7 +23,6 @@ import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 
 /**
  * Flex 输入框
@@ -37,21 +35,18 @@ fun FlexInput(
 	sizeType: FlexSizeType = FlexInputs.DefaultSizeType,
 	colorType: FlexColorType = FlexInputs.DefaultColorType,
 	cornerType: FlexCornerType = FlexInputs.DefaultCornerType,
-	prefix: (@Composable () -> Unit)? = null,
-	suffix: (@Composable () -> Unit)? = null,
+	prefix: FlexInputIcon? = null,
+	suffix: FlexInputIcon? = null,
 ) {
 	val current = LocalFlexConfig.current
 	val config = current.input.getConfig(sizeType)
-	val color = current.theme.colorScheme.current.getColor(colorType)
-	val darkTheme = LocalDarkTheme.current
+	val targetColor = current.theme.colorScheme.current.getColor(colorType)
 	val height by animateDpAsState(config.height)
 	val borderWidth by animateDpAsState(config.borderWidth)
 	val fontSize by animateFloatAsState(config.fontSize.value)
 	val letterSpacing by animateFloatAsState(config.letterSpacing.value)
-	val fontColor by animateColorAsState(
-		targetValue = if (darkTheme) Color.LightGray else Color.DarkGray
-	)
-	val borderColor by animateColorAsState(color)
+	val horizontalPadding by animateDpAsState(config.horizontalPadding)
+	val color by animateColorAsState(targetColor)
 	val corner by animateDpAsState(height * cornerType.percent)
 	val cornerShape by remember(corner) {
 		derivedStateOf {
@@ -60,30 +55,49 @@ fun FlexInput(
 	}
 	Row(
 		modifier = Modifier
-			.heightIn(min = height)
+			.height(height)
 			.border(
 				width = borderWidth,
-				color = borderColor,
+				color = color,
 				shape = cornerShape
-			),
+			)
+			.padding(horizontal = horizontalPadding / 2)
+			.then(modifier),
 		verticalAlignment = Alignment.CenterVertically
 	) {
+		if (prefix != null) {
+			Icon(
+				imageVector = prefix.icon,
+				contentDescription = null,
+				modifier = Modifier
+					.size(config.iconSize),
+				tint = color
+			)
+		}
+		Spacer(modifier = Modifier.width(horizontalPadding / 2))
 		BasicTextField(
 			value = value,
 			onValueChange = onValueChange,
-			modifier = Modifier
-				.padding(
-					horizontal = config.horizontalPadding
-				)
-				.then(modifier),
+			modifier = Modifier,
 			textStyle = TextStyle(
 				fontSize = fontSize.sp,
 				fontWeight = config.fontWeight,
 				letterSpacing = if (letterSpacing >= 0f) letterSpacing.sp else TextUnit.Unspecified,
-				color = fontColor
+				color = color
 			),
-			cursorBrush = SolidColor(color),
+			singleLine = true,
+			cursorBrush = SolidColor(targetColor),
 		)
+		Spacer(modifier = Modifier.width(horizontalPadding / 2))
+		if (suffix != null) {
+			Icon(
+				imageVector = suffix.icon,
+				contentDescription = null,
+				modifier = Modifier
+					.size(config.iconSize),
+				tint = color
+			)
+		}
 	}
 }
 
@@ -106,4 +120,19 @@ object FlexInputs {
 		get() = LocalFlexConfig.current.default.let {
 			it.input?.cornerType ?: it.common.cornerType ?: FlexCornerType.Default
 		}
+	
+	/**
+	 * 按钮
+	 */
+	fun icon(
+		icon: ImageVector,
+		rotation: Float = 0f,
+		onClick: (() -> Unit)? = null,
+	): FlexInputIcon = FlexInputIcon(icon, rotation, onClick)
 }
+
+class FlexInputIcon internal constructor(
+	val icon: ImageVector,
+	val rotation: Float,
+	val onClick: (() -> Unit)?,
+)

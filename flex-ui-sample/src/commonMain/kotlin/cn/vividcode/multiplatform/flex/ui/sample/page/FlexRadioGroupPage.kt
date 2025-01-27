@@ -17,7 +17,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.layout.TitleLayout
-import cn.vividcode.multiplatform.flex.ui.sample.components.*
+import cn.vividcode.multiplatform.flex.ui.sample.components.Code2
 import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
@@ -66,33 +66,25 @@ fun ColumnScope.FlexRadioPage() {
 		val isDefaultColorType by remember {
 			derivedStateOf { colorType in FlexColorType.defaultColorTypes }
 		}
-		Code(
-			methodName = "FlexRadioGroup",
-			variables = listOf(
-				KeywordT("var") + SpaceT() + VariableT("selectedKey") + SpaceT() + KeywordT("by") + SpaceT() + MethodT("remember") + SpaceT() + LeftBraceT,
-				SpaceT(4) + MethodT("mutableStateOf") + LeftParenthesesT + DoubleQuotesT + StringT("option1") + DoubleQuotesT + RightParenthesesT,
-				RightBraceT
-			),
-			assigns = listOf(
-				"selectedKey" assign VariableT("selectedKey"),
-				"onSelectedKeyChange" assign LeftBraceT + SpaceT() + VariableT("selectedKey") + SpaceT() + EqualsT + SpaceT() + VariableT("it") + SpaceT() + RightBraceT,
-				"options" assign (1 .. 3).map {
-					val codes =
-						ClassT("RadioOption") + LeftParenthesesT + DoubleQuotesT + StringT("option$it") + DoubleQuotesT + CommaT + SpaceT() + DoubleQuotesT + StringT("Option $it") + DoubleQuotesT
-					if (it == disabledOption) {
-						codes + CommaT + SpaceT() + KeywordT("false") + RightParenthesesT
-					} else {
-						codes + RightParenthesesT
-					}
-				},
-				"sizeType" assign ClassT("FlexSizeType") + DotT + ClassT(sizeType),
-				"colorType" assign if (isDefaultColorType) ClassT("FlexColorType") + DotT + ClassT(colorType) else ClassT(colorType),
-				"cornerType" assign ClassT("FlexCornerType") + DotT + ClassT(cornerType),
-				"radioType" assign ClassT("FlexRadioType") + DotT + ClassT(radioType),
-				"switchType" assign ClassT("FlexRadioSwitchType") + DotT + ClassT(switchType),
-				"scaleEffect" assign scaleEffect
+		val code = """
+			var selectedKey by remember { mutableStateOf("option1") }
+			FlexRadioGroup(
+				selectedKey = selectedKey,
+				onSelectedKeyChange = { selectedKey = it },
+				options = listOf(
+					RadioOption("option1", "Option 1"${if (disabledOption == 1) ", enabled = false" else ""}),
+					RadioOption("option2", "Option 2"${if (disabledOption == 2) ", enabled = false" else ""}),
+					RadioOption("option3", "Option 3"${if (disabledOption == 3) ", enabled = false" else ""})
+				)
+				sizeType = FlexSizeType.$sizeType,
+				colorType = ${if (isDefaultColorType) "FlexColorType." else ""}$colorType,
+				cornerType = FlexCornerType.$cornerType,
+				radioType = FlexRadioType.$radioType,
+				switchType = FlexRadioSwitchType.$switchType,
+				scaleEffect = $scaleEffect,
 			)
-		)
+		""".trimIndent()
+		Code2(code)
 	}
 	HorizontalDivider()
 	val verticalScrollState = rememberScrollState()

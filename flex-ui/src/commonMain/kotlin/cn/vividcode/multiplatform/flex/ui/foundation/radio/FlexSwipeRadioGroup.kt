@@ -62,6 +62,7 @@ internal fun <Key> FlexSwipeRadioGroup(
 			RoundedCornerShape(corner)
 		}
 	}
+	val horizontalPadding by animateDpAsState(config.horizontalPadding)
 	val height by animateDpAsState(config.height)
 	Box(
 		modifier = Modifier
@@ -205,9 +206,7 @@ internal fun <Key> FlexSwipeRadioGroup(
 								color = DisabledBackgroundColor
 							)
 						)
-						.padding(
-							horizontal = config.horizontalPadding,
-						),
+						.padding(horizontal = horizontalPadding),
 					horizontalArrangement = Arrangement.Center,
 					verticalAlignment = Alignment.CenterVertically,
 				) {

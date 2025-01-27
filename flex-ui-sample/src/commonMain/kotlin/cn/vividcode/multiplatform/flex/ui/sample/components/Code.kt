@@ -1,9 +1,12 @@
 package cn.vividcode.multiplatform.flex.ui.sample.components
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.DoneAll
@@ -34,76 +37,100 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun RowScope.Code(
-	methodName: String,
-	variables: List<Any> = emptyList(),
-	assigns: List<AssignT>,
+fun RowScope.Code2(
+	code: String,
 ) {
 	Column(
 		modifier = Modifier
 			.weight(0.8f)
 			.fillMaxHeight()
-			.background(
-				color = MaterialTheme.colorScheme.surfaceContainer,
-				shape = RoundedCornerShape(12.dp)
-			)
 			.border(
 				width = 1.dp,
 				color = MaterialTheme.colorScheme.outlineVariant,
-				shape = RoundedCornerShape(12.dp)
+				shape = RoundedCornerShape(8.dp)
 			)
 	) {
-		val codeString = buildAnnotatedString {
-			variables.forEach {
-				@Suppress("UNCHECKED_CAST")
-				var codes = it as? List<CodeT>
-				if (codes == null) {
-					check(it is CodeT)
-					codes = listOf(it)
-				}
-				codes.forEach {
-					withStyle(it.spanStyle) {
-						append(it.code)
+		val stringStyle = StringStyle
+		val keywordStyle = KeywordStyle
+		val symbolStyle = SymbolStyle
+		val uppercaseWordStyle = UppercaseWordStyle
+		val codeString by remember(code, LocalDarkTheme.current) {
+			val keywordIndices = keywordRegexList.flatMap { regex ->
+				regex.findAll(code).flatMap { it.range.toList() }
+			}
+			val symbolIndices = symbolRegexList.flatMap { regex ->
+				regex.findAll(code).flatMap { it.range.toList() }
+			}
+			val uppercaseIndices = uppercaseWordRegex.findAll(code).flatMap {
+				it.range.toList()
+			}
+			val stringIndices = stringRegex.findAll(code).flatMap {
+				val list = it.range.toList()
+				if (list.size < 2) list else list.subList(1, list.size - 1)
+			}
+			val charIndices = charRegex.findAll(code).flatMap {
+				val list = it.range.toList()
+				if (list.size < 2) list else list.subList(1, list.size - 1)
+			}
+			val quotationMarksIndices = quotationMarksRegex.findAll(code).flatMap {
+				it.range.toList()
+			}
+			println(uppercaseIndices)
+			val codeString = buildAnnotatedString {
+				code.forEachIndexed { index, char ->
+					when (index) {
+						in stringIndices -> {
+							withStyle(stringStyle) {
+								append(char)
+							}
+						}
+						
+						in charIndices -> {
+							withStyle(stringStyle) {
+								append(char)
+							}
+						}
+						
+						in quotationMarksIndices -> {
+							withStyle(stringStyle) {
+								append(char)
+							}
+						}
+						
+						in keywordIndices -> {
+							withStyle(keywordStyle) {
+								append(char)
+							}
+						}
+						
+						in symbolIndices -> {
+							withStyle(symbolStyle) {
+								append(char)
+							}
+						}
+						
+						in uppercaseIndices -> {
+							withStyle(uppercaseWordStyle) {
+								append(char)
+							}
+						}
+						
+						else -> {
+							when {
+								char == '\t' -> append(" ".repeat(4))
+								else -> append(char)
+							}
+						}
 					}
 				}
-				append("\n")
 			}
-			withStyle(MethodStyle) {
-				append(methodName)
-			}
-			withStyle(SymbolStyle) {
-				append("(")
-			}
-			append("\n")
-			assigns.forEachIndexed { index, parameter ->
-				append("    ")
-				withStyle(PropertyNameStyle) {
-					append(parameter.name)
-				}
-				withStyle(SymbolStyle) {
-					append(" = ")
-				}
-				parameter.codes.forEachIndexed { index, it ->
-					withStyle(it.spanStyle) {
-						append(it.code)
-					}
-				}
-				if (index != assigns.lastIndex) {
-					withStyle(SymbolStyle) {
-						append(",")
-					}
-				}
-				append("\n")
-			}
-			withStyle(SymbolStyle) {
-				append(")")
-			}
+			mutableStateOf(codeString)
 		}
 		Row(
 			modifier = Modifier
 				.fillMaxWidth()
-				.height(32.dp)
-				.padding(horizontal = 4.dp),
+				.height(36.dp)
+				.padding(horizontal = 6.dp),
 			verticalAlignment = Alignment.CenterVertically,
 		) {
 			FlexButton(
@@ -120,7 +147,6 @@ fun RowScope.Code(
 				text = if (copied) "Copied!" else "Copy",
 				icon = if (copied) Icons.Rounded.DoneAll else Icons.Rounded.ContentCopy,
 				sizeType = FlexSizeType.ExtraSmall,
-				cornerType = FlexCornerType.Large,
 				buttonType = FlexButtonType.Text,
 				iconPosition = FlexButtonIconPosition.Start,
 				enabled = !copied
@@ -159,7 +185,7 @@ fun RowScope.Code(
 						),
 					fontSize = 13.sp,
 					lineHeight = 24.sp,
-					color = if (LocalDarkTheme.current) Color.LightGray else Color.DarkGray,
+					color = TextColor,
 					textAlign = TextAlign.Center,
 				)
 				VerticalDivider()
@@ -176,8 +202,9 @@ fun RowScope.Code(
 							top = 3.dp,
 							bottom = 8.dp,
 						),
+					color = TextColor,
 					fontSize = 14.sp,
-					lineHeight = 24.sp
+					lineHeight = 24.sp,
 				)
 			}
 			val isStartTop by remember {
@@ -213,291 +240,69 @@ fun RowScope.Code(
 	}
 }
 
-@Suppress("UNCHECKED_CAST")
-infix fun String.assign(code: Any): AssignT = when (code) {
-	is String -> AssignT(this, DoubleQuotesT + StringT(code) + DoubleQuotesT)
-	is Number -> AssignT(this, NumberT(code))
-	is Boolean -> AssignT(this, KeywordT(code.toString()))
-	is CodeT -> AssignT(this, code)
-	is List<*> -> {
-		check(code.isNotEmpty())
-		when (code[0]) {
-			is CodeT -> {
-				val codes = code as? List<CodeT>
-				if (codes == null) {
-					AssignT(this, code as CodeT)
-				} else AssignT(this, codes)
-			}
-			
-			is List<*> -> {
-				val codes = mutableListOf<CodeT>()
-				codes += MethodT("listOf") + LeftParenthesesT + LineFeed
-				code.forEachIndexed { index, it ->
-					codes += SpaceT(8)
-					when (it) {
-						is CodeT -> codes += it
-						is List<*> -> codes += it as List<CodeT>
-					}
-					if (index != code.lastIndex) {
-						codes += CommaT
-					}
-					codes += LineFeed
-				}
-				codes += SpaceT(4) + RightParenthesesT
-				AssignT(this, codes)
-			}
-			
-			else -> AssignT.Empty
-		}
-	}
-	
-	else -> AssignT.Empty
+private val keywordRegexList by lazy {
+	listOf(
+		"abstract", "actual", "annotation", "as", "break", "by", "catch", "class",
+		"companion", "const", "constructor", "continue", "crossinline", "data",
+		"delegate", "do", "dynamic", "else", "enum", "expect", "external", "false",
+		"final", "finally", "for", "fun", "get", "if", "import", "in", "infix",
+		"init", "inline", "inner", "interface", "internal", "is", "lateinit",
+		"noinline", "null", "object", "open", "operator", "out", "override", "package",
+		"param", "private", "property", "protected", "public", "receiver", "reified",
+		"return", "sealed", "set", "setparam", "super", "suspend", "tailrec", "this",
+		"throw", "true", "try", "typealias", "typeof", "val", "var", "vararg", "when",
+		"where", "while", "in"
+	).map { "\\b${Regex.escape(it)}\\b".toRegex() }
 }
 
-data class AssignT(
-	val name: String,
-	val codes: List<CodeT>,
-) {
-	constructor(name: String, code: CodeT) : this(name, listOf(code))
-	
-	companion object {
-		val Empty = AssignT("", emptyList())
-	}
+private val symbolRegexList by lazy {
+	listOf(
+		"+", "-", "*", "/", "%",
+		"=", "+=", "-=", "*=", "/=", "%=",
+		"==", "!=", ">", "<", ">=", "<=",
+		"&&", "||", "!",
+		"++", "--",
+		":", "..", "..<",
+		"?", "!!", "->", "@"
+	).map { Regex.escape(it).toRegex() }
 }
 
-sealed interface CodeT {
-	
-	val code: String
-	
-	val spanStyle: SpanStyle
-		@Composable
-		get
+private val quotationMarksRegex = "['\"]".toRegex()
+
+private val uppercaseWordRegex = "\\b[A-Z][a-zA-Z]*\\b".toRegex()
+
+private val stringRegex = "\"([^\"]*)\"".toRegex()
+
+private val charRegex = "'([^\"]*)'".toRegex()
+
+private val numberRegex by lazy {
+	"\\d[f|L]+".toRegex()
 }
 
-data class MethodT(
-	val name: String,
-) : CodeT {
-	
-	override val code = name
-	
-	override val spanStyle: SpanStyle
-		@Composable
-		get() = MethodStyle
-}
-
-abstract class SymbolT(
-	override val code: String,
-) : CodeT {
-	
-	override val spanStyle: SpanStyle
-		@Composable
-		get() = SymbolStyle
-}
-
-data object DotT : SymbolT(".")
-
-data class SpaceT(
-	val count: Int = 1,
-) : SymbolT(" ".repeat(count))
-
-data object LeftBraceT : SymbolT("{")
-
-data object RightBraceT : SymbolT("}")
-
-data object LeftParenthesesT : SymbolT("(")
-
-data object RightParenthesesT : SymbolT(")")
-
-data object LineFeed : SymbolT("\n")
-
-data object CommaT : SymbolT(",")
-
-data object EqualsT : SymbolT("=")
-
-data object DoubleQuotesT : SymbolT("\"")
-
-data class NumberT<T : Number>(
-	val number: T,
-) : CodeT {
-	
-	override val code = when (number) {
-		is Float -> "${number}f"
-		is Long -> "${number}L"
-		else -> number.toString()
-	}
-	
-	override val spanStyle: SpanStyle
-		@Composable
-		get() = NumberStyle
-}
-
-data class KeywordT(
-	val keyword: String,
-) : CodeT {
-	
-	override val code = keyword
-	
-	override val spanStyle: SpanStyle
-		@Composable
-		get() = KeywordStyle
-}
-
-data class VariableT(
-	val name: String,
-) : CodeT {
-	
-	override val code = name
-	
-	override val spanStyle: SpanStyle
-		@Composable
-		get() = VariableStyle
-}
-
-data class StringT(
-	val string: String,
-) : CodeT {
-	
-	override val code = string
-	
-	override val spanStyle: SpanStyle
-		@Composable
-		get() = StringStyle
-}
-
-data class ClassT<T>(
-	val name: T,
-) : CodeT {
-	
-	override val code = name.toString()
-	
-	override val spanStyle: SpanStyle
-		@Composable
-		get() = ClassStyle
-}
-
-data class ParameterT(
-	val name: String,
-) : CodeT {
-	
-	override val code = name
-	
-	override val spanStyle: SpanStyle
-		@Composable
-		get() = ParameterStyle
-}
-
-operator fun CodeT.plus(other: CodeT): List<CodeT> {
-	return listOf(this, other)
-}
-
-operator fun List<CodeT>.plus(other: String): List<CodeT> {
-	return this + other
-}
-
-private val MethodStyle: SpanStyle
+private val StringStyle
 	@Composable
-	get() = if (LocalDarkTheme.current) MethodDarkStyle else MethodLightStyle
+	get() = SpanStyle(
+		color = if (LocalDarkTheme.current) Color(0xFF95CCFF) else Color(0xFF0B2256)
+	)
 
-private val ClassStyle: SpanStyle
+private val KeywordStyle
 	@Composable
-	get() = if (LocalDarkTheme.current) ClassDarkStyle else ClassLightStyle
+	get() = SpanStyle(
+		color = if (LocalDarkTheme.current) Color(0xFFFC635F) else Color(0xFFC10A23)
+	)
 
-private val NumberStyle: SpanStyle
+private val SymbolStyle
 	@Composable
-	get() = if (LocalDarkTheme.current) NumberDarkStyle else NumberLightStyle
+	get() = SpanStyle(
+		color = if (LocalDarkTheme.current) Color(0xFFFC635F) else Color(0xFFC10A23)
+	)
 
-private val SymbolStyle: SpanStyle
+private val UppercaseWordStyle
 	@Composable
-	get() = if (LocalDarkTheme.current) SymbolDarkStyle else SymbolLightStyle
+	get() = SpanStyle(
+		color = if (LocalDarkTheme.current) Color(0xFFC692FE) else Color(0xFF5220AB)
+	)
 
-private val PropertyNameStyle: SpanStyle
+private val TextColor
 	@Composable
-	get() = if (LocalDarkTheme.current) PropertyNameDarkStyle else PropertyNameLightStyle
-
-private val ParameterStyle: SpanStyle
-	@Composable
-	get() = if (LocalDarkTheme.current) ParameterDarkStyle else ParameterLightStyle
-
-private val StringStyle: SpanStyle
-	@Composable
-	get() = if (LocalDarkTheme.current) StringDarkStyle else StringLightStyle
-
-private val KeywordStyle: SpanStyle
-	@Composable
-	get() = if (LocalDarkTheme.current) KeywordDarkStyle else KeywordLightStyle
-
-private val VariableStyle: SpanStyle
-	@Composable
-	get() = if (LocalDarkTheme.current) VariableDarkStyle else VariableLightStyle
-
-private val MethodDarkStyle = SpanStyle(
-	color = Color(0xFF56B6C2)
-)
-
-private val ClassDarkStyle = SpanStyle(
-	color = Color(0xFFD19A66)
-)
-
-private val NumberDarkStyle = SpanStyle(
-	color = Color(0xff2ca4d3)
-)
-
-private val SymbolDarkStyle = SpanStyle(
-	color = Color(0xFFBBBBBB)
-)
-
-private val PropertyNameDarkStyle = SpanStyle(
-	color = Color(0xFF80C8D4)
-)
-
-private val ParameterDarkStyle = SpanStyle(
-	color = Color(0xFF73D0A2)
-)
-
-private val StringDarkStyle = SpanStyle(
-	color = Color(0xff85d27d)
-)
-
-private val KeywordDarkStyle = SpanStyle(
-	color = Color(0xFFE06C75)
-)
-
-private val VariableDarkStyle = SpanStyle(
-	color = Color(0xFFDDDDDD)
-)
-
-private val MethodLightStyle = SpanStyle(
-	color = Color(0xFF0077AA)
-)
-
-private val ClassLightStyle = SpanStyle(
-	color = Color(0xFFBF6F32)
-)
-
-private val NumberLightStyle = SpanStyle(
-	color = Color(0xFF006FBF)
-)
-
-private val SymbolLightStyle = SpanStyle(
-	color = Color(0xFF666666)
-)
-
-private val PropertyNameLightStyle = SpanStyle(
-	color = Color(0xFF008DA6)
-)
-
-private val ParameterLightStyle = SpanStyle(
-	color = Color(0xFF007D63)
-)
-
-private val StringLightStyle = SpanStyle(
-	color = Color(0xFF408D40)
-)
-
-private val KeywordLightStyle = SpanStyle(
-	color = Color(0xFFB03050)
-)
-
-private val VariableLightStyle = SpanStyle(
-	color = Color(0xFF222222)
-)
+	get() = if (LocalDarkTheme.current) Color(0xFFECF4FB) else Color(0xFF181A1E)

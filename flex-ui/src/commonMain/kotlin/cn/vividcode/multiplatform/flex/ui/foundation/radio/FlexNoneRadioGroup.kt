@@ -60,11 +60,12 @@ internal fun <Key> FlexNoneRadioGroup(
 	val color = current.theme.colorScheme.current.getColor(colorType)
 	val height by animateDpAsState(config.height)
 	val corner by animateDpAsState(config.height * cornerType.percent)
-	val cornerShape by remember(cornerType, corner) {
+	val cornerShape by remember(corner) {
 		derivedStateOf {
 			RoundedCornerShape(corner)
 		}
 	}
+	val horizontalPadding by animateDpAsState(config.horizontalPadding)
 	Row(
 		modifier = Modifier
 			.height(height)
@@ -165,9 +166,7 @@ internal fun <Key> FlexNoneRadioGroup(
 						color = borderColor,
 						shape = buttonCornerShape
 					)
-					.padding(
-						horizontal = config.horizontalPadding,
-					),
+					.padding(horizontal = horizontalPadding),
 				horizontalArrangement = Arrangement.Center,
 				verticalAlignment = Alignment.CenterVertically,
 			) {

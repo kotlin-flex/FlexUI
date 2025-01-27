@@ -22,7 +22,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.layout.TitleLayout
-import cn.vividcode.multiplatform.flex.ui.sample.components.*
+import cn.vividcode.multiplatform.flex.ui.sample.components.Code2
 import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
@@ -70,22 +70,21 @@ fun ColumnScope.FlexButtonPage() {
 		val isDefaultColorType by remember {
 			derivedStateOf { colorType in FlexColorType.defaultColorTypes }
 		}
-		Code(
-			methodName = "FlexButton",
-			assigns = listOf(
-				"text" assign "FlexButton",
-				"icon" assign if (showIcon) ClassT("Icons") + DotT + ClassT("Rounded") + DotT + ParameterT("Search") else KeywordT("null"),
-				"sizeType" assign ClassT("FlexSizeType") + DotT + ClassT(sizeType),
-				"colorType" assign if (isDefaultColorType) ClassT("FlexColorType") + DotT + ClassT(colorType) else ClassT(colorType),
-				"cornerType" assign ClassT("FlexCornerType") + DotT + ClassT(cornerType),
-				"buttonType" assign ClassT("FlexButtonType") + DotT + ClassT(buttonType),
-				"iconPosition" assign ClassT("FlexButtonIconPosition") + DotT + ClassT(iconPosition),
-				"iconRotation" assign 0f,
-				"scaleEffect" assign scaleEffect,
-				"enabled" assign enabled,
-				"onClick" assign LeftBraceT + SpaceT() + RightBraceT
+		val code = """
+			FlexButton(
+				text = "FlexButton",
+				icon = ${if (showIcon) "Icons.Rounded.Search" else "null"},
+				sizeType = FlexSizeType.$sizeType,
+				colorType = ${if (isDefaultColorType) "FlexColorType." else ""}$colorType,
+				cornerType = FlexCornerType.$cornerType,
+				buttonType = FlexButtonType.$buttonType,
+				iconPosition = FlexButtonIconPosition.$iconPosition,
+				iconRotation = 0f,
+				scaleEffect = $scaleEffect,
+				enabled = $enabled
 			)
-		)
+		""".trimIndent()
+		Code2(code)
 	}
 	HorizontalDivider()
 	val verticalScrollState = rememberScrollState()
