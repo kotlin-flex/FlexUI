@@ -1,4 +1,4 @@
-package cn.vividcode.multiplatform.flex.ui.layout
+package cn.vividcode.multiplatform.flex.ui.sample.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row

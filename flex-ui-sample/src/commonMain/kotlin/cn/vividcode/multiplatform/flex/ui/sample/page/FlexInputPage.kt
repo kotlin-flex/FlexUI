@@ -20,7 +20,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputs
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.layout.TitleLayout
+import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code2
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
