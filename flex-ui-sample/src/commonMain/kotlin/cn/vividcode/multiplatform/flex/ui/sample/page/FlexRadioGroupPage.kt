@@ -16,8 +16,8 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
-import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code2
+import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
@@ -63,9 +63,6 @@ fun ColumnScope.FlexRadioPage() {
 			)
 		}
 		Spacer(modifier = Modifier.width(12.dp))
-		val isDefaultColorType by remember {
-			derivedStateOf { colorType in FlexColorType.defaultColorTypes }
-		}
 		val code = """
 			var selectedKey by remember { mutableStateOf("option1") }
 			FlexRadioGroup(
@@ -77,7 +74,7 @@ fun ColumnScope.FlexRadioPage() {
 					RadioOption("option3", "Option 3"${if (disabledOption == 3) ", enabled = false" else ""})
 				)
 				sizeType = FlexSizeType.$sizeType,
-				colorType = ${if (isDefaultColorType) "FlexColorType." else ""}$colorType,
+				colorType = FlexColorType.$colorType,
 				cornerType = FlexCornerType.$cornerType,
 				radioType = FlexRadioType.$radioType,
 				switchType = FlexRadioSwitchType.$switchType,

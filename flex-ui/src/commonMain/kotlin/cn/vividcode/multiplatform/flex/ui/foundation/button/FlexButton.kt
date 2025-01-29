@@ -29,9 +29,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 import cn.vividcode.multiplatform.flex.ui.expends.dashedBorder
 import cn.vividcode.multiplatform.flex.ui.expends.isDark
@@ -311,29 +309,25 @@ object FlexButtons {
 	
 	val DefaultSizeType: FlexSizeType
 		@Composable
-		get() = LocalFlexConfig.current.default.let {
-			it.button?.sizeType ?: it.common.sizeType ?: FlexSizeType.Medium
-		}
+		get() = getDefaultSizeType { button.sizeType }
 	
 	val DefaultColorType: FlexColorType
 		@Composable
-		get() = LocalFlexConfig.current.default.let {
-			it.button?.colorType ?: it.common.colorType ?: FlexColorType.Default
-		}
+		get() = getDefaultColorType { button.colorType }
 	
 	val DefaultCornerType: FlexCornerType
 		@Composable
-		get() = LocalFlexConfig.current.default.let {
-			it.button?.cornerType ?: it.common.cornerType ?: FlexCornerType.Default
-		}
+		get() = getDefaultCornerType { button.cornerType }
 	
-	val DefaultButtonType = FlexButtonType.Default
+	val DefaultButtonType: FlexButtonType
+		@Composable
+		get() = LocalFlexButtonType.current
 	
 	val DefaultIconDirection = FlexButtonIconPosition.End
 	
 	const val DefaultIconRotation = 0f
 	
-	const val DefaultScaleEffect = true
+	const val DefaultScaleEffect = false
 }
 
 enum class FlexButtonIconPosition {
@@ -381,3 +375,5 @@ enum class FlexButtonType {
 	 */
 	Link,
 }
+
+internal val LocalFlexButtonType = compositionLocalOf { FlexButtonType.Default }

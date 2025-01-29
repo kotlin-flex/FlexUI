@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
@@ -162,7 +161,7 @@ internal fun <Key> FlexSwipeRadioGroup(
 				.fillMaxHeight()
 				.clip(cornerShape)
 		) {
-			val density = LocalDensity.current.density
+			val density = LocalDensity.current
 			options.forEachIndexed { index, option ->
 				val interactionSource = remember { MutableInteractionSource() }
 				val isPressed by interactionSource.collectIsPressedAsState()
@@ -189,7 +188,7 @@ internal fun <Key> FlexSwipeRadioGroup(
 					modifier = Modifier
 						.fillMaxHeight()
 						.onGloballyPositioned {
-							buttonWidths[index] = (it.size.width / density).dp
+							buttonWidths[index] = with(density) { it.size.width.toDp() }
 						}
 						.clip(RectangleShape)
 						.clickable(

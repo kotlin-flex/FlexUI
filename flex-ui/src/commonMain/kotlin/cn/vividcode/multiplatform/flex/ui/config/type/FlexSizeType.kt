@@ -1,6 +1,9 @@
 package cn.vividcode.multiplatform.flex.ui.config.type
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.compositionLocalOf
+import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 
 /**
  * 尺寸类型
@@ -33,3 +36,13 @@ enum class FlexSizeType {
 	 */
 	ExtraLarge
 }
+
+internal val LocalFlexSizeType = compositionLocalOf<FlexSizeType?> { null }
+
+@Composable
+internal fun getDefaultSizeType(
+	defaultSizeType: FlexComposeDefaultConfig.() -> FlexSizeType?,
+): FlexSizeType = LocalFlexSizeType.current
+	?: LocalFlexConfig.current.default.defaultSizeType()
+	?: LocalFlexConfig.current.default.common.sizeType
+	?: FlexSizeType.Medium

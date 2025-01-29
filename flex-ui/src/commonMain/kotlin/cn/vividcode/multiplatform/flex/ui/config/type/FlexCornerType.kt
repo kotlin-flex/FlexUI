@@ -1,6 +1,9 @@
 package cn.vividcode.multiplatform.flex.ui.config.type
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.compositionLocalOf
+import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 
 /**
  * 圆角类型
@@ -35,3 +38,13 @@ enum class FlexCornerType(
 	 */
 	Circle(0.5f)
 }
+
+internal val LocalFlexCornerType = compositionLocalOf<FlexCornerType?> { null }
+
+@Composable
+internal fun getDefaultCornerType(
+	defaultCornerType: FlexComposeDefaultConfig.() -> FlexCornerType?,
+): FlexCornerType = LocalFlexCornerType.current
+	?: LocalFlexConfig.current.default.defaultCornerType()
+	?: LocalFlexConfig.current.default.common.cornerType
+	?: FlexCornerType.Default

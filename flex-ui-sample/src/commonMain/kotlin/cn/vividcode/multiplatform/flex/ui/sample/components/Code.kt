@@ -75,7 +75,6 @@ fun RowScope.Code2(
 			val quotationMarksIndices = quotationMarksRegex.findAll(code).flatMap {
 				it.range.toList()
 			}
-			println(uppercaseIndices)
 			val codeString = buildAnnotatedString {
 				code.forEachIndexed { index, char ->
 					when (index) {

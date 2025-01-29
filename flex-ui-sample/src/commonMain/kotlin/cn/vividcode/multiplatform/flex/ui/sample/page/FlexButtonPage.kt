@@ -21,8 +21,8 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
-import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code2
+import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
@@ -67,15 +67,12 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(Modifier.width(12.dp))
-		val isDefaultColorType by remember {
-			derivedStateOf { colorType in FlexColorType.defaultColorTypes }
-		}
 		val code = """
 			FlexButton(
 				text = "FlexButton",
 				icon = ${if (showIcon) "Icons.Rounded.Search" else "null"},
 				sizeType = FlexSizeType.$sizeType,
-				colorType = ${if (isDefaultColorType) "FlexColorType." else ""}$colorType,
+				colorType = FlexColorType.$colorType,
 				cornerType = FlexCornerType.$cornerType,
 				buttonType = FlexButtonType.$buttonType,
 				iconPosition = FlexButtonIconPosition.$iconPosition,

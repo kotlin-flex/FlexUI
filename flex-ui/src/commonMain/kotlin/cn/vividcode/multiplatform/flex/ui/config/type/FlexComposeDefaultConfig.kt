@@ -7,26 +7,26 @@ class FlexComposeDefaultConfig internal constructor() {
 	
 	internal val common: FlexDefaultConfig = FlexDefaultConfig.DefaultConfig
 	
-	internal var button: FlexDefaultConfig? = null
+	internal var button: FlexDefaultConfig = FlexDefaultConfig()
 	
-	internal var radio: FlexDefaultConfig? = null
+	internal var radio: FlexDefaultConfig = FlexDefaultConfig()
 	
-	internal var input: FlexDefaultConfig? = null
+	internal var input: FlexDefaultConfig = FlexDefaultConfig()
 	
 	fun common(config: FlexDefaultConfig.() -> Unit) {
 		this.common.apply(config)
 	}
 	
 	fun button(config: FlexDefaultConfig.() -> Unit) {
-		this.button = FlexDefaultConfig().apply(config)
+		this.button.apply(config)
 	}
 	
 	fun radio(config: FlexDefaultConfig.() -> Unit) {
-		this.radio = FlexDefaultConfig().apply(config)
+		this.radio.apply(config)
 	}
 	
 	fun input(config: FlexDefaultConfig.() -> Unit) {
-		this.input = FlexDefaultConfig().apply(config)
+		this.input.apply(config)
 	}
 }
 

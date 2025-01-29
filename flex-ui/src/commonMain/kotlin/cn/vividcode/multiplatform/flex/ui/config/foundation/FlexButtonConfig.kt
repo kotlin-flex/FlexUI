@@ -23,7 +23,7 @@ class FlexButtonConfig internal constructor(
 
 internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 	
-	private const val ICON_HEIGHT_SCALE = 2f / 3f
+	private const val ICON_SIZE_SCALE = 2f / 3f
 	
 	/**
 	 * 默认超小尺寸按钮配置
@@ -36,7 +36,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			fontSize = 12.sp,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 24.dp * ICON_HEIGHT_SCALE,
+			iconSize = 24.dp * ICON_SIZE_SCALE,
 			iconInterval = 4.dp
 		)
 	
@@ -51,7 +51,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			fontSize = 16.sp,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 32.dp * ICON_HEIGHT_SCALE,
+			iconSize = 32.dp * ICON_SIZE_SCALE,
 			iconInterval = 6.dp
 		)
 	
@@ -66,7 +66,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			fontSize = 20.sp,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 40.dp * ICON_HEIGHT_SCALE,
+			iconSize = 40.dp * ICON_SIZE_SCALE,
 			iconInterval = 8.dp
 		)
 	
@@ -81,7 +81,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			fontSize = 24.sp,
 			fontWeight = FontWeight.SemiBold,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 48.dp * ICON_HEIGHT_SCALE,
+			iconSize = 48.dp * ICON_SIZE_SCALE,
 			iconInterval = 10.dp
 		)
 	
@@ -96,7 +96,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			fontSize = 28.sp,
 			fontWeight = FontWeight.SemiBold,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 56.dp * ICON_HEIGHT_SCALE,
+			iconSize = 56.dp * ICON_SIZE_SCALE,
 			iconInterval = 12.dp
 		)
 }

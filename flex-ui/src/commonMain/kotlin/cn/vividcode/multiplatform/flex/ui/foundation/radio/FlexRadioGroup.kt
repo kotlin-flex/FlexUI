@@ -18,11 +18,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
-import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 import cn.vividcode.multiplatform.flex.ui.expends.isDark
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
@@ -93,27 +90,21 @@ object FlexRadioGroups {
 	
 	val DefaultSizeType: FlexSizeType
 		@Composable
-		get() = LocalFlexConfig.current.default.let {
-			it.radio?.sizeType ?: it.common.sizeType ?: FlexSizeType.Medium
-		}
+		get() = getDefaultSizeType { radio.sizeType }
 	
 	val DefaultColorType: FlexColorType
 		@Composable
-		get() = LocalFlexConfig.current.default.let {
-			it.radio?.colorType ?: it.common.colorType ?: FlexColorType.Default
-		}
+		get() = getDefaultColorType { radio.colorType }
 	
 	val DefaultCornerType: FlexCornerType
 		@Composable
-		get() = LocalFlexConfig.current.default.let {
-			it.radio?.cornerType ?: it.common.cornerType ?: FlexCornerType.Default
-		}
+		get() = getDefaultCornerType { radio.cornerType }
 	
 	val DefaultRadioType = FlexRadioType.Default
 	
 	val DefaultSwitchType = FlexRadioSwitchType.None
 	
-	const val DefaultScaleEffect = true
+	const val DefaultScaleEffect = false
 }
 
 enum class FlexRadioType {
