@@ -50,8 +50,8 @@ private fun Color.rgbToHsl(): FloatArray {
  * HSL 转 RGB
  */
 private fun hslToRgb(h: Float, s: Float, l: Float): Color {
-	val c = (1 - kotlin.math.abs(2 * l - 1)) * s
-	val x = c * (1 - kotlin.math.abs((h * 6) % 2 - 1))
+	val c = (1 - abs(2 * l - 1)) * s
+	val x = c * (1 - abs((h * 6) % 2 - 1))
 	val m = l - c / 2
 	
 	val (r, g, b) = when {

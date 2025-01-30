@@ -21,5 +21,5 @@ dependencyResolutionManagement {
 		maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 	}
 }
+include("flex-ui-core")
 include("flex-ui-sample")
-include("flex-ui")
