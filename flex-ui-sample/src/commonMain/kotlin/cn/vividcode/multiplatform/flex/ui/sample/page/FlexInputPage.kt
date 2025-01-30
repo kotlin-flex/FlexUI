@@ -25,11 +25,10 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code2
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
+import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
-import cn.vividcode.multiplatform.flex.ui.sample.page.FlexInputExample.*
-import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 
 /**
  * 输入框展示页
@@ -39,7 +38,9 @@ fun ColumnScope.FlexInputPage() {
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
 	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Default) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Default) }
-	var inputType by remember { mutableStateOf(Default) }
+	var example by remember { mutableStateOf(FlexInputExample.Default) }
+	var enabled by remember { mutableStateOf(true) }
+	var readOnly by remember { mutableStateOf(false) }
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -53,89 +54,170 @@ fun ColumnScope.FlexInputPage() {
 			contentAlignment = Alignment.Center
 		) {
 			var value by remember { mutableStateOf("") }
-			val isEmpty by remember(value) {
-				derivedStateOf { value.isEmpty() }
-			}
-			var visualTransformation by remember { mutableStateOf(VisualTransformation.None) }
-			FlexInput(
-				value = value,
-				onValueChange = { value = it },
-				sizeType = sizeType,
-				colorType = colorType,
-				cornerType = cornerType,
-				placeholder = {
-					when (inputType) {
-						Default -> {
-							Text("Text")
-						}
-						
-						Password -> {
-							Text("Password")
-						}
-						
-						Search -> {
-							Text("Search Text")
-						}
-					}
-				},
-				leadingIcon = when (inputType) {
-					Default -> null
-					Password -> FlexInputs.icon(
-						icon = Icons.Rounded.Lock
-					)
-					
-					Search -> FlexInputs.icon(
-						icon = Icons.Rounded.Search
-					)
-				},
-				trailingIcon = when (inputType) {
-					Default -> null
-					Password -> FlexInputs.icon(
-						icon = when (visualTransformation == VisualTransformation.None) {
-							true -> Icons.Rounded.Visibility
-							false -> Icons.Rounded.VisibilityOff
+			when (example) {
+				FlexInputExample.Default -> {
+					FlexInput(
+						value = value,
+						onValueChange = { value = it },
+						sizeType = sizeType,
+						colorType = colorType,
+						cornerType = cornerType,
+						enabled = enabled,
+						readOnly = readOnly,
+						placeholder = {
+							Text("Input Text")
 						},
-						onClick = {
-							visualTransformation = if (visualTransformation == VisualTransformation.None) {
-								PasswordVisualTransformation()
-							} else {
-								VisualTransformation.None
-							}
-						}
-					)
-					
-					Search -> if (isEmpty) null else FlexInputs.icon(
-						icon = Icons.Rounded.Cancel,
-						tint = if (LocalDarkTheme.current) Color.DarkGray else Color.LightGray,
-						onClick = {
-							value = ""
-						},
-					)
-				},
-				visualTransformation = visualTransformation
-			)
-		}
-		Spacer(Modifier.width(12.dp))
-		val code = """
-			var value by remember { mutableStateOf("") }
-			FlexInput(
-				value = value,
-				onValueChange = { value = it },
-				sizeType = sizeType,
-				colorType = colorType,
-				cornerType = cornerType,
-				prefix = {
-					FlexIcon(
-						icon = Icons.Rounded.Lock
-					)
-				},
-				suffix = {
-					FlexIcon(
-						icon = Icons.Rounded.Visibility,
 					)
 				}
-			)
-			""".trimIndent()
+				
+				FlexInputExample.Password -> {
+					var visualTransformation by remember {
+						mutableStateOf<VisualTransformation>(PasswordVisualTransformation())
+					}
+					FlexInput(
+						value = value,
+						onValueChange = { value = it },
+						sizeType = sizeType,
+						colorType = colorType,
+						cornerType = cornerType,
+						enabled = enabled,
+						readOnly = readOnly,
+						placeholder = {
+							Text("Input Password")
+						},
+						leadingIcon = FlexInputs.icon(
+							icon = Icons.Rounded.Lock
+						),
+						trailingIcon = FlexInputs.icon(
+							icon = when (visualTransformation == VisualTransformation.None) {
+								true -> Icons.Rounded.Visibility
+								false -> Icons.Rounded.VisibilityOff
+							},
+							onClick = {
+								visualTransformation = if (visualTransformation == VisualTransformation.None) {
+									PasswordVisualTransformation()
+								} else {
+									VisualTransformation.None
+								}
+							}
+						),
+						visualTransformation = visualTransformation,
+					)
+				}
+				
+				FlexInputExample.Search -> {
+					val isEmpty by remember(value) {
+						derivedStateOf { value.isEmpty() }
+					}
+					FlexInput(
+						value = value,
+						onValueChange = { value = it },
+						sizeType = sizeType,
+						colorType = colorType,
+						cornerType = cornerType,
+						enabled = enabled,
+						readOnly = readOnly,
+						placeholder = {
+							Text("Search Text")
+						},
+						leadingIcon = FlexInputs.icon(
+							icon = Icons.Rounded.Search
+						),
+						trailingIcon = if (isEmpty) null else FlexInputs.icon(
+							icon = Icons.Rounded.Cancel,
+							tint = Color.Gray,
+							onClick = {
+								value = ""
+							},
+						)
+					)
+				}
+			}
+		}
+		Spacer(Modifier.width(12.dp))
+		val code = when (example) {
+			FlexInputExample.Default ->
+				"""
+					var value by remember { mutableStateOf("") }
+					FlexInput(
+						value = value,
+						onValueChange = { value = it },
+						sizeType = FlexSizeType.$sizeType,
+						colorType = FlexColorType.$colorType,
+						cornerType = FlexCornerType.$cornerType,
+						enabled = $enabled,
+						readOnly = $readOnly,
+						placeholder = {
+							Text("Input Text")
+						}
+					)
+				""".trimIndent()
+			
+			FlexInputExample.Password ->
+				"""
+					var value by remember { mutableStateOf("") }
+					var visualTransformation by remember {
+						mutableStateOf<VisualTransformation>(PasswordVisualTransformation())
+					}
+					FlexInput(
+						value = value,
+						onValueChange = { value = it },
+						sizeType = FlexSizeType.$sizeType,
+						colorType = FlexColorType.$colorType,
+						cornerType = FlexCornerType.$cornerType,
+						enabled = $enabled,
+						readOnly = $readOnly,
+						placeholder = {
+							Text("Input Password")
+						},
+						leadingIcon = FlexInputs.icon(
+							icon = Icons.Rounded.Lock
+						),
+						trailingIcon = FlexInputs.icon(
+							icon = when (visualTransformation == VisualTransformation.None) {
+								true -> Icons.Rounded.Visibility
+								false -> Icons.Rounded.VisibilityOff
+							},
+							onClick = {
+								visualTransformation = if (visualTransformation == VisualTransformation.None) {
+									PasswordVisualTransformation()
+								} else {
+									VisualTransformation.None
+								}
+							}
+						),
+						visualTransformation = visualTransformation,
+					)
+				""".trimIndent()
+			
+			FlexInputExample.Search ->
+				"""
+					var value by remember { mutableStateOf("") }
+					val isEmpty by remember(value) {
+						derivedStateOf { value.isEmpty() }
+					}
+					FlexInput(
+						value = value,
+						onValueChange = { value = it },
+						sizeType = FlexSizeType.$sizeType,
+						colorType = FlexColorType.$colorType,
+						cornerType = FlexCornerType.$cornerType,
+						enabled = $enabled,
+						readOnly = $readOnly,
+						placeholder = {
+							Text("Search Text")
+						},
+						leadingIcon = FlexInputs.icon(
+							icon = Icons.Rounded.Search
+						),
+						trailingIcon = if (isEmpty) null else FlexInputs.icon(
+							icon = Icons.Rounded.Cancel,
+							tint = Color.Gray,
+							onClick = { value = "" }
+						)
+					)
+				""".trimIndent()
+		}
 		Code2(code)
 	}
 	HorizontalDivider()
@@ -185,6 +267,7 @@ fun ColumnScope.FlexInputPage() {
 				options = cornerTypeOptions,
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
+				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -194,9 +277,37 @@ fun ColumnScope.FlexInputPage() {
 			title = { Text("Input Example") }
 		) {
 			FlexRadioGroup(
-				selectedKey = inputType,
-				onSelectedKeyChange = { inputType = it },
+				selectedKey = example,
+				onSelectedKeyChange = { example = it },
 				options = inputExampleOptions,
+				sizeType = FlexSizeType.Small,
+				colorType = FlexColorType.Primary,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
+			title = { Text("Enabled") }
+		) {
+			FlexRadioGroup(
+				selectedKey = enabled,
+				onSelectedKeyChange = { enabled = it },
+				options = booleanOptions,
+				sizeType = FlexSizeType.Small,
+				colorType = FlexColorType.Primary,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
+			title = { Text("Read Only") }
+		) {
+			FlexRadioGroup(
+				selectedKey = readOnly,
+				onSelectedKeyChange = { readOnly = it },
+				options = booleanOptions,
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,

@@ -143,6 +143,7 @@ fun ColumnScope.FlexRadioPage() {
 				options = cornerTypeOptions,
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
+				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)

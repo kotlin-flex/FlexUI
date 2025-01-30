@@ -24,7 +24,7 @@ fun TitleLayout(
 		verticalAlignment = Alignment.CenterVertically,
 	) {
 		CompositionLocalProvider(
-			LocalTextStyle provides MaterialTheme.typography.titleMedium
+			LocalTextStyle provides MaterialTheme.typography.titleSmall
 		) {
 			Box(
 				modifier = Modifier.weight(1f)

@@ -51,7 +51,7 @@ fun FlexInput(
 	enabled: Boolean = true,
 	readOnly: Boolean = false,
 	maxLength: Int = Int.MAX_VALUE,
-	filterRegex: Regex? = null,
+	inputRegex: Regex? = null,
 	placeholder: @Composable (() -> Unit)? = null,
 	leadingIcon: FlexInputIcon? = null,
 	trailingIcon: FlexInputIcon? = null,
@@ -64,7 +64,9 @@ fun FlexInput(
 	val current = LocalFlexConfig.current
 	val config = current.input.getConfig(sizeType)
 	val targetColor = current.theme.colorScheme.current.getColor(colorType)
-	val color by animateColorAsState(targetColor)
+	val color by animateColorAsState(
+		targetValue = if (enabled) targetColor else targetColor.copy(alpha = 0.6f)
+	)
 	
 	CompositionLocalProvider(
 		LocalTextSelectionColors provides TextSelectionColors(
@@ -100,7 +102,7 @@ fun FlexInput(
 		BasicTextField(
 			value = value,
 			onValueChange = {
-				if (it.length <= maxLength && filterRegex?.matches(it) != false) {
+				if (it.length <= maxLength && inputRegex?.matches(it) != false) {
 					onValueChange(it)
 				}
 			},
@@ -148,10 +150,9 @@ fun FlexInput(
 					val iconSize by animateDpAsState(config.iconSize)
 					if (leadingIcon != null) {
 						FlexInputIcon(
-							icon = leadingIcon.icon,
-							size = iconSize,
-							tint = leadingIcon.tint ?: targetColor,
-							onClick = leadingIcon.onClick,
+							icon = leadingIcon,
+							iconSize = iconSize,
+							targetColor = targetColor,
 							isFocused = isFocused,
 							focusRequester = focusRequester,
 							interactionSource = leadingIconInteractionSource
@@ -196,10 +197,9 @@ fun FlexInput(
 					}
 					if (trailingIcon != null) {
 						FlexInputIcon(
-							icon = trailingIcon.icon,
-							size = iconSize,
-							tint = trailingIcon.tint ?: targetColor,
-							onClick = trailingIcon.onClick,
+							icon = trailingIcon,
+							iconSize = iconSize,
+							targetColor = targetColor,
 							isFocused = isFocused,
 							focusRequester = focusRequester,
 							interactionSource = trailingIconInteractionSource
@@ -213,15 +213,15 @@ fun FlexInput(
 
 @Composable
 private fun FlexInputIcon(
-	icon: ImageVector,
-	size: Dp,
-	tint: Color,
-	onClick: (() -> Unit)?,
+	icon: FlexInputIcon,
+	iconSize: Dp,
+	targetColor: Color,
 	isFocused: Boolean,
 	focusRequester: FocusRequester,
 	interactionSource: MutableInteractionSource,
 ) {
 	val isPressed by interactionSource.collectIsPressedAsState()
+	val tint = if (icon.tint != Color.Unspecified) icon.tint else targetColor
 	val iconTint by animateColorAsState(
 		targetValue = when {
 			!isFocused -> tint.copy(alpha = 0.6f)
@@ -229,18 +229,21 @@ private fun FlexInputIcon(
 			else -> tint
 		}
 	)
+	val size by animateDpAsState(
+		targetValue = if (icon.size != Dp.Unspecified) icon.size else iconSize,
+	)
 	Icon(
-		imageVector = icon,
+		imageVector = icon.icon,
 		contentDescription = null,
 		modifier = Modifier
 			.size(size)
 			.pointerHoverIcon(PointerIcon.Default)
 			.then(
-				if (onClick == null) Modifier else Modifier.clickable(
+				if (icon.onClick == null) Modifier else Modifier.clickable(
 					interactionSource = interactionSource,
 					indication = null,
 					onClick = {
-						onClick()
+						icon.onClick()
 						focusRequester.requestFocus()
 					}
 				)
@@ -265,13 +268,17 @@ object FlexInputs {
 	
 	fun icon(
 		icon: ImageVector,
-		tint: Color? = null,
+		tint: Color = Color.Unspecified,
+		rotate: Float = 0f,
+		size: Dp = Dp.Unspecified,
 		onClick: (() -> Unit)? = null,
-	) = FlexInputIcon(icon, tint, onClick)
+	) = FlexInputIcon(icon, tint, rotate, size, onClick)
 }
 
 class FlexInputIcon internal constructor(
 	val icon: ImageVector,
-	val tint: Color?,
+	val tint: Color,
+	val rotate: Float,
+	val size: Dp,
 	val onClick: (() -> Unit)?,
 )
