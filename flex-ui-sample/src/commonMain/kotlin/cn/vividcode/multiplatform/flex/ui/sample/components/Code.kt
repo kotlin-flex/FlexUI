@@ -36,8 +36,11 @@ import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * 代码框展示组件
+ */
 @Composable
-fun RowScope.Code2(
+fun RowScope.Code(
 	code: String,
 ) {
 	Column(
@@ -50,75 +53,29 @@ fun RowScope.Code2(
 				shape = RoundedCornerShape(8.dp)
 			)
 	) {
-		val stringStyle = StringStyle
-		val keywordStyle = KeywordStyle
-		val symbolStyle = SymbolStyle
-		val uppercaseWordStyle = UppercaseWordStyle
-		val codeString by remember(code, LocalDarkTheme.current) {
-			val keywordIndices = keywordRegexList.flatMap { regex ->
-				regex.findAll(code).flatMap { it.range.toList() }
+		val darkTheme = LocalDarkTheme.current
+		val spanStyles by remember(darkTheme) {
+			mutableStateOf(colorCodings.map { it.getSpanStyle(darkTheme) })
+		}
+		val indices by remember(code) {
+			val indices = colorCodings.map {
+				it.regex.findAll(code).flatMap { it.range.toList() }
 			}
-			val symbolIndices = symbolRegexList.flatMap { regex ->
-				regex.findAll(code).flatMap { it.range.toList() }
-			}
-			val uppercaseIndices = uppercaseWordRegex.findAll(code).flatMap {
-				it.range.toList()
-			}
-			val stringIndices = stringRegex.findAll(code).flatMap {
-				val list = it.range.toList()
-				if (list.size < 2) list else list.subList(1, list.size - 1)
-			}
-			val charIndices = charRegex.findAll(code).flatMap {
-				val list = it.range.toList()
-				if (list.size < 2) list else list.subList(1, list.size - 1)
-			}
-			val quotationMarksIndices = quotationMarksRegex.findAll(code).flatMap {
-				it.range.toList()
-			}
+			mutableStateOf(indices)
+		}
+		val codeString by remember(code, indices, darkTheme) {
 			val codeString = buildAnnotatedString {
 				code.forEachIndexed { index, char ->
-					when (index) {
-						in stringIndices -> {
-							withStyle(stringStyle) {
-								append(char)
-							}
+					val typeIndex = indices.indexOfFirst { index in it }
+					if (typeIndex != -1) {
+						withStyle(spanStyles[typeIndex]) {
+							append(char)
 						}
-						
-						in charIndices -> {
-							withStyle(stringStyle) {
-								append(char)
-							}
-						}
-						
-						in quotationMarksIndices -> {
-							withStyle(stringStyle) {
-								append(char)
-							}
-						}
-						
-						in keywordIndices -> {
-							withStyle(keywordStyle) {
-								append(char)
-							}
-						}
-						
-						in symbolIndices -> {
-							withStyle(symbolStyle) {
-								append(char)
-							}
-						}
-						
-						in uppercaseIndices -> {
-							withStyle(uppercaseWordStyle) {
-								append(char)
-							}
-						}
-						
-						else -> {
-							when {
-								char == '\t' -> append(" ".repeat(4))
-								else -> append(char)
-							}
+					} else {
+						if (char == '\t') {
+							append(" ".repeat(4))
+						} else {
+							append(char)
 						}
 					}
 				}
@@ -173,18 +130,14 @@ fun RowScope.Code2(
 				Text(
 					text = codeString.lines().mapIndexed { index, _ -> index + 1 }.joinToString("\n"),
 					modifier = Modifier
+						.width(36.dp)
 						.fillMaxHeight()
-						.padding(4.dp)
+						.padding(vertical = 4.dp)
 						.verticalScroll(verticalScrollState)
-						.padding(
-							start = 8.dp,
-							top = 3.dp,
-							bottom = 8.dp,
-							end = 8.dp
-						),
+						.padding(vertical = 4.dp),
 					fontSize = 13.sp,
 					lineHeight = 24.sp,
-					color = TextColor,
+					color = TextColor.copy(alpha = 0.6f),
 					textAlign = TextAlign.Center,
 				)
 				VerticalDivider()
@@ -197,9 +150,8 @@ fun RowScope.Code2(
 						.horizontalScroll(horizontalScrollState)
 						.verticalScroll(verticalScrollState)
 						.padding(
-							start = 8.dp,
-							top = 3.dp,
-							bottom = 8.dp,
+							horizontal = 8.dp,
+							vertical = 4.dp
 						),
 					color = TextColor,
 					fontSize = 14.sp,
@@ -239,8 +191,50 @@ fun RowScope.Code2(
 	}
 }
 
-private val keywordRegexList by lazy {
-	listOf(
+private val TextColor
+	@Composable
+	get() = if (LocalDarkTheme.current) Color(0xFFECF4FB) else Color(0xFF181A1E)
+
+
+private val colorCodings = arrayOf(
+	StringColorCoding,
+	KeywordColorCoding,
+	OperatorSymbolColorCoding,
+	NumberColorCoding,
+	UppercaseWordColorCoding
+)
+
+private sealed class ColorCoding {
+	
+	abstract val regex: Regex
+	
+	abstract val lightColor: Color
+	
+	abstract val darkColor: Color
+	
+	fun getSpanStyle(darkTheme: Boolean) = SpanStyle(
+		color = if (darkTheme) darkColor else lightColor
+	)
+}
+
+/**
+ * 字符串
+ */
+private data object StringColorCoding : ColorCoding() {
+	
+	override val regex = "\"\"\"[\\s\\S]*?\"\"\"|\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'".toRegex()
+	
+	override val lightColor: Color = Color(0xFF0B2256)
+	
+	override val darkColor = Color(0xFF95CCFF)
+}
+
+/**
+ * 关键字
+ */
+private data object KeywordColorCoding : ColorCoding() {
+	
+	private val keywords = arrayOf(
 		"abstract", "actual", "annotation", "as", "break", "by", "catch", "class",
 		"companion", "const", "constructor", "continue", "crossinline", "data",
 		"delegate", "do", "dynamic", "else", "enum", "expect", "external", "false",
@@ -248,60 +242,44 @@ private val keywordRegexList by lazy {
 		"init", "inline", "inner", "interface", "internal", "is", "lateinit",
 		"noinline", "null", "object", "open", "operator", "out", "override", "package",
 		"param", "private", "property", "protected", "public", "receiver", "reified",
-		"return", "sealed", "set", "setparam", "super", "suspend", "tailrec", "this",
+		"return", "sealed", "set", "super", "suspend", "tailrec", "this",
 		"throw", "true", "try", "typealias", "typeof", "val", "var", "vararg", "when",
 		"where", "while", "in"
-	).map { "\\b${Regex.escape(it)}\\b".toRegex() }
+	)
+	
+	override val regex = "\\b(${keywords.joinToString("|")})\\b".toRegex()
+	
+	override val lightColor = Color(0xFFC10A23)
+	
+	override val darkColor = Color(0xFFFC635F)
 }
 
-private val symbolRegexList by lazy {
-	listOf(
-		"+", "-", "*", "/", "%",
-		"=", "+=", "-=", "*=", "/=", "%=",
-		"==", "!=", ">", "<", ">=", "<=",
-		"&&", "||", "!",
-		"++", "--",
-		":", "..", "..<",
-		"?", "!!", "->", "@"
-	).map { Regex.escape(it).toRegex() }
+private data object OperatorSymbolColorCoding : ColorCoding() {
+	
+	override val regex = """\+\+|--|!=|==|>=|<=|\+=|-=|\*=|/=|%=|\.\.|\.\.<|&&|\|\||!!|->|[@:+*/%=<>&|\-!?]""".toRegex()
+	
+	override val lightColor = Color(0xFFC10A23)
+	
+	override val darkColor = Color(0xFFFC635F)
 }
 
-private val quotationMarksRegex = "['\"]".toRegex()
-
-private val uppercaseWordRegex = "\\b[A-Z][a-zA-Z]*\\b".toRegex()
-
-private val stringRegex = "\"([^\"]*)\"".toRegex()
-
-private val charRegex = "'([^\"]*)'".toRegex()
-
-private val numberRegex by lazy {
-	"\\d[f|L]+".toRegex()
+/**
+ * 数字
+ */
+private data object NumberColorCoding : ColorCoding() {
+	
+	override val regex = "-?\\d+(\\.\\d+)?[fFL]?".toRegex()
+	
+	override val lightColor = Color(0xFF093B9E)
+	
+	override val darkColor = Color(0xFF68B1FF)
 }
 
-private val StringStyle
-	@Composable
-	get() = SpanStyle(
-		color = if (LocalDarkTheme.current) Color(0xFF95CCFF) else Color(0xFF0B2256)
-	)
-
-private val KeywordStyle
-	@Composable
-	get() = SpanStyle(
-		color = if (LocalDarkTheme.current) Color(0xFFFC635F) else Color(0xFFC10A23)
-	)
-
-private val SymbolStyle
-	@Composable
-	get() = SpanStyle(
-		color = if (LocalDarkTheme.current) Color(0xFFFC635F) else Color(0xFFC10A23)
-	)
-
-private val UppercaseWordStyle
-	@Composable
-	get() = SpanStyle(
-		color = if (LocalDarkTheme.current) Color(0xFFC692FE) else Color(0xFF5220AB)
-	)
-
-private val TextColor
-	@Composable
-	get() = if (LocalDarkTheme.current) Color(0xFFECF4FB) else Color(0xFF181A1E)
+private data object UppercaseWordColorCoding : ColorCoding() {
+	
+	override val regex = "\\b[A-Z][a-zA-Z]*\\b".toRegex()
+	
+	override val lightColor = Color(0xFF5220AB)
+	
+	override val darkColor = Color(0xFFC692FE)
+}

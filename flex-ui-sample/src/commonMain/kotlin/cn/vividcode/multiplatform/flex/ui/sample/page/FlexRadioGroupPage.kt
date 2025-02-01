@@ -16,7 +16,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
-import cn.vividcode.multiplatform.flex.ui.sample.components.Code2
+import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
@@ -78,10 +78,10 @@ fun ColumnScope.FlexRadioPage() {
 				cornerType = FlexCornerType.$cornerType,
 				radioType = FlexRadioType.$radioType,
 				switchType = FlexRadioSwitchType.$switchType,
-				scaleEffect = $scaleEffect,
+				scaleEffect = $scaleEffect
 			)
 		""".trimIndent()
-		Code2(code)
+		Code(code)
 	}
 	HorizontalDivider()
 	val verticalScrollState = rememberScrollState()
