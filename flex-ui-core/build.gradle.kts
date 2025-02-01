@@ -130,13 +130,13 @@ fun String.isReleaseVersion(): Boolean {
 			5. 1.0.0            (正式版本)
 		""".trimIndent()
 	}
-	val releaseRegex = "-(exp|alpha|beta|rc)-\\d{2}$".toRegex()
-	return !this.matches(releaseRegex)
+	val regex = "^(?!.*(exp|rc|alpha|beta)).*$".toRegex()
+	return this.matches(regex)
 }
 
 mavenPublishing {
 	val release = flexUiVersion.isReleaseVersion()
-	publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, release)
+	publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = release)
 	signAllPublications()
 	
 	coordinates("cn.vividcode.multiplatform", "flex-ui", flexUiVersion)
