@@ -81,6 +81,7 @@ fun FlexInput(
 	visualTransformation: VisualTransformation = VisualTransformation.None,
 	keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 	keyboardActions: KeyboardActions = KeyboardActions.Default,
+	interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
 	val current = LocalFlexConfig.current
 	val config = current.input.getConfig(sizeType)
@@ -92,10 +93,9 @@ fun FlexInput(
 			backgroundColor = targetColor.copy(alpha = 0.15f)
 		)
 	) {
-		val textFieldInteractionSource = remember { MutableInteractionSource() }
 		val leadingIconInteractionSource = remember { MutableInteractionSource() }
 		val trailingIconInteractionSource = remember { MutableInteractionSource() }
-		val textFieldIsFocused by textFieldInteractionSource.collectIsFocusedAsState()
+		val textFieldIsFocused by interactionSource.collectIsFocusedAsState()
 		val leadingIconIsFocused by leadingIconInteractionSource.collectIsFocusedAsState()
 		val trailingIconIsFocused by trailingIconInteractionSource.collectIsFocusedAsState()
 		val isFocused by remember(textFieldIsFocused, leadingIconIsFocused, trailingIconIsFocused) {
@@ -136,7 +136,7 @@ fun FlexInput(
 			keyboardActions = keyboardActions,
 			singleLine = true,
 			visualTransformation = visualTransformation,
-			interactionSource = textFieldInteractionSource,
+			interactionSource = interactionSource,
 			cursorBrush = SolidColor(color),
 			decorationBox = @Composable { innerTextField ->
 				FlexInputDecorationBox(
@@ -296,12 +296,13 @@ private fun FlexInputIcon(
 	val size by animateDpAsState(
 		targetValue = if (icon.size != Dp.Unspecified) icon.size else iconSize,
 	)
+	val rotateDegrees by animateFloatAsState(icon.rotateDegrees)
 	Icon(
 		imageVector = icon.icon,
 		contentDescription = null,
 		modifier = Modifier
 			.size(size)
-			.rotate(icon.rotateDegrees)
+			.rotate(rotateDegrees)
 			.pointerHoverIcon(PointerIcon.Default)
 			.then(
 				if (icon.onClick == null) Modifier else Modifier.clickable(
