@@ -32,13 +32,12 @@
 
 ## FlexButton 按钮
 
-- 按钮有6种样式，分别为：主要的、默认、虚线框、填充、文本、链接
-- 当只设置图标时，宽度会和高度相同
-- 允许设置是否开启缩放效果（默认开启）
-
 ![FlexButton.png](image/FlexButton.png)
 
 ## FlexRadioGroup 单选框
 
-
 ![FlexRadioGroup.png](image/FlexRadioGroup.png)
+
+## FlexInput 输入框
+
+![FlexInput.png](image/FlexInput.png)

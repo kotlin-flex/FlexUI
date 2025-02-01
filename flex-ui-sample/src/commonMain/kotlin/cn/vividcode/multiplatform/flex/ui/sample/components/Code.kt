@@ -147,8 +147,14 @@ fun RowScope.Code(
 						.weight(1f)
 						.fillMaxHeight()
 						.padding(4.dp)
-						.horizontalScroll(horizontalScrollState)
-						.verticalScroll(verticalScrollState)
+						.horizontalScroll(
+							state = horizontalScrollState,
+							enabled = !verticalScrollState.isScrollInProgress
+						)
+						.verticalScroll(
+							state = verticalScrollState,
+							enabled = !horizontalScrollState.isScrollInProgress
+						)
 						.padding(
 							horizontal = 8.dp,
 							vertical = 4.dp
@@ -199,6 +205,7 @@ private val TextColor
 private val colorCodings = arrayOf(
 	StringColorCoding,
 	KeywordColorCoding,
+	BooleanColorCoding,
 	OperatorSymbolColorCoding,
 	NumberColorCoding,
 	UppercaseWordColorCoding
@@ -237,13 +244,13 @@ private data object KeywordColorCoding : ColorCoding() {
 	private val keywords = arrayOf(
 		"abstract", "actual", "annotation", "as", "break", "by", "catch", "class",
 		"companion", "const", "constructor", "continue", "crossinline", "data",
-		"delegate", "do", "dynamic", "else", "enum", "expect", "external", "false",
+		"delegate", "do", "dynamic", "else", "enum", "expect", "external",
 		"final", "finally", "for", "fun", "get", "if", "import", "in", "infix",
 		"init", "inline", "inner", "interface", "internal", "is", "lateinit",
 		"noinline", "null", "object", "open", "operator", "out", "override", "package",
 		"param", "private", "property", "protected", "public", "receiver", "reified",
 		"return", "sealed", "set", "super", "suspend", "tailrec", "this",
-		"throw", "true", "try", "typealias", "typeof", "val", "var", "vararg", "when",
+		"throw", "try", "typealias", "typeof", "val", "var", "vararg", "when",
 		"where", "while", "in"
 	)
 	
@@ -254,6 +261,21 @@ private data object KeywordColorCoding : ColorCoding() {
 	override val darkColor = Color(0xFFFC635F)
 }
 
+/**
+ * 布尔值
+ */
+private data object BooleanColorCoding : ColorCoding() {
+	
+	override val regex = "\\b(true|false)\\b".toRegex()
+	
+	override val lightColor = Color(0xFF093B9E)
+	
+	override val darkColor = Color(0xFF68B1FF)
+}
+
+/**
+ * 运算符
+ */
 private data object OperatorSymbolColorCoding : ColorCoding() {
 	
 	override val regex = """\+\+|--|!=|==|>=|<=|\+=|-=|\*=|/=|%=|\.\.|\.\.<|&&|\|\||!!|->|[@:+*/%=<>&|\-!?]""".toRegex()
@@ -275,6 +297,9 @@ private data object NumberColorCoding : ColorCoding() {
 	override val darkColor = Color(0xFF68B1FF)
 }
 
+/**
+ * 大写
+ */
 private data object UppercaseWordColorCoding : ColorCoding() {
 	
 	override val regex = "\\b[A-Z][a-zA-Z]*\\b".toRegex()

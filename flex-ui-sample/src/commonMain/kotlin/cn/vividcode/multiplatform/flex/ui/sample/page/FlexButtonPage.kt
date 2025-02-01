@@ -4,12 +4,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
@@ -17,6 +20,7 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
+import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
@@ -33,11 +37,12 @@ import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
  */
 @Composable
 fun ColumnScope.FlexButtonPage() {
+	var buttonText by remember { mutableStateOf("FlexButton") }
 	var buttonType by remember { mutableStateOf(FlexButtonType.Default) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
 	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Default) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Default) }
-	var showIcon by remember { mutableStateOf(true) }
+	var iconType by remember { mutableStateOf(IconType.None) }
 	var iconPosition by remember { mutableStateOf(FlexButtonIconPosition.End) }
 	var scaleEffect by remember { mutableStateOf(true) }
 	var enabled by remember { mutableStateOf(true) }
@@ -54,8 +59,8 @@ fun ColumnScope.FlexButtonPage() {
 			contentAlignment = Alignment.Center
 		) {
 			FlexButton(
-				text = "FlexButton",
-				icon = if (showIcon) Icons.Rounded.Search else null,
+				text = buttonText,
+				icon = iconType.icon,
 				sizeType = sizeType,
 				colorType = colorType,
 				cornerType = cornerType,
@@ -69,8 +74,8 @@ fun ColumnScope.FlexButtonPage() {
 		Spacer(Modifier.width(12.dp))
 		val code = """
 			FlexButton(
-				text = "FlexButton",
-				icon = ${if (showIcon) "Icons.Rounded.Search" else "null"},
+				text = "$buttonText",
+				icon = ${iconType.code},
 				sizeType = FlexSizeType.$sizeType,
 				colorType = FlexColorType.$colorType,
 				cornerType = FlexCornerType.$cornerType,
@@ -92,6 +97,18 @@ fun ColumnScope.FlexButtonPage() {
 			.verticalScroll(verticalScrollState)
 			.padding(8.dp)
 	) {
+		TitleLayout(
+			title = { Text("Button Text") }
+		) {
+			FlexInput(
+				value = buttonText,
+				onValueChange = { buttonText = it },
+				sizeType = FlexSizeType.Small,
+				colorType = colorType,
+				placeholder = { Text("Button Text") }
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Button Type") }
 		) {
@@ -150,12 +167,12 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Icon Visible") }
+			title = { Text("Icon") }
 		) {
 			FlexRadioGroup(
-				selectedKey = showIcon,
-				onSelectedKeyChange = { showIcon = it },
-				options = booleanOptions,
+				selectedKey = iconType,
+				onSelectedKeyChange = { iconType = it },
+				options = iconTypeOptions,
 				sizeType = FlexSizeType.Small,
 				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
@@ -210,3 +227,31 @@ fun ColumnScope.FlexButtonPage() {
 private val iconPositionOptions = FlexButtonIconPosition.entries.map { RadioOption(it, it.toString()) }
 
 private val buttonTypeOptions = FlexButtonType.entries.map { RadioOption(it, it.toString()) }
+
+private enum class IconType(
+	val icon: ImageVector?,
+	val code: String,
+) {
+	
+	Search(
+		icon = Icons.Rounded.Search,
+		code = "Icons.Rounded.Search"
+	),
+	
+	Add(
+		icon = Icons.Rounded.Add,
+		code = "Icons.Rounded.Add"
+	),
+	
+	KeyboardArrowRight(
+		icon = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+		code = "Icons.AutoMirrored.Rounded.KeyboardArrowRight"
+	),
+	
+	None(
+		icon = null,
+		code = "null"
+	)
+}
+
+private val iconTypeOptions = IconType.entries.map { RadioOption(it, it.toString()) }

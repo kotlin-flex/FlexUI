@@ -35,10 +35,11 @@ import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
  */
 @Composable
 fun ColumnScope.FlexInputPage() {
+	var exampleType by remember { mutableStateOf(ExampleType.Default) }
+	var prefixSuffixType by remember { mutableStateOf(PrefixSuffixType.None) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
 	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Default) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Default) }
-	var example by remember { mutableStateOf(FlexInputExample.Default) }
 	var enabled by remember { mutableStateOf(true) }
 	var readOnly by remember { mutableStateOf(false) }
 	Row(
@@ -54,8 +55,8 @@ fun ColumnScope.FlexInputPage() {
 			contentAlignment = Alignment.Center
 		) {
 			var value by remember { mutableStateOf("") }
-			when (example) {
-				FlexInputExample.Default -> {
+			when (exampleType) {
+				ExampleType.Default -> {
 					FlexInput(
 						value = value,
 						onValueChange = { value = it },
@@ -64,13 +65,17 @@ fun ColumnScope.FlexInputPage() {
 						cornerType = cornerType,
 						enabled = enabled,
 						readOnly = readOnly,
-						placeholder = {
-							Text("Input Text")
-						},
+						placeholder = { Text("Input Text") },
+						prefix = if (prefixSuffixType.prefix) ({
+							Text("Prefix")
+						}) else null,
+						suffix = if (prefixSuffixType.suffix) ({
+							Text("Suffix")
+						}) else null,
 					)
 				}
 				
-				FlexInputExample.Password -> {
+				ExampleType.Password -> {
 					var visualTransformation by remember {
 						mutableStateOf<VisualTransformation>(PasswordVisualTransformation())
 					}
@@ -82,9 +87,7 @@ fun ColumnScope.FlexInputPage() {
 						cornerType = cornerType,
 						enabled = enabled,
 						readOnly = readOnly,
-						placeholder = {
-							Text("Input Password")
-						},
+						placeholder = { Text("Input Password") },
 						leadingIcon = FlexInputs.icon(
 							icon = Icons.Rounded.Lock
 						),
@@ -105,7 +108,7 @@ fun ColumnScope.FlexInputPage() {
 					)
 				}
 				
-				FlexInputExample.Search -> {
+				ExampleType.Search -> {
 					val isEmpty by remember(value) {
 						derivedStateOf { value.isEmpty() }
 					}
@@ -117,9 +120,7 @@ fun ColumnScope.FlexInputPage() {
 						cornerType = cornerType,
 						enabled = enabled,
 						readOnly = readOnly,
-						placeholder = {
-							Text("Search Text")
-						},
+						placeholder = { Text("Search Text") },
 						leadingIcon = FlexInputs.icon(
 							icon = Icons.Rounded.Search
 						),
@@ -135,9 +136,9 @@ fun ColumnScope.FlexInputPage() {
 			}
 		}
 		Spacer(Modifier.width(12.dp))
-		val code = when (example) {
-			FlexInputExample.Default ->
-				"""
+		val code = when (exampleType) {
+			ExampleType.Default -> {
+				val code = """
 					var value by remember { mutableStateOf("") }
 					FlexInput(
 						value = value,
@@ -147,13 +148,15 @@ fun ColumnScope.FlexInputPage() {
 						cornerType = FlexCornerType.$cornerType,
 						enabled = $enabled,
 						readOnly = $readOnly,
-						placeholder = {
-							Text("Input Text")
-						}
+						placeholder = { Text("Input Text") },
+						prefix = ${if (prefixSuffixType.prefix) "{ Text(\"Prefix\") }" else "null"},
+						suffix = ${if (prefixSuffixType.suffix) "{ Text(\"Suffix\") }" else "null"}
 					)
 				""".trimIndent()
+				code
+			}
 			
-			FlexInputExample.Password ->
+			ExampleType.Password ->
 				"""
 					var value by remember { mutableStateOf("") }
 					var visualTransformation by remember {
@@ -167,9 +170,7 @@ fun ColumnScope.FlexInputPage() {
 						cornerType = FlexCornerType.$cornerType,
 						enabled = $enabled,
 						readOnly = $readOnly,
-						placeholder = {
-							Text("Input Password")
-						},
+						placeholder = { Text("Input Password") },
 						leadingIcon = FlexInputs.icon(
 							icon = Icons.Rounded.Lock
 						),
@@ -190,7 +191,7 @@ fun ColumnScope.FlexInputPage() {
 					)
 				""".trimIndent()
 			
-			FlexInputExample.Search ->
+			ExampleType.Search ->
 				"""
 					var value by remember { mutableStateOf("") }
 					val isEmpty by remember(value) {
@@ -204,9 +205,7 @@ fun ColumnScope.FlexInputPage() {
 						cornerType = FlexCornerType.$cornerType,
 						enabled = $enabled,
 						readOnly = $readOnly,
-						placeholder = {
-							Text("Search Text")
-						},
+						placeholder = { Text("Search Text") },
 						leadingIcon = FlexInputs.icon(
 							icon = Icons.Rounded.Search
 						),
@@ -229,6 +228,34 @@ fun ColumnScope.FlexInputPage() {
 			.verticalScroll(verticalScrollState)
 			.padding(8.dp)
 	) {
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
+			title = { Text("Example Type") }
+		) {
+			FlexRadioGroup(
+				selectedKey = exampleType,
+				onSelectedKeyChange = { exampleType = it },
+				options = exampleTypeOptions,
+				sizeType = FlexSizeType.Small,
+				colorType = FlexColorType.Primary,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
+			title = { Text("Show Prefix And Suffix") }
+		) {
+			FlexRadioGroup(
+				selectedKey = prefixSuffixType,
+				onSelectedKeyChange = { prefixSuffixType = it },
+				options = prefixSuffixTypeOptions,
+				sizeType = FlexSizeType.Small,
+				colorType = FlexColorType.Primary,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = { Text("Size Type") }
@@ -274,20 +301,6 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Input Example") }
-		) {
-			FlexRadioGroup(
-				selectedKey = example,
-				onSelectedKeyChange = { example = it },
-				options = inputExampleOptions,
-				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
 			title = { Text("Enabled") }
 		) {
 			FlexRadioGroup(
@@ -317,7 +330,7 @@ fun ColumnScope.FlexInputPage() {
 	}
 }
 
-private enum class FlexInputExample {
+private enum class ExampleType {
 	
 	Default,
 	
@@ -326,4 +339,20 @@ private enum class FlexInputExample {
 	Search
 }
 
-private val inputExampleOptions = FlexInputExample.entries.map { RadioOption(it, it.toString()) }
+private enum class PrefixSuffixType(
+	val prefix: Boolean,
+	val suffix: Boolean,
+) {
+	
+	None(prefix = false, suffix = false),
+	
+	Prefix(prefix = true, suffix = false),
+	
+	Suffix(prefix = false, suffix = true),
+	
+	Both(prefix = true, suffix = true),
+}
+
+private val exampleTypeOptions = ExampleType.entries.map { RadioOption(it, it.toString()) }
+
+private val prefixSuffixTypeOptions = PrefixSuffixType.entries.map { RadioOption(it, it.toString()) }

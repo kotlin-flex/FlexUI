@@ -197,4 +197,4 @@ private val radioTypeOptions = FlexRadioType.entries.map { RadioOption(it, it.to
 
 private val switchTypeOptions = FlexRadioSwitchType.entries.map { RadioOption(it, it.toString()) }
 
-private val disabledOptions = (1 .. 4).map { RadioOption(it, if (it < 4) "Option $it" else "Cancel") }
+private val disabledOptions = (1 .. 4).map { RadioOption(it, if (it < 4) "Option $it" else "None") }
