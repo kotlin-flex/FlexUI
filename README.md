@@ -40,8 +40,5 @@
 
 ## FlexRadioGroup 单选框
 
-- 单选框有2种样式，分别为：按钮、默认
-- 单选框有2种动画效果，分别为：默认、滑动
-- 允许设置是否开启缩放效果（默认开启）
 
 ![FlexRadioGroup.png](image/FlexRadioGroup.png)
