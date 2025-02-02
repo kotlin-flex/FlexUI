@@ -133,7 +133,7 @@ compose.desktop {
 		
 		nativeDistributions {
 			targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
-			packageName = "cn.vividcode.multiplatform.flex.ui.sample"
+			packageName = "Flex UI"
 			packageVersion = sampleVersion
 		}
 	}

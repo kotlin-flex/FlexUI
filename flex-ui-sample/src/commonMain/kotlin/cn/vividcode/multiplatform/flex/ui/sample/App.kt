@@ -5,19 +5,21 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.PlaylistRemove
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.rounded.Circle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -34,14 +36,13 @@ import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.sample.page.FlexButtonPage
 import cn.vividcode.multiplatform.flex.ui.sample.page.FlexInputPage
 import cn.vividcode.multiplatform.flex.ui.sample.page.FlexRadioPage
+import cn.vividcode.multiplatform.flex.ui.sample.page.SettingsPage
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.math.sqrt
 
-private val ItemWidth = 220.dp
-
-private const val VERSION_NAME = "v1.0.0-exp-04"
+private const val VERSION_NAME = "v1.0.0-exp-05"
 
 private val versionType = VersionType.EXP
 
@@ -70,23 +71,26 @@ fun App() {
 				}
 			}
 	) {
-		var itemOffsetX by remember { mutableStateOf(Dp.Hairline) }
+		var showSidebar by remember { mutableStateOf(true) }
+		var showSettings by remember { mutableStateOf(false) }
 		Box(
 			modifier = Modifier.fillMaxSize()
 		) {
-			var currentFlexType by remember { mutableStateOf(FlexType.FlexButton) }
-			val targetItemOffsetX by animateDpAsState(itemOffsetX)
+			var currentPageRoute by remember { mutableStateOf(PageRoute.FlexButton) }
+			val sidebarOffsetX by animateDpAsState(
+				targetValue = if (showSidebar) Dp.Hairline else -(220.dp)
+			)
 			Column(
 				modifier = Modifier
-					.width(ItemWidth)
+					.width(220.dp)
 					.fillMaxHeight()
 					.background(MaterialTheme.colorScheme.surfaceContainerLow)
 					.padding(horizontal = 8.dp)
-					.offset(x = targetItemOffsetX)
+					.offset(x = sidebarOffsetX)
 			) {
 				Column(
 					modifier = Modifier
-						.widthIn(min = ItemWidth)
+						.fillMaxWidth()
 						.height(110.dp)
 						.padding(top = 20.dp),
 					horizontalAlignment = Alignment.CenterHorizontally,
@@ -107,17 +111,18 @@ fun App() {
 				Spacer(modifier = Modifier.height(8.dp))
 				Column(
 					modifier = Modifier
-						.widthIn(min = ItemWidth)
-						.fillMaxSize()
-						.padding(bottom = 60.dp)
+						.fillMaxWidth()
+						.weight(1f)
+						.padding(bottom = 4.dp)
 				) {
-					FlexType.entries.forEach { flexPage ->
+					PageRoute.entries.forEachIndexed { index, it ->
+						if (index != 0) {
+							Spacer(modifier = Modifier.height(4.dp))
+						}
 						ComponentItem(
-							flexType = flexPage,
-							value = currentFlexType,
-							onValueChange = {
-								currentFlexType = it
-							}
+							pageRoute = it,
+							value = currentPageRoute,
+							onValueChange = { currentPageRoute = it }
 						)
 					}
 				}
@@ -125,23 +130,10 @@ fun App() {
 			Scaffold(
 				modifier = Modifier
 					.fillMaxSize()
-					.padding(start = targetItemOffsetX + ItemWidth),
+					.padding(start = sidebarOffsetX + 220.dp),
 				topBar = {
 					TopAppBar(
-						title = {
-							Row(
-								modifier = Modifier.fillMaxHeight(),
-								verticalAlignment = Alignment.CenterVertically,
-							) {
-								Text(
-									text = currentFlexType.name,
-									fontSize = 20.sp,
-									fontWeight = FontWeight.Medium,
-									color = MaterialTheme.colorScheme.onSurface,
-									lineHeight = 20.sp
-								)
-							}
-						},
+						title = { Text(text = currentPageRoute.name) },
 						actions = {
 							var refreshRate by remember { mutableLongStateOf(-1) }
 							LaunchedEffect(Unit) {
@@ -174,11 +166,11 @@ fun App() {
 							Spacer(modifier = Modifier.width(if (FlexPlatform.isMobile) 8.dp else 70.dp))
 							if (FlexPlatform.isMobile) {
 								FlexButton(
-									icon = if (itemOffsetX == Dp.Hairline) Icons.Outlined.PlaylistRemove else Icons.AutoMirrored.Outlined.PlaylistPlay,
-									colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
+									icon = if (showSidebar) Icons.Outlined.PlaylistRemove else Icons.AutoMirrored.Outlined.PlaylistPlay,
+									colorType = if (showSidebar) FlexColorType.Default else FlexColorType.Primary,
 									buttonType = FlexButtonType.Primary
 								) {
-									itemOffsetX = if (itemOffsetX == Dp.Hairline) -ItemWidth else Dp.Hairline
+									showSidebar = !showSidebar
 								}
 								Spacer(modifier = Modifier.width(8.dp))
 								FlexButton(
@@ -186,7 +178,7 @@ fun App() {
 									buttonType = FlexButtonType.Primary,
 									iconRotation = if (LocalDarkTheme.current) -90f else 0f
 								) {
-									FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
+									FlexThemeState.darkTheme = !FlexThemeState.darkTheme
 								}
 							}
 						}
@@ -198,12 +190,47 @@ fun App() {
 						.fillMaxSize()
 						.padding(it)
 				) {
-					when (currentFlexType) {
-						FlexType.FlexButton -> FlexButtonPage()
-						FlexType.FlexRadioGroup -> FlexRadioPage()
-						FlexType.FlexInput -> FlexInputPage()
+					when (currentPageRoute) {
+						PageRoute.FlexButton -> FlexButtonPage()
+						PageRoute.FlexRadioGroup -> FlexRadioPage()
+						PageRoute.FlexInput -> FlexInputPage()
 					}
 				}
+			}
+			val settingsOffsetX by animateDpAsState(
+				targetValue = if (showSettings) Dp.Hairline else 380.dp
+			)
+			if (showSettings) {
+				Box(
+					modifier = Modifier
+						.fillMaxSize()
+						.clickable(
+							interactionSource = null,
+							indication = null,
+							onClick = {
+								showSettings = false
+							}
+						)
+				)
+			}
+			Scaffold(
+				modifier = Modifier
+					.offset(x = settingsOffsetX)
+					.width(380.dp)
+					.fillMaxHeight()
+					.shadow(elevation = 12.dp)
+					.align(Alignment.CenterEnd),
+				topBar = {
+					TopAppBar(
+						title = { Text("Settings") },
+						colors = TopAppBarDefaults.topAppBarColors(
+							containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+						)
+					)
+				},
+				containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+			) {
+				SettingsPage(it)
 			}
 		}
 		if (!FlexPlatform.isMobile) {
@@ -225,20 +252,30 @@ fun App() {
 				FlexButton(
 					icon = if (LocalDarkTheme.current) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
 					buttonType = FlexButtonType.Primary,
-					iconRotation = themeIconRotation
+					iconRotation = themeIconRotation,
+					scaleEffect = true
 				) {
-					FlexThemeState.darkTheme = !FlexThemeState.darkTheme!!
+					FlexThemeState.darkTheme = !FlexThemeState.darkTheme
 				}
 				Spacer(modifier = Modifier.height(8.dp))
 				FlexButton(
-					icon = when (itemOffsetX == Dp.Hairline) {
+					icon = Icons.Outlined.Settings,
+					buttonType = FlexButtonType.Primary,
+					scaleEffect = true
+				) {
+					showSettings = true
+				}
+				Spacer(modifier = Modifier.height(8.dp))
+				FlexButton(
+					icon = when (showSidebar) {
 						true -> Icons.Outlined.PlaylistRemove
 						false -> Icons.AutoMirrored.Outlined.PlaylistPlay
 					},
-					colorType = if (itemOffsetX == Dp.Hairline) FlexColorType.Default else FlexColorType.Primary,
-					buttonType = FlexButtonType.Primary
+					colorType = if (showSidebar) FlexColorType.Primary else FlexColorType.Default,
+					buttonType = FlexButtonType.Primary,
+					scaleEffect = true
 				) {
-					itemOffsetX = if (itemOffsetX == Dp.Hairline) -(ItemWidth) else Dp.Hairline
+					showSidebar = !showSidebar
 				}
 			}
 		}
@@ -246,7 +283,7 @@ fun App() {
 	}
 }
 
-enum class FlexType {
+enum class PageRoute {
 	FlexButton,
 	FlexRadioGroup,
 	FlexInput
@@ -254,9 +291,9 @@ enum class FlexType {
 
 @Composable
 private fun ComponentItem(
-	flexType: FlexType,
-	value: FlexType,
-	onValueChange: (FlexType) -> Unit,
+	pageRoute: PageRoute,
+	value: PageRoute,
+	onValueChange: (PageRoute) -> Unit,
 ) {
 	Row(
 		modifier = Modifier
@@ -264,18 +301,18 @@ private fun ComponentItem(
 			.height(40.dp)
 			.clip(RoundedCornerShape(10.dp))
 			.background(
-				color = if (value == flexType) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
+				color = if (value == pageRoute) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
 				shape = RoundedCornerShape(10.dp)
 			)
 			.clickable {
-				onValueChange(flexType)
+				onValueChange(pageRoute)
 			}
 			.padding(horizontal = 16.dp),
 		verticalAlignment = Alignment.CenterVertically,
 		horizontalArrangement = Arrangement.SpaceBetween
 	) {
 		Text(
-			text = flexType.name,
+			text = pageRoute.name,
 			modifier = Modifier.weight(1f),
 			fontSize = 15.sp,
 			color = MaterialTheme.colorScheme.onSurface,
@@ -283,14 +320,12 @@ private fun ComponentItem(
 			maxLines = 1,
 			overflow = TextOverflow.Ellipsis
 		)
-		if (value == flexType) {
-			Box(
-				modifier = Modifier
-					.size(10.dp)
-					.background(
-						color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-						shape = CircleShape
-					)
+		if (value == pageRoute) {
+			Icon(
+				imageVector = Icons.Rounded.Circle,
+				contentDescription = null,
+				modifier = Modifier.size(10.dp),
+				tint = MaterialTheme.colorScheme.onSurface
 			)
 		}
 	}

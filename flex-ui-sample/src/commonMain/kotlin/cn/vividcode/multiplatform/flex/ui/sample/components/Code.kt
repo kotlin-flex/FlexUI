@@ -90,7 +90,7 @@ fun RowScope.Code(
 			verticalAlignment = Alignment.CenterVertically,
 		) {
 			FlexButton(
-				text = "Kotlin",
+				text = "Kotlin v${KotlinVersion.CURRENT}",
 				sizeType = FlexSizeType.ExtraSmall,
 				buttonType = FlexButtonType.Link,
 				scaleEffect = false

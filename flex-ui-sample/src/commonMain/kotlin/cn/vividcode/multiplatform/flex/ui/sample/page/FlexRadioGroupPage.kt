@@ -93,7 +93,7 @@ fun ColumnScope.FlexRadioPage() {
 			.padding(8.dp)
 	) {
 		TitleLayout(
-			title = { Text("Radio Type") }
+			title = "Radio Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = radioType,
@@ -107,7 +107,7 @@ fun ColumnScope.FlexRadioPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Size Type") }
+			title = "Size Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = sizeType,
@@ -121,7 +121,7 @@ fun ColumnScope.FlexRadioPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Color Type") }
+			title = "Color Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = colorType,
@@ -135,7 +135,7 @@ fun ColumnScope.FlexRadioPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Corner Type") }
+			title = "Corner Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = cornerType,
@@ -150,7 +150,7 @@ fun ColumnScope.FlexRadioPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Switch Type") }
+			title = "Switch Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = switchType,
@@ -164,7 +164,7 @@ fun ColumnScope.FlexRadioPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Scale Effect") }
+			title = "Scale Effect"
 		) {
 			FlexRadioGroup(
 				selectedKey = scaleEffect,
@@ -178,7 +178,7 @@ fun ColumnScope.FlexRadioPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Option Disabled") }
+			title = "Option Disabled"
 		) {
 			FlexRadioGroup(
 				selectedKey = disabledOption,

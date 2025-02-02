@@ -98,11 +98,12 @@ fun ColumnScope.FlexButtonPage() {
 			.padding(8.dp)
 	) {
 		TitleLayout(
-			title = { Text("Button Text") }
+			title = "Button Text"
 		) {
 			FlexInput(
 				value = buttonText,
 				onValueChange = { buttonText = it },
+				modifier = Modifier.width(220.dp),
 				sizeType = FlexSizeType.Small,
 				colorType = colorType,
 				placeholder = { Text("Button Text") }
@@ -110,7 +111,7 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Button Type") }
+			title = "Button Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = buttonType,
@@ -124,7 +125,7 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Size Type") }
+			title = "Size Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = sizeType,
@@ -138,7 +139,7 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Color Type") }
+			title = "Color Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = colorType,
@@ -152,7 +153,7 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Corner Type") }
+			title = "Corner Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = cornerType,
@@ -167,7 +168,7 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Icon") }
+			title = "Icon"
 		) {
 			FlexRadioGroup(
 				selectedKey = iconType,
@@ -181,7 +182,7 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Icon Position") }
+			title = "Icon Position"
 		) {
 			FlexRadioGroup(
 				selectedKey = iconPosition,
@@ -195,7 +196,7 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Scale Effect") }
+			title = "Scale Effect"
 		) {
 			FlexRadioGroup(
 				selectedKey = scaleEffect,
@@ -209,7 +210,7 @@ fun ColumnScope.FlexButtonPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Enabled") }
+			title = "Enabled"
 		) {
 			FlexRadioGroup(
 				selectedKey = enabled,

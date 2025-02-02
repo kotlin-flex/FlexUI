@@ -230,7 +230,7 @@ fun ColumnScope.FlexInputPage() {
 	) {
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Example Type") }
+			title = "Example Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = exampleType,
@@ -244,7 +244,7 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Show Prefix And Suffix") }
+			title = "Show Prefix And Suffix"
 		) {
 			FlexRadioGroup(
 				selectedKey = prefixSuffixType,
@@ -258,7 +258,7 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Size Type") }
+			title = "Size Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = sizeType,
@@ -272,7 +272,7 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Color Type") }
+			title = "Color type"
 		) {
 			FlexRadioGroup(
 				selectedKey = colorType,
@@ -286,7 +286,7 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Corner Type") }
+			title = "Corner Type"
 		) {
 			FlexRadioGroup(
 				selectedKey = cornerType,
@@ -301,7 +301,7 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Enabled") }
+			title = "Enabled"
 		) {
 			FlexRadioGroup(
 				selectedKey = enabled,
@@ -315,7 +315,7 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = { Text("Read Only") }
+			title = "Read Only"
 		) {
 			FlexRadioGroup(
 				selectedKey = readOnly,

@@ -1,22 +1,16 @@
 package cn.vividcode.multiplatform.flex.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.Typography
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import cn.vividcode.multiplatform.flex.ui.config.FlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.flexConfig
-import androidx.compose.material3.darkColorScheme as defaultDarkColorScheme
-import androidx.compose.material3.lightColorScheme as defaultLightColorScheme
 
 @Composable
 fun FlexTheme(
 	darkTheme: Boolean = isSystemInDarkTheme(),
-	lightColorScheme: () -> ColorScheme = { defaultLightColorScheme() },
-	darkColorScheme: () -> ColorScheme = { defaultDarkColorScheme() },
+	colorSchemes: ColorSchemes = DefaultColorSchemes,
 	shapes: Shapes = MaterialTheme.shapes,
 	typography: Typography = MaterialTheme.typography,
 	flexConfig: FlexConfig = flexConfig(),
@@ -30,12 +24,26 @@ fun FlexTheme(
 		LocalFlexConfig provides flexConfig
 	) {
 		MaterialTheme(
-			colorScheme = if (LocalDarkTheme.current) darkColorScheme() else lightColorScheme(),
+			colorScheme = if (LocalDarkTheme.current) colorSchemes.darkScheme else colorSchemes.lightScheme,
 			shapes = shapes,
 			typography = typography,
 			content = content
 		)
 	}
+}
+
+interface ColorSchemes {
+	
+	val lightScheme: ColorScheme
+	
+	val darkScheme: ColorScheme
+}
+
+object DefaultColorSchemes : ColorSchemes {
+	
+	override val lightScheme = lightColorScheme()
+	
+	override val darkScheme = darkColorScheme()
 }
 
 object FlexThemeState {
