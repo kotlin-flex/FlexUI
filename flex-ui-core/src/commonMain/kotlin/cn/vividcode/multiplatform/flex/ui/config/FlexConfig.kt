@@ -23,6 +23,8 @@ class FlexConfig internal constructor() {
 	
 	internal val input = FlexSizeConfig(FlexInputSizeDefaults)
 	
+	internal val switch = FlexSizeConfig(FlexSwitchSizeDefaults)
+	
 	/**
 	 * 主题配置
 	 */
@@ -56,5 +58,12 @@ class FlexConfig internal constructor() {
 	 */
 	fun input(config: FlexSizeConfig<FlexInputConfig>.() -> Unit) {
 		this.input.apply(config)
+	}
+	
+	/**
+	 * 开关配置
+	 */
+	fun switch(config: FlexSizeConfig<FlexSwitchConfig>.() -> Unit) {
+		this.switch.apply(config)
 	}
 }
