@@ -135,25 +135,15 @@ fun App() {
 					TopAppBar(
 						title = { Text(text = currentPageRoute.name) },
 						actions = {
-							var refreshRate by remember { mutableLongStateOf(-1) }
-							LaunchedEffect(Unit) {
-								var lastFrameTime = 0L
-								var total = 0L
-								while (true) {
-									withFrameNanos { currentFrameTime ->
-										if (lastFrameTime != 0L) {
-											total += currentFrameTime - lastFrameTime
-											if (total > 500_000_000) {
-												total %= 500_000_000
-												refreshRate = 1_000_000_000 / (currentFrameTime - lastFrameTime)
-											}
-										}
-										lastFrameTime = currentFrameTime
-									}
-								}
+							var refreshRate by remember { mutableLongStateOf(0L) }
+							frameNanosListener {
+								refreshRate = it
+							}
+							val frameText by remember(refreshRate) {
+								derivedStateOf { "$refreshRate FPS" }
 							}
 							FlexButton(
-								text = "${if (refreshRate == -1L) "NaN" else refreshRate} FPS",
+								text = frameText,
 								modifier = Modifier
 									.width(90.dp),
 								colorType = when {
@@ -370,5 +360,32 @@ private fun BoxScope.VersionType() {
 			color = Color.White,
 			lineHeight = 14.sp
 		)
+	}
+}
+
+@Composable
+private fun frameNanosListener(callback: (frame: Long) -> Unit) {
+	LaunchedEffect(Unit) {
+		var lastFrameTime = 0L
+		var lastUpdateTime = 0L
+		val frameTimes = ArrayDeque<Long>(10)
+		while (true) {
+			withFrameNanos { currentFrameTime ->
+				if (lastFrameTime != 0L) {
+					val frameDuration = currentFrameTime - lastFrameTime
+					
+					if (frameTimes.size >= 10) {
+						frameTimes.removeFirst()
+					}
+					frameTimes += frameDuration
+					if (currentFrameTime - lastUpdateTime >= 500_000_000L) {
+						val averageFrameTime = frameTimes.average().toLong()
+						callback(1_000_000_000L / averageFrameTime)
+						lastUpdateTime = currentFrameTime
+					}
+				}
+				lastFrameTime = currentFrameTime
+			}
+		}
 	}
 }
