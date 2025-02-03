@@ -154,7 +154,7 @@ fun App() {
 							if (FlexPlatform.isMobile) {
 								FlexButton(
 									icon = if (showSidebar) Icons.Outlined.PlaylistRemove else Icons.AutoMirrored.Outlined.PlaylistPlay,
-									colorType = if (showSidebar) FlexColorType.Default else FlexColorType.Primary,
+									colorType = if (showSidebar) FlexColorType.OnSurface else FlexColorType.Primary,
 									buttonType = FlexButtonType.Primary
 								) {
 									showSidebar = !showSidebar
@@ -249,7 +249,7 @@ fun App() {
 				FlexButton(
 					icon = Icons.Outlined.Settings,
 					buttonType = FlexButtonType.Primary,
-					colorType = if (showSettings) FlexColorType.Primary else FlexColorType.Default,
+					colorType = if (showSettings) FlexColorType.Primary else FlexColorType.OnSurface,
 					scaleEffect = true
 				) {
 					showSettings = !showSettings
@@ -260,7 +260,7 @@ fun App() {
 						true -> Icons.Outlined.PlaylistRemove
 						false -> Icons.AutoMirrored.Outlined.PlaylistPlay
 					},
-					colorType = if (showSidebar) FlexColorType.Primary else FlexColorType.Default,
+					colorType = if (showSidebar) FlexColorType.Primary else FlexColorType.OnSurface,
 					buttonType = FlexButtonType.Primary,
 					scaleEffect = true
 				) {

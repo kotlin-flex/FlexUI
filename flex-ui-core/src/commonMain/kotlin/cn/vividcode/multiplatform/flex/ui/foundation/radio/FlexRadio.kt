@@ -88,7 +88,7 @@ fun <Key> FlexRadio(
 @Suppress("ConstPropertyName")
 object FlexRadioDefaults : FlexDefaults() {
 	
-	override val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+	override val FlexComposeDefaultConfig.defaultConfig
 		get() = this.radio
 	
 	val DefaultRadioType = FlexRadioType.Default

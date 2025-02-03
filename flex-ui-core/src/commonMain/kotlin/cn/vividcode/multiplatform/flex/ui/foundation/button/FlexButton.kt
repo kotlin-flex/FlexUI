@@ -307,7 +307,7 @@ private fun Modifier.backgroundBorderStyle(
 @Suppress("ConstPropertyName")
 object FlexButtonDefaults : FlexDefaults() {
 	
-	override val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+	override val FlexComposeDefaultConfig.defaultConfig
 		get() = this.button
 	
 	val DefaultButtonType: FlexButtonType

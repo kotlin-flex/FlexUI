@@ -38,8 +38,8 @@ fun ColumnScope.FlexInputPage() {
 	var exampleType by remember { mutableStateOf(ExampleType.Default) }
 	var prefixSuffixType by remember { mutableStateOf(PrefixSuffixType.None) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
-	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Default) }
-	var cornerType by remember { mutableStateOf(FlexCornerType.Default) }
+	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.OnSurface) }
+	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var enabled by remember { mutableStateOf(true) }
 	var readOnly by remember { mutableStateOf(false) }
 	Row(

@@ -24,9 +24,9 @@ enum class FlexCornerType(
 	Small(0.125f),
 	
 	/**
-	 * 默认圆角，1/4
+	 * 中圆角，1/4
 	 */
-	Default(0.25f),
+	Medium(0.25f),
 	
 	/**
 	 * 大圆角，1/3
@@ -45,6 +45,8 @@ internal val LocalFlexCornerType = compositionLocalOf<FlexCornerType?> { null }
 internal fun getDefaultCornerType(
 	defaultCornerType: FlexComposeDefaultConfig.() -> FlexCornerType?,
 ): FlexCornerType = LocalFlexCornerType.current
-	?: LocalFlexConfig.current.default.defaultCornerType()
-	?: LocalFlexConfig.current.default.common.cornerType
-	?: FlexCornerType.Default
+	?: LocalFlexConfig.current.default.let {
+		it.defaultCornerType()
+			?: it.common.cornerType
+			?: FlexCornerType.Circle
+	}

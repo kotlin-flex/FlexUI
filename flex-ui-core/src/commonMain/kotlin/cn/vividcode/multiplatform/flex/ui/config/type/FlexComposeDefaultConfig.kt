@@ -9,35 +9,34 @@ class FlexComposeDefaultConfig internal constructor() {
 	
 	internal val common: FlexDefaultConfig = FlexDefaultConfig.DefaultConfig
 	
-	internal var button: FlexDefaultConfig = FlexDefaultConfig()
+	internal var button: FlexDefaultConfig? = null
 	
-	internal var radio: FlexDefaultConfig = FlexDefaultConfig()
+	internal var radio: FlexDefaultConfig? = null
 	
-	internal var input: FlexDefaultConfig = FlexDefaultConfig()
+	internal var input: FlexDefaultConfig? = null
 	
-	internal var switch: FlexDefaultConfig = FlexDefaultConfig(
-		colorType = FlexColorType.Primary,
-		cornerType = FlexCornerType.Circle
-	)
+	internal var switch: FlexDefaultConfig? = null
 	
 	fun common(config: FlexDefaultConfig.() -> Unit) {
 		this.common.apply(config)
 	}
 	
 	fun button(config: FlexDefaultConfig.() -> Unit) {
-		this.button.apply(config)
+		this.button = (this.button ?: FlexDefaultConfig()).apply(config)
 	}
 	
 	fun radio(config: FlexDefaultConfig.() -> Unit) {
-		this.radio.apply(config)
+		this.radio = (this.radio ?: FlexDefaultConfig()).apply(config)
 	}
 	
 	fun input(config: FlexDefaultConfig.() -> Unit) {
-		this.input.apply(config)
+		this.input = (this.input ?: FlexDefaultConfig()).apply(config)
 	}
 	
 	fun switch(config: FlexDefaultConfig.() -> Unit) {
-		this.switch.apply(config)
+		this.switch = FlexDefaultConfig(
+			cornerType = FlexCornerType.Circle
+		).apply(config)
 	}
 }
 
@@ -51,8 +50,8 @@ class FlexDefaultConfig internal constructor(
 		
 		val DefaultConfig: FlexDefaultConfig
 			get() = FlexDefaultConfig(
-				colorType = FlexColorType.Default,
-				cornerType = FlexCornerType.Default,
+				colorType = FlexColorType.Primary,
+				cornerType = FlexCornerType.Medium,
 				sizeType = FlexSizeType.Medium
 			)
 	}
@@ -61,17 +60,17 @@ class FlexDefaultConfig internal constructor(
 @Suppress("PropertyName")
 abstract class FlexDefaults {
 	
-	internal abstract val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+	internal abstract val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig?
 	
 	internal val DefaultSizeType: FlexSizeType
 		@Composable
-		get() = getDefaultSizeType { defaultConfig.sizeType }
+		get() = getDefaultSizeType { defaultConfig?.sizeType }
 	
 	internal val DefaultColorType: FlexColorType
 		@Composable
-		get() = getDefaultColorType { defaultConfig.colorType }
+		get() = getDefaultColorType { defaultConfig?.colorType }
 	
 	internal val DefaultCornerType: FlexCornerType
 		@Composable
-		get() = getDefaultCornerType { defaultConfig.cornerType }
+		get() = getDefaultCornerType { defaultConfig?.cornerType }
 }

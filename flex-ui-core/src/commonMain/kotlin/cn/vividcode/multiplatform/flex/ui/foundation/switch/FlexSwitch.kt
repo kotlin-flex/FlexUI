@@ -102,6 +102,6 @@ fun FlexSwitch(
 
 object FlexSwitchDefaults : FlexDefaults() {
 	
-	override val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+	override val FlexComposeDefaultConfig.defaultConfig
 		get() = this.switch
 }

@@ -11,11 +11,13 @@ import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 @Stable
 interface FlexColorType {
 	
-	data object Default : FlexColorType
-	
 	data object Primary : FlexColorType
 	
 	data object Secondary : FlexColorType
+	
+	data object Tertiary : FlexColorType
+	
+	data object OnSurface : FlexColorType
 	
 	data object Success : FlexColorType
 	
@@ -25,7 +27,7 @@ interface FlexColorType {
 	
 	companion object {
 		
-		val defaultColorTypes = arrayOf(Primary, Default, Secondary, Success, Warning, Error)
+		val defaultColorTypes = arrayOf(Primary, Secondary, Tertiary, OnSurface, Success, Warning, Error)
 		
 		val allColorTypes: Array<FlexColorType>
 			@Composable
@@ -39,6 +41,8 @@ internal val LocalFlexColorType = compositionLocalOf<FlexColorType?> { null }
 internal fun getDefaultColorType(
 	defaultColorType: FlexComposeDefaultConfig.() -> FlexColorType?,
 ): FlexColorType = LocalFlexColorType.current
-	?: LocalFlexConfig.current.default.defaultColorType()
-	?: LocalFlexConfig.current.default.common.colorType
-	?: FlexColorType.Default
+	?: LocalFlexConfig.current.default.let {
+		it.defaultColorType()
+			?: it.common.colorType
+			?: FlexColorType.Primary
+	}

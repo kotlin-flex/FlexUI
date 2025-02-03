@@ -165,7 +165,7 @@ fun FlexInput(
 
 object FlexInputDefaults : FlexDefaults() {
 	
-	override val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+	override val FlexComposeDefaultConfig.defaultConfig
 		get() = this.input
 	
 	fun icon(
