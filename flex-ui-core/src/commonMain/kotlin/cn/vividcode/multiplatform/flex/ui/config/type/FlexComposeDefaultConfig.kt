@@ -15,7 +15,10 @@ class FlexComposeDefaultConfig internal constructor() {
 	
 	internal var input: FlexDefaultConfig = FlexDefaultConfig()
 	
-	internal var switch: FlexDefaultConfig = FlexDefaultConfig()
+	internal var switch: FlexDefaultConfig = FlexDefaultConfig(
+		colorType = FlexColorType.Primary,
+		cornerType = FlexCornerType.Circle
+	)
 	
 	fun common(config: FlexDefaultConfig.() -> Unit) {
 		this.common.apply(config)
