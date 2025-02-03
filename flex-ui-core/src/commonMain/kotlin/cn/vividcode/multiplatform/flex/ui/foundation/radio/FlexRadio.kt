@@ -26,7 +26,7 @@ import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.jvm.JvmName
 
 /**
- * FlexRadioGroup 单选框组
+ * FlexRadio 单选框
  *
  * @param selectedKey 选中的 key
  * @param onSelectedKeyChange 当选中改变事件
@@ -39,16 +39,16 @@ import kotlin.jvm.JvmName
  * @param scaleEffect 缩放效果
  */
 @Composable
-fun <Key> FlexRadioGroup(
+fun <Key> FlexRadio(
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
 	options: List<RadioOption<Key>>,
-	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
-	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
-	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
-	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
-	switchType: FlexRadioSwitchType = FlexRadioGroups.DefaultSwitchType,
-	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
+	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
+	colorType: FlexColorType = FlexRadioDefaults.DefaultColorType,
+	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
+	radioType: FlexRadioType = FlexRadioDefaults.DefaultRadioType,
+	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,
+	scaleEffect: Boolean = FlexRadioDefaults.DefaultScaleEffect,
 ) {
 	val targetSelectedKey by remember(options, selectedKey) {
 		derivedStateOf {
@@ -61,7 +61,7 @@ fun <Key> FlexRadioGroup(
 		}
 	}
 	when (switchType) {
-		FlexRadioSwitchType.None -> FlexNoneRadioGroup(
+		FlexRadioSwitchType.None -> FlexNoneRadio(
 			options = options,
 			selectedKey = targetSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
@@ -72,7 +72,7 @@ fun <Key> FlexRadioGroup(
 			scaleEffect = scaleEffect
 		)
 		
-		FlexRadioSwitchType.Swipe -> FlexSwipeRadioGroup(
+		FlexRadioSwitchType.Swipe -> FlexSwipeRadio(
 			options = options,
 			selectedKey = targetSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
@@ -86,19 +86,10 @@ fun <Key> FlexRadioGroup(
 }
 
 @Suppress("ConstPropertyName")
-object FlexRadioGroups {
+object FlexRadioDefaults : FlexDefaults() {
 	
-	val DefaultSizeType: FlexSizeType
-		@Composable
-		get() = getDefaultSizeType { radio.sizeType }
-	
-	val DefaultColorType: FlexColorType
-		@Composable
-		get() = getDefaultColorType { radio.colorType }
-	
-	val DefaultCornerType: FlexCornerType
-		@Composable
-		get() = getDefaultCornerType { radio.cornerType }
+	override val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+		get() = this.radio
 	
 	val DefaultRadioType = FlexRadioType.Default
 	
@@ -134,7 +125,7 @@ enum class FlexRadioSwitchType {
 }
 
 /**
- * FlexRadioGroup 单选框组
+ * FlexRadio 单选框
  *
  * @param selectedKey 选中的 key
  * @param onSelectedKeyChange 当选中改变事件
@@ -144,20 +135,20 @@ enum class FlexRadioSwitchType {
  * @param cornerType 圆角类型
  * @param radioType 单选框组类型
  */
-@JvmName("FlexRadioGroupWithPairOption")
+@JvmName("FlexRadioWithPairOption")
 @Composable
-fun <Key> FlexRadioGroup(
+fun <Key> FlexRadio(
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
 	options: List<Pair<Key, String>>,
-	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
-	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
-	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
-	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
-	switchType: FlexRadioSwitchType = FlexRadioGroups.DefaultSwitchType,
-	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
+	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
+	colorType: FlexColorType = FlexRadioDefaults.DefaultColorType,
+	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
+	radioType: FlexRadioType = FlexRadioDefaults.DefaultRadioType,
+	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,
+	scaleEffect: Boolean = FlexRadioDefaults.DefaultScaleEffect,
 ) {
-	FlexRadioGroup(
+	FlexRadio(
 		selectedKey = selectedKey,
 		onSelectedKeyChange = onSelectedKeyChange,
 		options = options.map { RadioOption(it.first, it.second) },
@@ -171,7 +162,7 @@ fun <Key> FlexRadioGroup(
 }
 
 /**
- * FlexRadioGroup 单选框组
+ * FlexRadioG 单选框
  *
  * @param selectedKey 选中的 key
  * @param onSelectedKeyChange 当选中改变事件
@@ -181,20 +172,20 @@ fun <Key> FlexRadioGroup(
  * @param cornerType 圆角类型
  * @param radioType 单选框组类型
  */
-@JvmName("FlexRadioGroupWithStringOption")
+@JvmName("FlexRadioWithStringOption")
 @Composable
-fun FlexRadioGroup(
+fun FlexRadio(
 	selectedKey: String,
 	onSelectedKeyChange: (String) -> Unit,
 	options: List<String>,
-	sizeType: FlexSizeType = FlexRadioGroups.DefaultSizeType,
-	colorType: FlexColorType = FlexRadioGroups.DefaultColorType,
-	cornerType: FlexCornerType = FlexRadioGroups.DefaultCornerType,
-	radioType: FlexRadioType = FlexRadioGroups.DefaultRadioType,
-	switchType: FlexRadioSwitchType = FlexRadioGroups.DefaultSwitchType,
-	scaleEffect: Boolean = FlexRadioGroups.DefaultScaleEffect,
+	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
+	colorType: FlexColorType = FlexRadioDefaults.DefaultColorType,
+	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
+	radioType: FlexRadioType = FlexRadioDefaults.DefaultRadioType,
+	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,
+	scaleEffect: Boolean = FlexRadioDefaults.DefaultScaleEffect,
 ) {
-	FlexRadioGroup(
+	FlexRadio(
 		selectedKey = selectedKey,
 		onSelectedKeyChange = onSelectedKeyChange,
 		options = options.map { RadioOption(it, it) },

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
@@ -48,7 +47,7 @@ fun ColumnScope.FlexRadioPage() {
 			contentAlignment = Alignment.Center
 		) {
 			var selectedKey by remember { mutableStateOf("option1") }
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = selectedKey,
 				onSelectedKeyChange = { selectedKey = it },
 				options = (1 .. 3).map {
@@ -65,7 +64,7 @@ fun ColumnScope.FlexRadioPage() {
 		Spacer(modifier = Modifier.width(12.dp))
 		val code = """
 			var selectedKey by remember { mutableStateOf("option1") }
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = selectedKey,
 				onSelectedKeyChange = { selectedKey = it },
 				options = listOf(
@@ -95,7 +94,7 @@ fun ColumnScope.FlexRadioPage() {
 		TitleLayout(
 			title = "Radio Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = radioType,
 				onSelectedKeyChange = { radioType = it },
 				options = radioTypeOptions,
@@ -109,7 +108,7 @@ fun ColumnScope.FlexRadioPage() {
 		TitleLayout(
 			title = "Size Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
 				options = sizeTypeOptions,
@@ -123,7 +122,7 @@ fun ColumnScope.FlexRadioPage() {
 		TitleLayout(
 			title = "Color Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
 				options = colorTypeOptions,
@@ -137,7 +136,7 @@ fun ColumnScope.FlexRadioPage() {
 		TitleLayout(
 			title = "Corner Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
 				options = cornerTypeOptions,
@@ -152,7 +151,7 @@ fun ColumnScope.FlexRadioPage() {
 		TitleLayout(
 			title = "Switch Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = switchType,
 				onSelectedKeyChange = { switchType = it },
 				options = switchTypeOptions,
@@ -166,7 +165,7 @@ fun ColumnScope.FlexRadioPage() {
 		TitleLayout(
 			title = "Scale Effect"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = scaleEffect,
 				onSelectedKeyChange = { scaleEffect = it },
 				options = booleanOptions,
@@ -180,7 +179,7 @@ fun ColumnScope.FlexRadioPage() {
 		TitleLayout(
 			title = "Option Disabled"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = disabledOption,
 				onSelectedKeyChange = { disabledOption = it },
 				options = disabledOptions,

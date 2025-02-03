@@ -30,7 +30,7 @@ import cn.vividcode.multiplatform.flex.ui.expends.brightness
 import cn.vividcode.multiplatform.flex.ui.expends.sum
 
 /**
- * FlexRadioGroup 单选框组，类型：滑块
+ * FlexRadio 单选框，类型：滑块
  *
  * @param options 选项 [RadioOption] 类型
  * @param selectedKey 选中的 key
@@ -42,7 +42,7 @@ import cn.vividcode.multiplatform.flex.ui.expends.sum
  * @param scaleEffect 开启缩放效果
  */
 @Composable
-internal fun <Key> FlexSwipeRadioGroup(
+internal fun <Key> FlexSwipeRadio(
 	options: List<RadioOption<Key>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,

@@ -33,7 +33,7 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 
 /**
- * FlexRadioGroup 单选框组，类型：无效果
+ * FlexRadio 单选框，类型：无效果
  *
  * @param options 选项 [RadioOption] 类型
  * @param selectedKey 选中的 key
@@ -45,7 +45,7 @@ import cn.vividcode.multiplatform.flex.ui.expends.brightness
  * @param scaleEffect 开启缩放效果
  */
 @Composable
-internal fun <Key> FlexNoneRadioGroup(
+internal fun <Key> FlexNoneRadio(
 	options: List<RadioOption<Key>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,

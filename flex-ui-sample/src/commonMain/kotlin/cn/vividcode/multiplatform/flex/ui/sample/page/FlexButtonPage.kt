@@ -21,7 +21,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
@@ -113,7 +113,7 @@ fun ColumnScope.FlexButtonPage() {
 		TitleLayout(
 			title = "Button Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = buttonType,
 				onSelectedKeyChange = { buttonType = it },
 				options = buttonTypeOptions,
@@ -127,7 +127,7 @@ fun ColumnScope.FlexButtonPage() {
 		TitleLayout(
 			title = "Size Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
 				options = sizeTypeOptions,
@@ -141,7 +141,7 @@ fun ColumnScope.FlexButtonPage() {
 		TitleLayout(
 			title = "Color Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
 				options = colorTypeOptions,
@@ -155,7 +155,7 @@ fun ColumnScope.FlexButtonPage() {
 		TitleLayout(
 			title = "Corner Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
 				options = cornerTypeOptions,
@@ -170,7 +170,7 @@ fun ColumnScope.FlexButtonPage() {
 		TitleLayout(
 			title = "Icon"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = iconType,
 				onSelectedKeyChange = { iconType = it },
 				options = iconTypeOptions,
@@ -184,7 +184,7 @@ fun ColumnScope.FlexButtonPage() {
 		TitleLayout(
 			title = "Icon Position"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = iconPosition,
 				onSelectedKeyChange = { iconPosition = it },
 				options = iconPositionOptions,
@@ -198,7 +198,7 @@ fun ColumnScope.FlexButtonPage() {
 		TitleLayout(
 			title = "Scale Effect"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = scaleEffect,
 				onSelectedKeyChange = { scaleEffect = it },
 				options = booleanOptions,
@@ -212,7 +212,7 @@ fun ColumnScope.FlexButtonPage() {
 		TitleLayout(
 			title = "Enabled"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = enabled,
 				onSelectedKeyChange = { enabled = it },
 				options = booleanOptions,

@@ -58,8 +58,8 @@ fun RowScope.Code(
 			mutableStateOf(colorCodings.map { it.getSpanStyle(darkTheme) })
 		}
 		val indices by remember(code) {
-			val indices = colorCodings.map {
-				it.regex.findAll(code).flatMap { it.range.toList() }
+			val indices = colorCodings.map { colorCoding ->
+				colorCoding.regex.findAll(code).flatMap { it.range.toList() }
 			}
 			mutableStateOf(indices)
 		}
@@ -67,16 +67,16 @@ fun RowScope.Code(
 			val codeString = buildAnnotatedString {
 				code.forEachIndexed { index, char ->
 					val typeIndex = indices.indexOfFirst { index in it }
-					if (typeIndex != -1) {
-						withStyle(spanStyles[typeIndex]) {
-							append(char)
+					when {
+						typeIndex != -1 -> {
+							withStyle(spanStyles[typeIndex]) {
+								append(char)
+							}
 						}
-					} else {
-						if (char == '\t') {
-							append(" ".repeat(4))
-						} else {
-							append(char)
-						}
+						
+						char == '\t' -> append(" ".repeat(4))
+						
+						else -> append(char)
 					}
 				}
 			}
@@ -157,7 +157,7 @@ fun RowScope.Code(
 						)
 						.padding(
 							horizontal = 8.dp,
-							vertical = 4.dp
+							vertical = 3.dp
 						),
 					color = TextColor,
 					fontSize = 14.sp,

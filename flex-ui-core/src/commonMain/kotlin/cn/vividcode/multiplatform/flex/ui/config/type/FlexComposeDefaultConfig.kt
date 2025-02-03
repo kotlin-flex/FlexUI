@@ -1,5 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.config.type
 
+import androidx.compose.runtime.Composable
+
 /**
  * 默认类型配置
  */
@@ -12,6 +14,8 @@ class FlexComposeDefaultConfig internal constructor() {
 	internal var radio: FlexDefaultConfig = FlexDefaultConfig()
 	
 	internal var input: FlexDefaultConfig = FlexDefaultConfig()
+	
+	internal var switch: FlexDefaultConfig = FlexDefaultConfig()
 	
 	fun common(config: FlexDefaultConfig.() -> Unit) {
 		this.common.apply(config)
@@ -27,6 +31,10 @@ class FlexComposeDefaultConfig internal constructor() {
 	
 	fun input(config: FlexDefaultConfig.() -> Unit) {
 		this.input.apply(config)
+	}
+	
+	fun switch(config: FlexDefaultConfig.() -> Unit) {
+		this.switch.apply(config)
 	}
 }
 
@@ -45,4 +53,22 @@ class FlexDefaultConfig internal constructor(
 				sizeType = FlexSizeType.Medium
 			)
 	}
+}
+
+@Suppress("PropertyName")
+abstract class FlexDefaults {
+	
+	internal abstract val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+	
+	internal val DefaultSizeType: FlexSizeType
+		@Composable
+		get() = getDefaultSizeType { defaultConfig.sizeType }
+	
+	internal val DefaultColorType: FlexColorType
+		@Composable
+		get() = getDefaultColorType { defaultConfig.colorType }
+	
+	internal val DefaultCornerType: FlexCornerType
+		@Composable
+		get() = getDefaultCornerType { defaultConfig.cornerType }
 }

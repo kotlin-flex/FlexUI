@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
@@ -33,7 +33,7 @@ fun SettingsPage(
 		modifier = Modifier
 			.padding(paddingValues)
 			.fillMaxSize()
-			.padding(12.dp)
+			.padding(16.dp)
 	) {
 		GroupLayout(
 			title = "Theme"
@@ -41,7 +41,7 @@ fun SettingsPage(
 			TitleLayout(
 				title = "Contrast"
 			) {
-				FlexRadioGroup(
+				FlexRadio(
 					selectedKey = contrastType,
 					onSelectedKeyChange = {
 						contrastType = it
@@ -84,9 +84,9 @@ fun GroupLayout(
 	) {
 		Text(
 			text = title,
-			style = MaterialTheme.typography.titleLarge,
+			style = MaterialTheme.typography.titleMedium,
 		)
-		Spacer(Modifier.height(12.dp))
+		Spacer(Modifier.height(16.dp))
 		content()
 	}
 }

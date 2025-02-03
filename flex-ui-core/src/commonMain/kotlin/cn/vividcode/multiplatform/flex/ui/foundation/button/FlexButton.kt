@@ -55,13 +55,13 @@ fun FlexButton(
 	text: String = "",
 	icon: ImageVector? = null,
 	modifier: Modifier = Modifier,
-	sizeType: FlexSizeType = FlexButtons.DefaultSizeType,
-	colorType: FlexColorType = FlexButtons.DefaultColorType,
-	cornerType: FlexCornerType = FlexButtons.DefaultCornerType,
-	buttonType: FlexButtonType = FlexButtons.DefaultButtonType,
-	iconPosition: FlexButtonIconPosition = FlexButtons.DefaultIconDirection,
-	iconRotation: Float = FlexButtons.DefaultIconRotation,
-	scaleEffect: Boolean = FlexButtons.DefaultScaleEffect,
+	sizeType: FlexSizeType = FlexButtonDefaults.DefaultSizeType,
+	colorType: FlexColorType = FlexButtonDefaults.DefaultColorType,
+	cornerType: FlexCornerType = FlexButtonDefaults.DefaultCornerType,
+	buttonType: FlexButtonType = FlexButtonDefaults.DefaultButtonType,
+	iconPosition: FlexButtonIconPosition = FlexButtonDefaults.DefaultIconDirection,
+	iconRotation: Float = FlexButtonDefaults.DefaultIconRotation,
+	scaleEffect: Boolean = FlexButtonDefaults.DefaultScaleEffect,
 	enabled: Boolean = true,
 	onClick: () -> Unit = {},
 ) {
@@ -305,19 +305,10 @@ private fun Modifier.backgroundBorderStyle(
 }
 
 @Suppress("ConstPropertyName")
-object FlexButtons {
+object FlexButtonDefaults : FlexDefaults() {
 	
-	val DefaultSizeType: FlexSizeType
-		@Composable
-		get() = getDefaultSizeType { button.sizeType }
-	
-	val DefaultColorType: FlexColorType
-		@Composable
-		get() = getDefaultColorType { button.colorType }
-	
-	val DefaultCornerType: FlexCornerType
-		@Composable
-		get() = getDefaultCornerType { button.cornerType }
+	override val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+		get() = this.button
 	
 	val DefaultButtonType: FlexButtonType
 		@Composable

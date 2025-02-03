@@ -18,8 +18,8 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
-import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputs
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioGroup
+import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputDefaults
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
@@ -88,10 +88,10 @@ fun ColumnScope.FlexInputPage() {
 						enabled = enabled,
 						readOnly = readOnly,
 						placeholder = { Text("Input Password") },
-						leadingIcon = FlexInputs.icon(
+						leadingIcon = FlexInputDefaults.icon(
 							icon = Icons.Rounded.Lock
 						),
-						trailingIcon = FlexInputs.icon(
+						trailingIcon = FlexInputDefaults.icon(
 							icon = when (visualTransformation == VisualTransformation.None) {
 								true -> Icons.Rounded.Visibility
 								false -> Icons.Rounded.VisibilityOff
@@ -121,10 +121,10 @@ fun ColumnScope.FlexInputPage() {
 						enabled = enabled,
 						readOnly = readOnly,
 						placeholder = { Text("Search Text") },
-						leadingIcon = FlexInputs.icon(
+						leadingIcon = FlexInputDefaults.icon(
 							icon = Icons.Rounded.Search
 						),
-						trailingIcon = if (isEmpty) null else FlexInputs.icon(
+						trailingIcon = if (isEmpty) null else FlexInputDefaults.icon(
 							icon = Icons.Rounded.Cancel,
 							tint = Color.Gray,
 							onClick = {
@@ -228,11 +228,10 @@ fun ColumnScope.FlexInputPage() {
 			.verticalScroll(verticalScrollState)
 			.padding(8.dp)
 	) {
-		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = "Example Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = exampleType,
 				onSelectedKeyChange = { exampleType = it },
 				options = exampleTypeOptions,
@@ -244,23 +243,9 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
-			title = "Show Prefix And Suffix"
-		) {
-			FlexRadioGroup(
-				selectedKey = prefixSuffixType,
-				onSelectedKeyChange = { prefixSuffixType = it },
-				options = prefixSuffixTypeOptions,
-				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
 			title = "Size Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
 				options = sizeTypeOptions,
@@ -274,7 +259,7 @@ fun ColumnScope.FlexInputPage() {
 		TitleLayout(
 			title = "Color type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
 				options = colorTypeOptions,
@@ -288,7 +273,7 @@ fun ColumnScope.FlexInputPage() {
 		TitleLayout(
 			title = "Corner Type"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
 				options = cornerTypeOptions,
@@ -301,9 +286,23 @@ fun ColumnScope.FlexInputPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
+			title = "Show Prefix And Suffix"
+		) {
+			FlexRadio(
+				selectedKey = prefixSuffixType,
+				onSelectedKeyChange = { prefixSuffixType = it },
+				options = prefixSuffixTypeOptions,
+				sizeType = FlexSizeType.Small,
+				colorType = FlexColorType.Primary,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
 			title = "Enabled"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = enabled,
 				onSelectedKeyChange = { enabled = it },
 				options = booleanOptions,
@@ -317,7 +316,7 @@ fun ColumnScope.FlexInputPage() {
 		TitleLayout(
 			title = "Read Only"
 		) {
-			FlexRadioGroup(
+			FlexRadio(
 				selectedKey = readOnly,
 				onSelectedKeyChange = { readOnly = it },
 				options = booleanOptions,

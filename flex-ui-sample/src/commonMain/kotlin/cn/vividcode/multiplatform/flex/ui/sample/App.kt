@@ -33,10 +33,7 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
-import cn.vividcode.multiplatform.flex.ui.sample.page.FlexButtonPage
-import cn.vividcode.multiplatform.flex.ui.sample.page.FlexInputPage
-import cn.vividcode.multiplatform.flex.ui.sample.page.FlexRadioPage
-import cn.vividcode.multiplatform.flex.ui.sample.page.SettingsPage
+import cn.vividcode.multiplatform.flex.ui.sample.page.*
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
@@ -182,8 +179,9 @@ fun App() {
 				) {
 					when (currentPageRoute) {
 						PageRoute.FlexButton -> FlexButtonPage()
-						PageRoute.FlexRadioGroup -> FlexRadioPage()
+						PageRoute.FlexRadio -> FlexRadioPage()
 						PageRoute.FlexInput -> FlexInputPage()
+						PageRoute.FlexSwitch -> FlexSwitchPage()
 					}
 				}
 			}
@@ -251,9 +249,10 @@ fun App() {
 				FlexButton(
 					icon = Icons.Outlined.Settings,
 					buttonType = FlexButtonType.Primary,
+					colorType = if (showSettings) FlexColorType.Primary else FlexColorType.Default,
 					scaleEffect = true
 				) {
-					showSettings = true
+					showSettings = !showSettings
 				}
 				Spacer(modifier = Modifier.height(8.dp))
 				FlexButton(
@@ -275,8 +274,9 @@ fun App() {
 
 enum class PageRoute {
 	FlexButton,
-	FlexRadioGroup,
-	FlexInput
+	FlexRadio,
+	FlexInput,
+	FlexSwitch
 }
 
 @Composable

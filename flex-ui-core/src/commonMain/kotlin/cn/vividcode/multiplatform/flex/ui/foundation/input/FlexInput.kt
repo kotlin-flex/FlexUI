@@ -66,9 +66,9 @@ fun FlexInput(
 	value: String,
 	onValueChange: (String) -> Unit,
 	modifier: Modifier = Modifier,
-	sizeType: FlexSizeType = FlexInputs.DefaultSizeType,
-	colorType: FlexColorType = FlexInputs.DefaultColorType,
-	cornerType: FlexCornerType = FlexInputs.DefaultCornerType,
+	sizeType: FlexSizeType = FlexInputDefaults.DefaultSizeType,
+	colorType: FlexColorType = FlexInputDefaults.DefaultColorType,
+	cornerType: FlexCornerType = FlexInputDefaults.DefaultCornerType,
 	enabled: Boolean = true,
 	readOnly: Boolean = false,
 	maxLength: Int = Int.MAX_VALUE,
@@ -161,6 +161,20 @@ fun FlexInput(
 			}
 		)
 	}
+}
+
+object FlexInputDefaults : FlexDefaults() {
+	
+	override val FlexComposeDefaultConfig.defaultConfig: FlexDefaultConfig
+		get() = this.input
+	
+	fun icon(
+		icon: ImageVector,
+		tint: Color = Color.Unspecified,
+		rotate: Float = 0f,
+		size: Dp = Dp.Unspecified,
+		onClick: (() -> Unit)? = null,
+	) = FlexInputIcon(icon, tint, rotate, size, onClick)
 }
 
 @Composable
@@ -297,6 +311,7 @@ private fun FlexInputIcon(
 		targetValue = if (icon.size != Dp.Unspecified) icon.size else iconSize,
 	)
 	val rotateDegrees by animateFloatAsState(icon.rotateDegrees)
+	val onClick = icon.onClick
 	Icon(
 		imageVector = icon.icon,
 		contentDescription = null,
@@ -305,40 +320,17 @@ private fun FlexInputIcon(
 			.rotate(rotateDegrees)
 			.pointerHoverIcon(PointerIcon.Default)
 			.then(
-				if (icon.onClick == null) Modifier else Modifier.clickable(
+				if (onClick == null) Modifier else Modifier.clickable(
 					interactionSource = interactionSource,
 					indication = null,
 					onClick = {
-						icon.onClick()
+						onClick()
 						focusRequester.requestFocus()
 					}
 				)
 			),
 		tint = iconTint
 	)
-}
-
-object FlexInputs {
-	
-	val DefaultSizeType: FlexSizeType
-		@Composable
-		get() = getDefaultSizeType { input.sizeType }
-	
-	val DefaultColorType: FlexColorType
-		@Composable
-		get() = getDefaultColorType { input.colorType }
-	
-	val DefaultCornerType: FlexCornerType
-		@Composable
-		get() = getDefaultCornerType { input.cornerType }
-	
-	fun icon(
-		icon: ImageVector,
-		tint: Color = Color.Unspecified,
-		rotate: Float = 0f,
-		size: Dp = Dp.Unspecified,
-		onClick: (() -> Unit)? = null,
-	) = FlexInputIcon(icon, tint, rotate, size, onClick)
 }
 
 class FlexInputIcon internal constructor(

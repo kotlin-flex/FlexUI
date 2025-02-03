@@ -34,9 +34,9 @@
 
 ![FlexButton.png](image/FlexButton.png)
 
-## FlexRadioGroup 单选框
+## FlexRadio 单选框
 
-![FlexRadioGroup.png](image/FlexRadioGroup.png)
+![FlexRadio.png](image/FlexRadio.png)
 
 ## FlexInput 输入框
 
