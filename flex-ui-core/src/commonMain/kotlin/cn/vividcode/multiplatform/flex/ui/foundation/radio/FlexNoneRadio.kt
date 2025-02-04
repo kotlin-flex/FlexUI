@@ -31,6 +31,8 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Default
 
 /**
  * FlexRadio 单选框，类型：无效果
@@ -57,7 +59,6 @@ internal fun <Key> FlexNoneRadio(
 ) {
 	val current = LocalFlexConfig.current
 	val config = current.radio.getConfig(sizeType)
-	val color = current.theme.colorScheme.current.getColor(colorType)
 	val height by animateDpAsState(config.height)
 	val corner by animateDpAsState(config.height * cornerType.percent)
 	val cornerShape by remember(corner) {
@@ -101,12 +102,13 @@ internal fun <Key> FlexNoneRadio(
 			val interactionSource = remember { MutableInteractionSource() }
 			val isHovered by interactionSource.collectIsHoveredAsState()
 			val isPressed by interactionSource.collectIsPressedAsState()
-			val targetBorderColor by remember(color, option, selectedKey, radioType) {
-				derivedStateOf {
+			val borderColor by animateColorAsState(
+				targetValue = run {
+					val color = colorType.backgroundColor
 					when {
 						!option.enabled -> color.copy(alpha = 0f)
 						selectedKey != option.key -> color.copy(alpha = 0f)
-						radioType == FlexRadioType.Button -> color.copy(alpha = 0f)
+						radioType == Button -> color.copy(alpha = 0f)
 						else -> {
 							when {
 								isPressed -> color.brightness(1.1f)
@@ -116,13 +118,14 @@ internal fun <Key> FlexNoneRadio(
 						}
 					}
 				}
-			}
-			val targetBackgroundColor by remember(color, option, selectedKey, radioType) {
-				derivedStateOf {
+			)
+			val backgroundColor by animateColorAsState(
+				targetValue = run {
+					val color = colorType.backgroundColor
 					when {
 						!option.enabled -> DisabledBackgroundColor
 						selectedKey != option.key -> Color.Transparent
-						radioType == FlexRadioType.Button -> {
+						radioType == Button -> {
 							when {
 								isPressed -> color.brightness(0.95f)
 								isHovered -> color.brightness(1.1f)
@@ -133,9 +136,7 @@ internal fun <Key> FlexNoneRadio(
 						else -> color.copy(alpha = 0f)
 					}
 				}
-			}
-			val borderColor by animateColorAsState(targetBorderColor)
-			val backgroundColor by animateColorAsState(targetBackgroundColor)
+			)
 			if (index != 0) {
 				FlexRadioLine(
 					index = index,
@@ -170,11 +171,38 @@ internal fun <Key> FlexNoneRadio(
 				horizontalArrangement = Arrangement.Center,
 				verticalAlignment = Alignment.CenterVertically,
 			) {
+				val contentColor by animateColorAsState(
+					targetValue = when (radioType) {
+						Button -> {
+							val color = colorType.contentColor
+							when {
+								!option.enabled -> color.copy(alpha = 0.8f)
+								else -> color
+							}
+						}
+						
+						Default -> {
+							val color = colorType.backgroundColor
+							when {
+								!option.enabled -> color.copy(alpha = 0f)
+								selectedKey != option.key -> color.copy(alpha = 0f)
+								radioType == Button -> color.copy(alpha = 0f)
+								else -> {
+									when {
+										isPressed -> color.brightness(1.1f)
+										isHovered -> color.brightness(1.15f)
+										else -> color
+									}
+								}
+							}
+						}
+					}
+				)
 				FlexRadioText(
 					value = option.value,
 					enabled = option.enabled,
 					selected = option.key == selectedKey,
-					color = color,
+					color = contentColor,
 					config = config,
 					radioType = radioType,
 					isPressed = isPressed,

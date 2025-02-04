@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -85,12 +84,11 @@ fun FlexInput(
 ) {
 	val current = LocalFlexConfig.current
 	val config = current.input.getConfig(sizeType)
-	val targetColor = current.theme.colorScheme.current.getColor(colorType)
 	
 	CompositionLocalProvider(
 		LocalTextSelectionColors provides TextSelectionColors(
-			handleColor = targetColor,
-			backgroundColor = targetColor.copy(alpha = 0.15f)
+			handleColor = colorType.backgroundColor,
+			backgroundColor = colorType.backgroundColor.copy(alpha = 0.15f)
 		)
 	) {
 		val leadingIconInteractionSource = remember { MutableInteractionSource() }
@@ -104,16 +102,16 @@ fun FlexInput(
 		
 		val fontSize by animateFloatAsState(config.fontSize.value)
 		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
-		val color by animateColorAsState(
-			targetValue = if (enabled) targetColor else targetColor.copy(alpha = 0.6f)
+		val contentColor by animateColorAsState(
+			targetValue = if (enabled) colorType.backgroundColor else colorType.backgroundColor.copy(alpha = 0.6f)
 		)
-		val textStyle by remember(fontSize, config.fontWeight, letterSpacing, color) {
+		val textStyle by remember(fontSize, config.fontWeight, letterSpacing, contentColor) {
 			derivedStateOf {
 				TextStyle(
 					fontSize = fontSize.sp,
 					fontWeight = config.fontWeight,
 					letterSpacing = if (letterSpacing >= 0f) letterSpacing.sp else TextUnit.Unspecified,
-					color = color
+					color = contentColor
 				)
 			}
 		}
@@ -137,18 +135,17 @@ fun FlexInput(
 			singleLine = true,
 			visualTransformation = visualTransformation,
 			interactionSource = interactionSource,
-			cursorBrush = SolidColor(color),
+			cursorBrush = SolidColor(contentColor),
 			decorationBox = @Composable { innerTextField ->
 				FlexInputDecorationBox(
 					value = value,
 					modifier = modifier,
+					colorType = colorType,
 					cornerType = cornerType,
 					innerTextField = innerTextField,
 					config = config,
 					textStyle = textStyle,
 					isFocused = isFocused,
-					color = color,
-					targetColor = targetColor,
 					placeholder = placeholder,
 					leadingIcon = leadingIcon,
 					trailingIcon = trailingIcon,
@@ -181,13 +178,12 @@ object FlexInputDefaults : FlexDefaults() {
 private fun FlexInputDecorationBox(
 	value: String,
 	modifier: Modifier,
+	colorType: FlexColorType,
 	cornerType: FlexCornerType,
 	innerTextField: @Composable () -> Unit,
 	config: FlexInputConfig,
 	textStyle: TextStyle,
 	isFocused: Boolean,
-	color: Color,
-	targetColor: Color,
 	placeholder: @Composable (() -> Unit)?,
 	leadingIcon: FlexInputIcon?,
 	trailingIcon: FlexInputIcon?,
@@ -205,7 +201,7 @@ private fun FlexInputDecorationBox(
 		derivedStateOf { RoundedCornerShape(corner) }
 	}
 	val borderColor by animateColorAsState(
-		targetValue = if (isFocused) targetColor else targetColor.copy(alpha = 0f),
+		targetValue = if (isFocused) colorType.backgroundColor else colorType.backgroundColor.copy(alpha = 0f),
 	)
 	val backgroundColor by animateColorAsState(
 		targetValue = if (isFocused) Color.Gray.copy(alpha = 0f) else Color.Gray.copy(alpha = 0.15f),
@@ -233,7 +229,7 @@ private fun FlexInputDecorationBox(
 			FlexInputIcon(
 				icon = leadingIcon,
 				iconSize = iconSize,
-				targetColor = targetColor,
+				iconColor = colorType.backgroundColor,
 				isFocused = isFocused,
 				focusRequester = focusRequester,
 				interactionSource = leadingIconInteractionSource
@@ -242,7 +238,6 @@ private fun FlexInputDecorationBox(
 		if (prefix != null) {
 			Spacer(modifier = Modifier.width(interval))
 			CompositionLocalProvider(
-				LocalContentColor provides color,
 				LocalTextStyle provides textStyle
 			) {
 				prefix()
@@ -257,7 +252,7 @@ private fun FlexInputDecorationBox(
 			if (placeholder != null && isEmpty) {
 				CompositionLocalProvider(
 					LocalTextStyle provides textStyle.copy(
-						color = color.copy(alpha = 0.6f)
+						color = textStyle.color.copy(alpha = 0.7f)
 					)
 				) {
 					placeholder()
@@ -269,7 +264,6 @@ private fun FlexInputDecorationBox(
 		Spacer(modifier = Modifier.width(interval))
 		if (suffix != null) {
 			CompositionLocalProvider(
-				LocalContentColor provides color,
 				LocalTextStyle provides textStyle
 			) {
 				suffix()
@@ -280,7 +274,7 @@ private fun FlexInputDecorationBox(
 			FlexInputIcon(
 				icon = trailingIcon,
 				iconSize = iconSize,
-				targetColor = targetColor,
+				iconColor = colorType.backgroundColor,
 				isFocused = isFocused,
 				focusRequester = focusRequester,
 				interactionSource = trailingIconInteractionSource
@@ -293,13 +287,13 @@ private fun FlexInputDecorationBox(
 private fun FlexInputIcon(
 	icon: FlexInputIcon,
 	iconSize: Dp,
-	targetColor: Color,
+	iconColor: Color,
 	isFocused: Boolean,
 	focusRequester: FocusRequester,
 	interactionSource: MutableInteractionSource,
 ) {
 	val isPressed by interactionSource.collectIsPressedAsState()
-	val tint = if (icon.tint != Color.Unspecified) icon.tint else targetColor
+	val tint = if (icon.tint != Color.Unspecified) icon.tint else iconColor
 	val iconTint by animateColorAsState(
 		targetValue = when {
 			!isFocused -> tint.copy(alpha = 0.6f)

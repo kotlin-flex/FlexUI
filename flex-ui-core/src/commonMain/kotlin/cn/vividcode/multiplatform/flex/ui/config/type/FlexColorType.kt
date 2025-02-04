@@ -1,37 +1,67 @@
 package cn.vividcode.multiplatform.flex.ui.config.type
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.graphics.Color
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 
 /**
  * 颜色类型
  */
-@Stable
-interface FlexColorType {
+abstract class FlexColorType {
 	
-	data object Primary : FlexColorType
+	val contentColor: Color
+		@Composable
+		get() = MaterialTheme.colorScheme.contentColorFor(backgroundColor)
 	
-	data object Secondary : FlexColorType
+	abstract val backgroundColor: Color
+		@Composable
+		get
 	
-	data object Tertiary : FlexColorType
+	data object Primary : FlexColorType() {
+		
+		override val backgroundColor: Color
+			@Composable
+			get() = MaterialTheme.colorScheme.primary
+	}
 	
-	data object OnSurface : FlexColorType
+	data object Secondary : FlexColorType() {
+		
+		override val backgroundColor: Color
+			@Composable
+			get() = MaterialTheme.colorScheme.secondary
+	}
 	
-	data object Success : FlexColorType
+	data object Tertiary : FlexColorType() {
+		
+		override val backgroundColor: Color
+			@Composable
+			get() = MaterialTheme.colorScheme.tertiary
+	}
 	
-	data object Warning : FlexColorType
+	data object Error : FlexColorType() {
+		
+		override val backgroundColor: Color
+			@Composable
+			get() = MaterialTheme.colorScheme.error
+	}
 	
-	data object Error : FlexColorType
+	data object InverseSurface : FlexColorType() {
+		
+		override val backgroundColor: Color
+			@Composable
+			get() = MaterialTheme.colorScheme.inverseSurface
+	}
 	
 	companion object {
 		
-		val defaultColorTypes = arrayOf(Primary, Secondary, Tertiary, OnSurface, Success, Warning, Error)
-		
-		val allColorTypes: Array<FlexColorType>
-			@Composable
-			get() = defaultColorTypes + LocalFlexConfig.current.theme.colorScheme.current.customs.keys
+		val entries by lazy {
+			arrayOf(
+				Primary, Secondary, Tertiary, Error, InverseSurface
+			)
+		}
 	}
 }
 

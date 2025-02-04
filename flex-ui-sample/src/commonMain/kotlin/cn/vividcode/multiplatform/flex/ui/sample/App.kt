@@ -144,8 +144,8 @@ fun App() {
 								modifier = Modifier
 									.width(90.dp),
 								colorType = when {
-									refreshRate >= 60 -> FlexColorType.Success
-									refreshRate >= 30 -> FlexColorType.Warning
+									refreshRate >= 60 -> FlexColorType.Primary
+									refreshRate >= 30 -> FlexColorType.Secondary
 									else -> FlexColorType.Error
 								},
 								sizeType = FlexSizeType.Small
@@ -154,7 +154,7 @@ fun App() {
 							if (FlexPlatform.isMobile) {
 								FlexButton(
 									icon = if (showSidebar) Icons.Outlined.PlaylistRemove else Icons.AutoMirrored.Outlined.PlaylistPlay,
-									colorType = if (showSidebar) FlexColorType.OnSurface else FlexColorType.Primary,
+									colorType = if (showSidebar) FlexColorType.Primary else FlexColorType.InverseSurface,
 									buttonType = FlexButtonType.Primary
 								) {
 									showSidebar = !showSidebar
@@ -249,7 +249,7 @@ fun App() {
 				FlexButton(
 					icon = Icons.Outlined.Settings,
 					buttonType = FlexButtonType.Primary,
-					colorType = if (showSettings) FlexColorType.Primary else FlexColorType.OnSurface,
+					colorType = if (showSettings) FlexColorType.Primary else FlexColorType.InverseSurface,
 					scaleEffect = true
 				) {
 					showSettings = !showSettings
@@ -260,7 +260,7 @@ fun App() {
 						true -> Icons.Outlined.PlaylistRemove
 						false -> Icons.AutoMirrored.Outlined.PlaylistPlay
 					},
-					colorType = if (showSidebar) FlexColorType.Primary else FlexColorType.OnSurface,
+					colorType = if (showSidebar) FlexColorType.Primary else FlexColorType.InverseSurface,
 					buttonType = FlexButtonType.Primary,
 					scaleEffect = true
 				) {

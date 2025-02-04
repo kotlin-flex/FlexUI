@@ -29,7 +29,7 @@ import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
 fun ColumnScope.FlexRadioPage() {
 	var radioType by remember { mutableStateOf(FlexRadioType.Default) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
-	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.OnSurface) }
+	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var switchType by remember { mutableStateOf(FlexRadioSwitchType.None) }
 	var scaleEffect by remember { mutableStateOf(true) }

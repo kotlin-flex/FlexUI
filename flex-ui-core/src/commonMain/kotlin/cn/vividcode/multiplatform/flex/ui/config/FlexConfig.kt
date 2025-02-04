@@ -1,7 +1,6 @@
 package cn.vividcode.multiplatform.flex.ui.config
 
 import cn.vividcode.multiplatform.flex.ui.config.foundation.*
-import cn.vividcode.multiplatform.flex.ui.config.theme.FlexThemeConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexComposeDefaultConfig
 
 /**
@@ -13,8 +12,6 @@ fun flexConfig(config: (FlexConfig.() -> Unit)? = null) = FlexConfig().also {
 
 class FlexConfig internal constructor() {
 	
-	internal val theme = FlexThemeConfig()
-	
 	internal val default = FlexComposeDefaultConfig()
 	
 	internal val button = FlexSizeConfig(FlexButtonSizeDefaults)
@@ -24,13 +21,6 @@ class FlexConfig internal constructor() {
 	internal val input = FlexSizeConfig(FlexInputSizeDefaults)
 	
 	internal val switch = FlexSizeConfig(FlexSwitchSizeDefaults)
-	
-	/**
-	 * 主题配置
-	 */
-	fun theme(config: FlexThemeConfig.() -> Unit) {
-		this.theme.apply(config)
-	}
 	
 	/**
 	 * 默认类型配置

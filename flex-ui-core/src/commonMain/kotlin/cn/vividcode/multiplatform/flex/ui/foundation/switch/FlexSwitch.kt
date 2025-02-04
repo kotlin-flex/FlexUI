@@ -33,7 +33,6 @@ fun FlexSwitch(
 ) {
 	val current = LocalFlexConfig.current
 	val config = current.switch.getConfig(sizeType)
-	val targetColor = current.theme.colorScheme.current.getColor(colorType)
 	val height by animateDpAsState(config.height)
 	val padding by animateDpAsState(config.padding)
 	val corner by animateDpAsState(config.height * cornerType.percent)
@@ -45,11 +44,11 @@ fun FlexSwitch(
 	val backgroundColor by animateColorAsState(
 		targetValue = run {
 			val color = when {
-				checked -> targetColor
+				checked -> colorType.backgroundColor
 				LocalDarkTheme.current -> Color.DarkGray
 				else -> Color.LightGray
 			}
-			if (isHovered) color.copy(alpha = 0.85f) else color
+			if (isHovered) color.copy(alpha = 0.95f) else color
 		}
 	)
 	Box(

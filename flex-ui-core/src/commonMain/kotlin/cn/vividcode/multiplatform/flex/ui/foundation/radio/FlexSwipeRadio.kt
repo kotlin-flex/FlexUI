@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -28,6 +29,8 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 import cn.vividcode.multiplatform.flex.ui.expends.sum
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Default
 
 /**
  * FlexRadio 单选框，类型：滑块
@@ -54,7 +57,6 @@ internal fun <Key> FlexSwipeRadio(
 ) {
 	val current = LocalFlexConfig.current
 	val config = current.radio.getConfig(sizeType)
-	val color = current.theme.colorScheme.current.getColor(colorType)
 	val corner by animateDpAsState(config.height * cornerType.percent)
 	val cornerShape by remember(cornerType, corner) {
 		derivedStateOf {
@@ -82,8 +84,8 @@ internal fun <Key> FlexSwipeRadio(
 	) {
 		val buttonWidths = remember { mutableStateListOf(*options.map { Dp.Hairline }.toTypedArray()) }
 		val currentIndex = options.indexOfFirst { it.key == selectedKey }
-		var buttonIsPressed by remember { mutableStateOf(false) }
-		var buttonIsHovered by remember { mutableStateOf(false) }
+		var isButtonPressed by remember { mutableStateOf(false) }
+		var isButtonHovered by remember { mutableStateOf(false) }
 		if (currentIndex != -1 && buttonWidths.all { it != Dp.Hairline }) {
 			val targetWidth by animateDpAsState(buttonWidths[currentIndex])
 			val targetOffsetX by remember(buttonWidths, currentIndex, config.borderWidth) {
@@ -107,29 +109,33 @@ internal fun <Key> FlexSwipeRadio(
 				}
 			}
 			val option = options[currentIndex]
-			val targetBorderColor by remember(color, option.enabled, selectedKey, radioType) {
-				derivedStateOf {
+			val borderColor by animateColorAsState(
+				targetValue = run {
+					val color = colorType.backgroundColor
 					when {
 						!option.enabled -> color.copy(alpha = 0f)
-						radioType == FlexRadioType.Button -> color.copy(alpha = 0f)
+						selectedKey != option.key -> color.copy(alpha = 0f)
+						radioType == Button -> color.copy(alpha = 0f)
 						else -> {
 							when {
-								buttonIsPressed -> color.brightness(1.1f)
-								buttonIsHovered -> color.brightness(1.15f)
+								isButtonPressed -> color.brightness(1.1f)
+								isButtonHovered -> color.brightness(1.15f)
 								else -> color
 							}
 						}
 					}
 				}
-			}
-			val targetBackgroundColor by remember(color, option.enabled, selectedKey, radioType) {
-				derivedStateOf {
+			)
+			val backgroundColor by animateColorAsState(
+				targetValue = run {
+					val color = colorType.backgroundColor
 					when {
 						!option.enabled -> DisabledBackgroundColor
-						radioType == FlexRadioType.Button -> {
+						selectedKey != option.key -> Color.Transparent
+						radioType == Button -> {
 							when {
-								buttonIsPressed -> color.brightness(0.95f)
-								buttonIsHovered -> color.brightness(1.1f)
+								isButtonPressed -> color.brightness(0.95f)
+								isButtonHovered -> color.brightness(1.1f)
 								else -> color
 							}
 						}
@@ -137,9 +143,7 @@ internal fun <Key> FlexSwipeRadio(
 						else -> color.copy(alpha = 0f)
 					}
 				}
-			}
-			val borderColor by animateColorAsState(targetBorderColor)
-			val backgroundColor by animateColorAsState(targetBackgroundColor)
+			)
 			Box(
 				modifier = Modifier
 					.width(targetWidth)
@@ -168,12 +172,12 @@ internal fun <Key> FlexSwipeRadio(
 				val isHovered by interactionSource.collectIsHoveredAsState()
 				LaunchedEffect(isHovered) {
 					if (option.key == selectedKey) {
-						buttonIsHovered = isHovered
+						isButtonHovered = isHovered
 					}
 				}
 				LaunchedEffect(isPressed) {
 					if (option.key == selectedKey) {
-						buttonIsPressed = isPressed
+						isButtonPressed = isPressed
 					}
 				}
 				if (index != 0) {
@@ -209,11 +213,38 @@ internal fun <Key> FlexSwipeRadio(
 					horizontalArrangement = Arrangement.Center,
 					verticalAlignment = Alignment.CenterVertically,
 				) {
+					val contentColor by animateColorAsState(
+						targetValue = when (radioType) {
+							Button -> {
+								val color = colorType.contentColor
+								when {
+									!option.enabled -> color.copy(alpha = 0.8f)
+									else -> color
+								}
+							}
+							
+							Default -> {
+								val color = colorType.backgroundColor
+								when {
+									!option.enabled -> color.copy(alpha = 0f)
+									selectedKey != option.key -> color.copy(alpha = 0f)
+									radioType == Button -> color.copy(alpha = 0f)
+									else -> {
+										when {
+											isButtonPressed -> color.brightness(1.1f)
+											isButtonHovered -> color.brightness(1.15f)
+											else -> color
+										}
+									}
+								}
+							}
+						}
+					)
 					FlexRadioText(
 						value = option.value,
 						enabled = option.enabled,
 						selected = option.key == selectedKey,
-						color = color,
+						color = contentColor,
 						config = config,
 						radioType = radioType,
 						isPressed = isPressed,

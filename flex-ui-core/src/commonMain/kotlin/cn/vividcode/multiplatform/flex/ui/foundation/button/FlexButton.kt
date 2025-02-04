@@ -32,7 +32,6 @@ import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.expends.brightness
 import cn.vividcode.multiplatform.flex.ui.expends.dashedBorder
-import cn.vividcode.multiplatform.flex.ui.expends.isDark
 
 /**
  * FlexButton 按钮
@@ -74,12 +73,12 @@ fun FlexButton(
 	) {
 		val current = LocalFlexConfig.current
 		val config = current.button.getConfig(sizeType)
-		val color = current.theme.colorScheme.current.getColor(colorType)
 		val interactionSource = remember { MutableInteractionSource() }
 		val isHovered by interactionSource.collectIsHoveredAsState()
 		val isPressed by interactionSource.collectIsPressedAsState()
-		val targetBorderColor by remember(color, buttonType, enabled, isPressed, isHovered) {
-			derivedStateOf {
+		val borderColor by animateColorAsState(
+			targetValue = run {
+				val color = colorType.backgroundColor
 				when (buttonType) {
 					FlexButtonType.Default, FlexButtonType.Dashed -> {
 						when {
@@ -90,18 +89,19 @@ fun FlexButton(
 						}
 					}
 					
-					else -> color.copy(alpha = 0f)
+					else -> colorType.backgroundColor.copy(alpha = 0f)
 				}
 			}
-		}
-		val targetBackgroundColor by remember(color, buttonType, enabled, isPressed, isHovered) {
-			derivedStateOf {
+		)
+		val backgroundColor by animateColorAsState(
+			targetValue = run {
+				val color = colorType.backgroundColor
 				when (buttonType) {
 					FlexButtonType.Primary -> {
 						when {
 							!enabled -> color.copy(alpha = 0.6f)
 							isPressed -> color.brightness(0.95f)
-							isHovered -> color.brightness(1.1f)
+							isHovered -> color.brightness(1.05f)
 							else -> color
 						}
 					}
@@ -126,9 +126,7 @@ fun FlexButton(
 					else -> color.copy(alpha = 0f)
 				}
 			}
-		}
-		val borderColor by animateColorAsState(targetBorderColor)
-		val backgroundColor by animateColorAsState(targetBackgroundColor)
+		)
 		val horizontalPadding by animateDpAsState(
 			targetValue = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
 		)
@@ -178,39 +176,39 @@ fun FlexButton(
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.Center
 		) {
-			val targetFontColor by remember(color, buttonType, enabled) {
-				derivedStateOf {
-					when (buttonType) {
-						FlexButtonType.Primary -> when (color.isDark) {
-							true -> if (enabled) Color.White else Color.White.copy(alpha = 0.9f)
-							false -> if (enabled) Color.Black else Color.Black.copy(alpha = 0.9f)
+			val contentColor by animateColorAsState(
+				targetValue = when (buttonType) {
+					FlexButtonType.Primary -> {
+						val color = colorType.contentColor
+						if (enabled) color else color.copy(0.9f)
+					}
+					
+					FlexButtonType.Filled, FlexButtonType.Text -> {
+						val color = colorType.backgroundColor
+						if (enabled) color else color.copy(0.8f)
+					}
+					
+					FlexButtonType.Link -> {
+						val color = colorType.backgroundColor
+						when {
+							!enabled -> color.copy(0.8f)
+							isPressed -> color.brightness(0.85f)
+							isHovered -> color.brightness(1.2f)
+							else -> color
 						}
-						
-						FlexButtonType.Filled, FlexButtonType.Text -> {
-							if (enabled) color else color.copy(alpha = 0.8f)
-						}
-						
-						FlexButtonType.Link -> {
-							when {
-								!enabled -> color.copy(alpha = 0.8f)
-								isPressed -> color.brightness(0.85f)
-								isHovered -> color.brightness(1.2f)
-								else -> color
-							}
-						}
-						
-						else -> {
-							when {
-								!enabled -> color.copy(alpha = 0.6f)
-								isPressed -> color.brightness(0.9f)
-								isHovered -> color.brightness(1.15f)
-								else -> color
-							}
+					}
+					
+					FlexButtonType.Default, FlexButtonType.Dashed -> {
+						val color = colorType.backgroundColor
+						when {
+							!enabled -> color.copy(0.6f)
+							isPressed -> color.brightness(0.9f)
+							isHovered -> color.brightness(1.15f)
+							else -> color
 						}
 					}
 				}
-			}
-			val fontColor by animateColorAsState(targetFontColor)
+			)
 			if (icon != null) {
 				CompositionLocalProvider(
 					LocalLayoutDirection provides layoutDirection
@@ -219,7 +217,7 @@ fun FlexButton(
 					val rotation by animateFloatAsState(iconRotation)
 					Icon(
 						imageVector = icon,
-						tint = fontColor,
+						tint = contentColor,
 						contentDescription = null,
 						modifier = Modifier
 							.rotate(rotation)
@@ -240,7 +238,7 @@ fun FlexButton(
 				val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 				Text(
 					text = targetText,
-					color = fontColor,
+					color = contentColor,
 					fontSize = fontSize.sp,
 					fontWeight = config.fontWeight,
 					letterSpacing = when (config.letterSpacing) {

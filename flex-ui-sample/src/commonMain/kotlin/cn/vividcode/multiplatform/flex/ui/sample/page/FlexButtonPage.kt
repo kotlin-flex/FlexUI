@@ -40,7 +40,7 @@ fun ColumnScope.FlexButtonPage() {
 	var buttonText by remember { mutableStateOf("FlexButton") }
 	var buttonType by remember { mutableStateOf(FlexButtonType.Default) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
-	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.OnSurface) }
+	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var iconType by remember { mutableStateOf(IconType.None) }
 	var iconPosition by remember { mutableStateOf(FlexButtonIconPosition.End) }
