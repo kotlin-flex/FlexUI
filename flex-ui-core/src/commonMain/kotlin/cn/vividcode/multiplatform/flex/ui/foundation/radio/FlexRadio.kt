@@ -8,20 +8,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.brightness
-import cn.vividcode.multiplatform.flex.ui.expends.isDark
+import cn.vividcode.multiplatform.flex.ui.expends.darkenWithContent
+import cn.vividcode.multiplatform.flex.ui.expends.disabledWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.lightenWithContent
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.jvm.JvmName
 
@@ -207,16 +214,9 @@ class RadioOption<Key>(
 	val enabled: Boolean = true,
 )
 
-internal val BorderColor = Color.Gray.copy(alpha = 0.3f)
-
-internal val UnselectedFontColor
+internal val DisabledBackgroundColor: Color
 	@Composable
-	get() = when (LocalDarkTheme.current) {
-		true -> Color.LightGray
-		false -> Color.DarkGray
-	}
-
-internal val DisabledBackgroundColor = Color.Gray.copy(alpha = 0.15f)
+	get() = (if (LocalDarkTheme.current) Color.DarkGray else Color.LightGray).disabledWithBackground
 
 /**
  * 单选框文本
@@ -225,51 +225,46 @@ internal val DisabledBackgroundColor = Color.Gray.copy(alpha = 0.15f)
 internal fun FlexRadioText(
 	value: String,
 	enabled: Boolean,
-	selected: Boolean,
-	color: Color,
-	config: FlexRadioConfig,
+	colorType: FlexColorType,
 	radioType: FlexRadioType,
+	config: FlexRadioConfig,
+	selected: Boolean,
 	isPressed: Boolean,
 	isHovered: Boolean,
 	scaleEffect: Boolean,
 ) {
-	val targetFontColor by animateColorAsState(
+	val scale by animateFloatAsState(
 		targetValue = when {
-			!enabled -> UnselectedFontColor.copy(alpha = 0.8f)
-			selected -> {
-				when (radioType) {
-					FlexRadioType.Button -> if (color.isDark) Color.White else Color.Black
-					FlexRadioType.Default -> {
-						when {
-							isPressed -> color.brightness(0.9f)
-							isHovered -> color.brightness(1.15f)
-							else -> color
-						}
-					}
-				}
-			}
-			
-			isPressed -> color.brightness(0.9f)
-			isHovered -> color
-			else -> UnselectedFontColor
+			!enabled || !scaleEffect -> 1f
+			isPressed -> 0.98f
+			isHovered -> 1.02f
+			else -> 1f
 		}
 	)
-	val targetScale by remember(enabled, scaleEffect, isPressed, isHovered) {
-		derivedStateOf {
-			when {
-				!enabled || !scaleEffect -> 1f
-				isPressed -> 0.98f
-				isHovered -> 1.02f
-				else -> 1f
+	val fontSize by animateFloatAsState(config.fontSize.value)
+	val contentColor by animateColorAsState(
+		targetValue = when {
+			!enabled -> MaterialTheme.colorScheme.outline
+			!selected -> when {
+				isPressed || isHovered -> colorType.backgroundColor
+				else -> MaterialTheme.colorScheme.outline
+			}
+			
+			radioType == Button -> colorType.contentColor
+			else -> {
+				val color = colorType.backgroundColor
+				when {
+					isPressed -> color.darkenWithContent
+					isHovered -> color.lightenWithContent
+					else -> color
+				}
 			}
 		}
-	}
-	val scale by animateFloatAsState(targetScale)
-	val fontSize by animateFloatAsState(config.fontSize.value)
+	)
 	Text(
 		text = value,
 		modifier = Modifier.scale(scale),
-		color = targetFontColor,
+		color = contentColor,
 		fontSize = fontSize.sp,
 		fontWeight = config.fontWeight,
 		lineHeight = fontSize.sp,
@@ -289,7 +284,7 @@ internal fun <Key> FlexRadioLine(
 ) {
 	val lineColor by animateColorAsState(
 		targetValue = when {
-			options[index].key != selectedKey && options[index - 1].key != selectedKey -> BorderColor
+			options[index].key != selectedKey && options[index - 1].key != selectedKey -> MaterialTheme.colorScheme.outlineVariant
 			!options[index].enabled || !options[index - 1].enabled -> DisabledBackgroundColor
 			else -> Color.Transparent
 		}
@@ -303,5 +298,23 @@ internal fun <Key> FlexRadioLine(
 				vertical = width
 			)
 			.background(lineColor)
+	)
+}
+
+internal fun Modifier.bottomBorder(
+	width: Dp,
+	color: Color,
+	corner: Dp,
+): Modifier = this.drawBehind {
+	val borderWidth = width.toPx()
+	drawRoundRect(
+		color = color,
+		size = size.copy(
+			width = size.width - borderWidth,
+			height = size.height - borderWidth
+		),
+		topLeft = Offset(borderWidth / 2f, borderWidth / 2f),
+		cornerRadius = CornerRadius(corner.toPx()),
+		style = Stroke(width = borderWidth)
 	)
 }

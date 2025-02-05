@@ -30,8 +30,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.brightness
-import cn.vividcode.multiplatform.flex.ui.expends.dashedBorder
+import cn.vividcode.multiplatform.flex.ui.expends.*
 
 /**
  * FlexButton 按钮
@@ -82,9 +81,9 @@ fun FlexButton(
 				when (buttonType) {
 					FlexButtonType.Default, FlexButtonType.Dashed -> {
 						when {
-							!enabled -> color.copy(alpha = 0.6f)
-							isPressed -> color.brightness(0.9f)
-							isHovered -> color.brightness(1.15f)
+							!enabled -> color.disabledWithContent
+							isPressed -> color.darkenWithContent
+							isHovered -> color.lightenWithContent
 							else -> color
 						}
 					}
@@ -99,9 +98,9 @@ fun FlexButton(
 				when (buttonType) {
 					FlexButtonType.Primary -> {
 						when {
-							!enabled -> color.copy(alpha = 0.6f)
-							isPressed -> color.brightness(0.95f)
-							isHovered -> color.brightness(1.05f)
+							!enabled -> color.disabledWithBackground
+							isPressed -> color.darkenWithBackground
+							isHovered -> color.lightenWithBackground
 							else -> color
 						}
 					}
@@ -117,6 +116,7 @@ fun FlexButton(
 					
 					FlexButtonType.Text -> {
 						when {
+							!enabled -> color.copy(alpha = 0f)
 							isPressed -> color.copy(alpha = 0.2f)
 							isHovered -> color.copy(alpha = 0.1f)
 							else -> color.copy(alpha = 0f)
@@ -131,7 +131,7 @@ fun FlexButton(
 			targetValue = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
 		)
 		val height by animateDpAsState(config.height)
-		val corner by animateDpAsState(height * cornerType.percent)
+		val corner by animateDpAsState(height * cornerType.scale)
 		val cornerShape by remember(cornerType, corner) {
 			derivedStateOf {
 				RoundedCornerShape(corner)
@@ -178,22 +178,19 @@ fun FlexButton(
 		) {
 			val contentColor by animateColorAsState(
 				targetValue = when (buttonType) {
-					FlexButtonType.Primary -> {
-						val color = colorType.contentColor
-						if (enabled) color else color.copy(0.9f)
-					}
+					FlexButtonType.Primary -> colorType.contentColor
 					
 					FlexButtonType.Filled, FlexButtonType.Text -> {
 						val color = colorType.backgroundColor
-						if (enabled) color else color.copy(0.8f)
+						if (enabled) color else color.disabledWithContent
 					}
 					
 					FlexButtonType.Link -> {
 						val color = colorType.backgroundColor
 						when {
-							!enabled -> color.copy(0.8f)
-							isPressed -> color.brightness(0.85f)
-							isHovered -> color.brightness(1.2f)
+							!enabled -> color.disabledWithContent
+							isPressed -> color.darkenWithContent
+							isHovered -> color.lightenWithContent
 							else -> color
 						}
 					}
@@ -201,9 +198,9 @@ fun FlexButton(
 					FlexButtonType.Default, FlexButtonType.Dashed -> {
 						val color = colorType.backgroundColor
 						when {
-							!enabled -> color.copy(0.6f)
-							isPressed -> color.brightness(0.9f)
-							isHovered -> color.brightness(1.15f)
+							!enabled -> color.disabledWithContent
+							isPressed -> color.darkenWithContent
+							isHovered -> color.lightenWithContent
 							else -> color
 						}
 					}

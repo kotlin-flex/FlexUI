@@ -10,45 +10,45 @@ import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 /**
  * 颜色类型
  */
-abstract class FlexColorType {
+interface FlexColorType {
 	
 	val contentColor: Color
 		@Composable
 		get() = MaterialTheme.colorScheme.contentColorFor(backgroundColor)
 	
-	abstract val backgroundColor: Color
+	val backgroundColor: Color
 		@Composable
 		get
 	
-	data object Primary : FlexColorType() {
+	data object Primary : FlexColorType {
 		
 		override val backgroundColor: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.primary
 	}
 	
-	data object Secondary : FlexColorType() {
+	data object Secondary : FlexColorType {
 		
 		override val backgroundColor: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.secondary
 	}
 	
-	data object Tertiary : FlexColorType() {
+	data object Tertiary : FlexColorType {
 		
 		override val backgroundColor: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.tertiary
 	}
 	
-	data object Error : FlexColorType() {
+	data object Error : FlexColorType {
 		
 		override val backgroundColor: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.error
 	}
 	
-	data object InverseSurface : FlexColorType() {
+	data object InverseSurface : FlexColorType {
 		
 		override val backgroundColor: Color
 			@Composable
@@ -69,10 +69,11 @@ internal val LocalFlexColorType = compositionLocalOf<FlexColorType?> { null }
 
 @Composable
 internal fun getDefaultColorType(
-	defaultColorType: FlexComposeDefaultConfig.() -> FlexColorType?,
+	defaultColorType: FlexColorType = FlexColorType.Primary,
+	composeDefaultColorType: FlexComposeDefaultConfig.() -> FlexColorType?,
 ): FlexColorType = LocalFlexColorType.current
 	?: LocalFlexConfig.current.default.let {
-		it.defaultColorType()
-			?: it.common.colorType
-			?: FlexColorType.Primary
+		it.composeDefaultColorType()
+			?: it.common?.colorType
+			?: defaultColorType
 	}

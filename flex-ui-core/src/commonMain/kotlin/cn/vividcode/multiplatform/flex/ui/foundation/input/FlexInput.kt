@@ -196,7 +196,7 @@ private fun FlexInputDecorationBox(
 	val borderWidth by animateDpAsState(config.borderWidth)
 	val minWidth by animateDpAsState(config.minWidth)
 	val height by animateDpAsState(config.height)
-	val corner = height * cornerType.percent
+	val corner = height * cornerType.scale
 	val cornerShape by remember(corner) {
 		derivedStateOf { RoundedCornerShape(corner) }
 	}

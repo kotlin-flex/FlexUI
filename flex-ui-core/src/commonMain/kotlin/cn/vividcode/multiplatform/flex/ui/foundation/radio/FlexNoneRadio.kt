@@ -12,6 +12,7 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -19,20 +20,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.expends.brightness
+import cn.vividcode.multiplatform.flex.ui.expends.darkenWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.darkenWithContent
+import cn.vividcode.multiplatform.flex.ui.expends.lightenWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.lightenWithContent
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Default
 
 /**
  * FlexRadio 单选框，类型：无效果
@@ -60,30 +58,23 @@ internal fun <Key> FlexNoneRadio(
 	val current = LocalFlexConfig.current
 	val config = current.radio.getConfig(sizeType)
 	val height by animateDpAsState(config.height)
-	val corner by animateDpAsState(config.height * cornerType.percent)
+	val corner by animateDpAsState(config.height * cornerType.scale)
 	val cornerShape by remember(corner) {
 		derivedStateOf {
 			RoundedCornerShape(corner)
 		}
 	}
 	val horizontalPadding by animateDpAsState(config.horizontalPadding)
+	val borderWidth by animateDpAsState(config.borderWidth)
 	Row(
 		modifier = Modifier
 			.height(height)
 			.clip(cornerShape)
-			.drawBehind {
-				val borderWidth = config.borderWidth.toPx()
-				drawRoundRect(
-					color = BorderColor,
-					size = size.copy(
-						width = size.width - borderWidth,
-						height = size.height - borderWidth
-					),
-					topLeft = Offset(borderWidth / 2f, borderWidth / 2f),
-					cornerRadius = CornerRadius(corner.toPx()),
-					style = Stroke(width = borderWidth)
-				)
-			}
+			.bottomBorder(
+				width = borderWidth,
+				color = MaterialTheme.colorScheme.outlineVariant,
+				corner = corner
+			)
 	) {
 		options.forEachIndexed { index, option ->
 			val buttonCornerShape by remember(corner, options.lastIndex) {
@@ -111,8 +102,8 @@ internal fun <Key> FlexNoneRadio(
 						radioType == Button -> color.copy(alpha = 0f)
 						else -> {
 							when {
-								isPressed -> color.brightness(1.1f)
-								isHovered -> color.brightness(1.15f)
+								isPressed -> color.darkenWithContent
+								isHovered -> color.lightenWithContent
 								else -> color
 							}
 						}
@@ -124,16 +115,12 @@ internal fun <Key> FlexNoneRadio(
 					val color = colorType.backgroundColor
 					when {
 						!option.enabled -> DisabledBackgroundColor
-						selectedKey != option.key -> Color.Transparent
-						radioType == Button -> {
-							when {
-								isPressed -> color.brightness(0.95f)
-								isHovered -> color.brightness(1.1f)
-								else -> color
-							}
+						selectedKey != option.key || radioType == FlexRadioType.Default -> color.copy(alpha = 0f)
+						else -> when {
+							isPressed -> color.darkenWithBackground
+							isHovered -> color.lightenWithBackground
+							else -> color
 						}
-						
-						else -> color.copy(alpha = 0f)
 					}
 				}
 			)
@@ -171,40 +158,13 @@ internal fun <Key> FlexNoneRadio(
 				horizontalArrangement = Arrangement.Center,
 				verticalAlignment = Alignment.CenterVertically,
 			) {
-				val contentColor by animateColorAsState(
-					targetValue = when (radioType) {
-						Button -> {
-							val color = colorType.contentColor
-							when {
-								!option.enabled -> color.copy(alpha = 0.8f)
-								else -> color
-							}
-						}
-						
-						Default -> {
-							val color = colorType.backgroundColor
-							when {
-								!option.enabled -> color.copy(alpha = 0f)
-								selectedKey != option.key -> color.copy(alpha = 0f)
-								radioType == Button -> color.copy(alpha = 0f)
-								else -> {
-									when {
-										isPressed -> color.brightness(1.1f)
-										isHovered -> color.brightness(1.15f)
-										else -> color
-									}
-								}
-							}
-						}
-					}
-				)
 				FlexRadioText(
 					value = option.value,
 					enabled = option.enabled,
-					selected = option.key == selectedKey,
-					color = contentColor,
-					config = config,
+					colorType = colorType,
 					radioType = radioType,
+					config = config,
+					selected = selectedKey == option.key,
 					isPressed = isPressed,
 					isHovered = isHovered,
 					scaleEffect = scaleEffect

@@ -35,7 +35,7 @@ fun FlexSwitch(
 	val config = current.switch.getConfig(sizeType)
 	val height by animateDpAsState(config.height)
 	val padding by animateDpAsState(config.padding)
-	val corner by animateDpAsState(config.height * cornerType.percent)
+	val corner by animateDpAsState(config.height * cornerType.scale)
 	val cornerShape by remember(corner) {
 		derivedStateOf { RoundedCornerShape(corner) }
 	}
@@ -45,8 +45,7 @@ fun FlexSwitch(
 		targetValue = run {
 			val color = when {
 				checked -> colorType.backgroundColor
-				LocalDarkTheme.current -> Color.DarkGray
-				else -> Color.LightGray
+				else -> Color.Gray
 			}
 			if (isHovered) color.copy(alpha = 0.95f) else color
 		}
@@ -77,13 +76,16 @@ fun FlexSwitch(
 			}
 		)
 		val checkBoxCorner by animateDpAsState(
-			targetValue = (config.height - config.padding * 2) * cornerType.percent
+			targetValue = (config.height - config.padding * 2) * cornerType.scale
 		)
 		val checkBoxCornerShape by remember(checkBoxCorner) {
 			derivedStateOf { RoundedCornerShape(checkBoxCorner) }
 		}
 		val width by animateDpAsState(
 			targetValue = if (isPressed) config.height else config.height - config.padding * 2
+		)
+		val checkBoxBackgroundColor by animateColorAsState(
+			if (LocalDarkTheme.current) Color.White else Color.White
 		)
 		Box(
 			modifier = Modifier
@@ -92,14 +94,16 @@ fun FlexSwitch(
 				.height(height - padding * 2)
 				.clip(checkBoxCornerShape)
 				.background(
-					color = Color.White,
+					color = checkBoxBackgroundColor,
 					shape = checkBoxCornerShape
 				)
 		)
 	}
 }
 
-object FlexSwitchDefaults : FlexDefaults() {
+object FlexSwitchDefaults : FlexDefaults(
+	defaultCornerType = FlexCornerType.Circle
+) {
 	
 	override val FlexComposeDefaultConfig.defaultConfig
 		get() = this.switch

@@ -47,7 +47,7 @@ fun ColumnScope.FlexSwitchPage() {
 				onCheckedChange = { checked = it },
 				sizeType = sizeType,
 				colorType = colorType,
-				cornerType = cornerType,
+				cornerType = cornerType
 			)
 		}
 		Spacer(Modifier.width(12.dp))

@@ -10,43 +10,68 @@ import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
  */
 @Stable
 enum class FlexCornerType(
-	internal val percent: Float,
+	internal val scale: Float,
 ) {
 	
 	/**
-	 * 无圆角，0/8
+	 * 无圆角 0/16
 	 */
-	None(0f),
+	None(NONE_SCALE),
 	
 	/**
-	 * 小圆角，1/8
+	 * 超小圆角 1/16
 	 */
-	Small(0.125f),
+	ExtraSmall(EXTRA_SMALL_SCALE),
 	
 	/**
-	 * 中圆角，1/4
+	 * 小圆角 2/16
 	 */
-	Medium(0.25f),
+	Small(SMALL_SCALE),
 	
 	/**
-	 * 大圆角，1/3
+	 * 中圆角 4/16
 	 */
-	Large(0.333f),
+	Medium(MEDIUM_SCALE),
 	
 	/**
-	 * 完整的圆角，1/2
+	 * 大圆角 6/16
 	 */
-	Circle(0.5f)
+	Large(LARGE_SCALE),
+	
+	/**
+	 * 超大圆角 7/16
+	 */
+	ExtraLarge(EXTRA_LARGE_SCALE),
+	
+	/**
+	 * 最大圆角 8/16
+	 */
+	Circle(CIRCLE_SCALE)
 }
+
+private const val NONE_SCALE = 0f / 12f
+
+private const val EXTRA_SMALL_SCALE = 1f / 12f
+
+private const val SMALL_SCALE = 2f / 12f
+
+private const val MEDIUM_SCALE = 3f / 12f
+
+private const val LARGE_SCALE = 4f / 12f
+
+private const val EXTRA_LARGE_SCALE = 5f / 12f
+
+private const val CIRCLE_SCALE = 6f / 12f
 
 internal val LocalFlexCornerType = compositionLocalOf<FlexCornerType?> { null }
 
 @Composable
 internal fun getDefaultCornerType(
-	defaultCornerType: FlexComposeDefaultConfig.() -> FlexCornerType?,
+	defaultCornerType: FlexCornerType = FlexCornerType.Medium,
+	composeDefaultCornerType: FlexComposeDefaultConfig.() -> FlexCornerType?,
 ): FlexCornerType = LocalFlexCornerType.current
 	?: LocalFlexConfig.current.default.let {
-		it.defaultCornerType()
-			?: it.common.cornerType
-			?: FlexCornerType.Circle
+		it.composeDefaultCornerType()
+			?: it.common?.cornerType
+			?: defaultCornerType
 	}

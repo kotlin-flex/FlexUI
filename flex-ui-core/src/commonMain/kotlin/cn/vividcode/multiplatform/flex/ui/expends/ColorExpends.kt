@@ -1,33 +1,67 @@
 package cn.vividcode.multiplatform.flex.ui.expends
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-private const val RED_WEIGHT = 0.299
-
-private const val GREEN_WEIGHT = 0.587
-
-private const val BLUE_WEIGHT = 0.114
-
 /**
- * 是否是暗色
- */
-internal val Color.isDark: Boolean
-	get() = (this.red * RED_WEIGHT + this.green * GREEN_WEIGHT + this.blue * BLUE_WEIGHT) < 0.5
-
-/**
- * 颜色变量
+ * 颜色变亮
  * @param factor 因子, < 1: 变暗, > 1: 变亮
  */
-internal fun Color.brightness(factor: Float): Color {
+private fun Color.brightness(factor: Float): Color {
 	val hsl = this.rgbToHsl()
 	val h = hsl[0]
 	val s = hsl[1]
 	val l = min(1f, max(0f, hsl[2] * factor))
 	return hslToRgb(h, s, l)
 }
+
+/**
+ * 内容变深
+ */
+internal val Color.darkenWithContent: Color
+	@Composable
+	get() = this.brightness(
+		factor = if (LocalDarkTheme.current) 0.95f else 0.85f
+	)
+
+/**
+ * 内容变浅
+ */
+internal val Color.lightenWithContent: Color
+	@Composable
+	get() = this.brightness(
+		factor = if (LocalDarkTheme.current) 1.05f else 1.15f
+	)
+
+/**
+ * 背景变深
+ */
+internal val Color.darkenWithBackground: Color
+	@Composable
+	get() = this.brightness(0.95f)
+
+/**
+ * 背景变浅
+ */
+internal val Color.lightenWithBackground: Color
+	@Composable
+	get() = this.brightness(1.05f)
+
+/**
+ * 禁用内容
+ */
+internal val Color.disabledWithContent: Color
+	get() = this.copy(alpha = 0.8f)
+
+/**
+ * 禁用背景
+ */
+internal val Color.disabledWithBackground: Color
+	get() = this.copy(alpha = 0.8f)
 
 /**
  * RGB 转 HSL

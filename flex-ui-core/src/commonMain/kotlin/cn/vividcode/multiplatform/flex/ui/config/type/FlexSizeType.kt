@@ -41,10 +41,11 @@ internal val LocalFlexSizeType = compositionLocalOf<FlexSizeType?> { null }
 
 @Composable
 internal fun getDefaultSizeType(
-	defaultSizeType: FlexComposeDefaultConfig.() -> FlexSizeType?,
+	defaultSizeType: FlexSizeType = FlexSizeType.Medium,
+	composeDefaultSizeType: FlexComposeDefaultConfig.() -> FlexSizeType?,
 ): FlexSizeType = LocalFlexSizeType.current
 	?: LocalFlexConfig.current.default.let {
-		it.defaultSizeType()
-			?: it.common.sizeType
-			?: FlexSizeType.Medium
+		it.composeDefaultSizeType()
+			?: it.common?.sizeType
+			?: defaultSizeType
 	}
