@@ -14,7 +14,7 @@
 
 ## 最新变化
 
-当前版本：1.0.0-exp-04
+当前版本：1.0.0-exp-05
 
 项目处于早期阶段
 
@@ -32,12 +32,16 @@
 
 ## FlexButton 按钮
 
-![FlexButton.png](image/FlexButton.png)
+![FlexButtonPage.png](image/FlexButtonPage.png)
 
 ## FlexRadio 单选框
 
-![FlexRadio.png](image/FlexRadio.png)
+![FlexRadioPage.png](image/FlexRadioPage.png)
 
 ## FlexInput 输入框
 
-![FlexInput.png](image/FlexInput.png)
+![FlexInputPage.png](image/FlexInputPage.png)
+
+## FlexSwitch 开关
+
+![FlexSwitch.png](image/FlexSwitchPage.png)
