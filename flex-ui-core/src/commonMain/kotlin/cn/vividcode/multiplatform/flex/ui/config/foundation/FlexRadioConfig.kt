@@ -21,15 +21,17 @@ class FlexRadioConfig internal constructor(
 
 internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 	
+	private const val FONT_SIZE_SCALE = 4 / 9f
+	
 	/**
 	 * 默认超小尺寸单选框配置
 	 */
 	override val DefaultExtraSmall: FlexRadioConfig
 		get() = FlexRadioConfig(
-			height = 24.dp,
-			horizontalPadding = 8.dp,
+			height = 20.dp,
+			horizontalPadding = 6.dp,
 			borderWidth = 1.dp,
-			fontSize = 10.sp,
+			fontSize = 20.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified
 		)
@@ -39,10 +41,10 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 	 */
 	override val DefaultSmall: FlexRadioConfig
 		get() = FlexRadioConfig(
-			height = 32.dp,
-			horizontalPadding = 10.dp,
+			height = 28.dp,
+			horizontalPadding = 8.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 13.sp,
+			fontSize = 28.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified
 		)
@@ -52,10 +54,10 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 	 */
 	override val DefaultMedium: FlexRadioConfig
 		get() = FlexRadioConfig(
-			height = 40.dp,
-			horizontalPadding = 12.dp,
+			height = 36.dp,
+			horizontalPadding = 10.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 16.sp,
+			fontSize = 36.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified
 		)
@@ -65,10 +67,10 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 	 */
 	override val DefaultLarge: FlexRadioConfig
 		get() = FlexRadioConfig(
-			height = 48.dp,
-			horizontalPadding = 14.dp,
+			height = 44.dp,
+			horizontalPadding = 12.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 19.sp,
+			fontSize = 44.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.SemiBold,
 			letterSpacing = TextUnit.Unspecified
 		)
@@ -78,10 +80,10 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 	 */
 	override val DefaultExtraLarge: FlexRadioConfig
 		get() = FlexRadioConfig(
-			height = 56.dp,
-			horizontalPadding = 16.dp,
+			height = 52.dp,
+			horizontalPadding = 14.dp,
 			borderWidth = 2.dp,
-			fontSize = 22.5.sp,
+			fontSize = 52.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.SemiBold,
 			letterSpacing = TextUnit.Unspecified
 		)

@@ -15,9 +15,9 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
+import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
-import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
@@ -99,7 +99,6 @@ fun ColumnScope.FlexRadioPage() {
 				onSelectedKeyChange = { radioType = it },
 				options = radioTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -113,7 +112,6 @@ fun ColumnScope.FlexRadioPage() {
 				onSelectedKeyChange = { sizeType = it },
 				options = sizeTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -141,7 +139,6 @@ fun ColumnScope.FlexRadioPage() {
 				onSelectedKeyChange = { cornerType = it },
 				options = cornerTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -156,7 +153,6 @@ fun ColumnScope.FlexRadioPage() {
 				onSelectedKeyChange = { switchType = it },
 				options = switchTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -165,14 +161,10 @@ fun ColumnScope.FlexRadioPage() {
 		TitleLayout(
 			title = "Scale Effect"
 		) {
-			FlexRadio(
-				selectedKey = scaleEffect,
-				onSelectedKeyChange = { scaleEffect = it },
-				options = booleanOptions,
+			FlexSwitch(
+				checked = scaleEffect,
+				onCheckedChange = { scaleEffect = it },
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
@@ -184,7 +176,6 @@ fun ColumnScope.FlexRadioPage() {
 				onSelectedKeyChange = { disabledOption = it },
 				options = disabledOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)

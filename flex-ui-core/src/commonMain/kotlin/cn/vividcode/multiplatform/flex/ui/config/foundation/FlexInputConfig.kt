@@ -31,14 +31,14 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig> {
 	 */
 	override val DefaultExtraSmall: FlexInputConfig
 		get() = FlexInputConfig(
-			minWidth = 96.dp,
-			height = 24.dp,
-			horizontalPadding = 8.dp,
+			minWidth = 80.dp,
+			height = 20.dp,
+			horizontalPadding = 6.dp,
 			borderWidth = 1.dp,
-			fontSize = 24.sp * FONT_SIZE_SCALE,
+			fontSize = 20.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 24.dp * ICON_SIZE_SCALE
+			iconSize = 20.dp * ICON_SIZE_SCALE
 		)
 	
 	/**
@@ -46,14 +46,14 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig> {
 	 */
 	override val DefaultSmall: FlexInputConfig
 		get() = FlexInputConfig(
-			minWidth = 128.dp,
-			height = 32.dp,
-			horizontalPadding = 10.dp,
+			minWidth = 112.dp,
+			height = 28.dp,
+			horizontalPadding = 8.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 32.sp * FONT_SIZE_SCALE,
+			fontSize = 28.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 32.dp * ICON_SIZE_SCALE
+			iconSize = 28.dp * ICON_SIZE_SCALE
 		)
 	
 	/**
@@ -61,14 +61,14 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig> {
 	 */
 	override val DefaultMedium: FlexInputConfig
 		get() = FlexInputConfig(
-			minWidth = 160.dp,
-			height = 40.dp,
-			horizontalPadding = 12.dp,
+			minWidth = 144.dp,
+			height = 36.dp,
+			horizontalPadding = 10.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 40.sp * FONT_SIZE_SCALE,
+			fontSize = 36.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 40.dp * ICON_SIZE_SCALE
+			iconSize = 36.dp * ICON_SIZE_SCALE
 		)
 	
 	/**
@@ -76,14 +76,14 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig> {
 	 */
 	override val DefaultLarge: FlexInputConfig
 		get() = FlexInputConfig(
-			minWidth = 192.dp,
-			height = 48.dp,
-			horizontalPadding = 14.dp,
+			minWidth = 176.dp,
+			height = 44.dp,
+			horizontalPadding = 12.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 48.sp * FONT_SIZE_SCALE,
+			fontSize = 44.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 48.dp * ICON_SIZE_SCALE
+			iconSize = 44.dp * ICON_SIZE_SCALE
 		)
 	
 	/**
@@ -91,13 +91,13 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig> {
 	 */
 	override val DefaultExtraLarge: FlexInputConfig
 		get() = FlexInputConfig(
-			minWidth = 224.dp,
-			height = 56.dp,
-			horizontalPadding = 16.dp,
+			minWidth = 208.dp,
+			height = 52.dp,
+			horizontalPadding = 14.dp,
 			borderWidth = 2.dp,
-			fontSize = 56.sp * FONT_SIZE_SCALE,
+			fontSize = 52.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 56.dp * ICON_SIZE_SCALE
+			iconSize = 52.dp * ICON_SIZE_SCALE
 		)
 }

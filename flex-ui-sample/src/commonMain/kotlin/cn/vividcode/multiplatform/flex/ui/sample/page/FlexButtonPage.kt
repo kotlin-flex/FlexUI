@@ -118,7 +118,6 @@ fun ColumnScope.FlexButtonPage() {
 				onSelectedKeyChange = { buttonType = it },
 				options = buttonTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -132,7 +131,6 @@ fun ColumnScope.FlexButtonPage() {
 				onSelectedKeyChange = { sizeType = it },
 				options = sizeTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -160,7 +158,6 @@ fun ColumnScope.FlexButtonPage() {
 				onSelectedKeyChange = { cornerType = it },
 				options = cornerTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -175,7 +172,6 @@ fun ColumnScope.FlexButtonPage() {
 				onSelectedKeyChange = { iconType = it },
 				options = iconTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -189,7 +185,6 @@ fun ColumnScope.FlexButtonPage() {
 				onSelectedKeyChange = { iconPosition = it },
 				options = iconPositionOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)

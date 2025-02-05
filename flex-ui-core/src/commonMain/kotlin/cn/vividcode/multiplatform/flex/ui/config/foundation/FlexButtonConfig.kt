@@ -30,14 +30,14 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 	 */
 	override val DefaultExtraSmall: FlexButtonConfig
 		get() = FlexButtonConfig(
-			height = 24.dp,
-			horizontalPadding = 8.dp,
+			height = 20.dp,
+			horizontalPadding = 6.dp,
 			borderWidth = 1.dp,
-			fontSize = 12.sp,
+			fontSize = 10.sp,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 24.dp * ICON_SIZE_SCALE,
-			iconInterval = 4.dp
+			iconSize = 20.dp * ICON_SIZE_SCALE,
+			iconInterval = 2.dp
 		)
 	
 	/**
@@ -45,14 +45,14 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 	 */
 	override val DefaultSmall: FlexButtonConfig
 		get() = FlexButtonConfig(
-			height = 32.dp,
-			horizontalPadding = 10.dp,
+			height = 28.dp,
+			horizontalPadding = 8.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 16.sp,
+			fontSize = 14.sp,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 32.dp * ICON_SIZE_SCALE,
-			iconInterval = 6.dp
+			iconSize = 28.dp * ICON_SIZE_SCALE,
+			iconInterval = 4.dp
 		)
 	
 	/**
@@ -60,14 +60,14 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 	 */
 	override val DefaultMedium: FlexButtonConfig
 		get() = FlexButtonConfig(
-			height = 40.dp,
-			horizontalPadding = 12.dp,
+			height = 36.dp,
+			horizontalPadding = 10.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 20.sp,
+			fontSize = 18.sp,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 40.dp * ICON_SIZE_SCALE,
-			iconInterval = 8.dp
+			iconSize = 36.dp * ICON_SIZE_SCALE,
+			iconInterval = 6.dp
 		)
 	
 	/**
@@ -75,14 +75,14 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 	 */
 	override val DefaultLarge: FlexButtonConfig
 		get() = FlexButtonConfig(
-			height = 48.dp,
-			horizontalPadding = 14.dp,
+			height = 44.dp,
+			horizontalPadding = 12.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 24.sp,
+			fontSize = 22.sp,
 			fontWeight = FontWeight.SemiBold,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 48.dp * ICON_SIZE_SCALE,
-			iconInterval = 10.dp
+			iconSize = 44.dp * ICON_SIZE_SCALE,
+			iconInterval = 8.dp
 		)
 	
 	/**
@@ -90,13 +90,13 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 	 */
 	override val DefaultExtraLarge: FlexButtonConfig
 		get() = FlexButtonConfig(
-			height = 56.dp,
-			horizontalPadding = 16.dp,
+			height = 52.dp,
+			horizontalPadding = 14.dp,
 			borderWidth = 2.dp,
-			fontSize = 28.sp,
+			fontSize = 26.sp,
 			fontWeight = FontWeight.SemiBold,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 56.dp * ICON_SIZE_SCALE,
-			iconInterval = 12.dp
+			iconSize = 52.dp * ICON_SIZE_SCALE,
+			iconInterval = 10.dp
 		)
 }

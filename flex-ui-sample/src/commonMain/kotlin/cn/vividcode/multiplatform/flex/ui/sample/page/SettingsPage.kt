@@ -49,7 +49,6 @@ fun SettingsPage(
 					},
 					options = contrastTypeOptions,
 					sizeType = FlexSizeType.Small,
-					colorType = FlexColorType.Primary,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
 				)

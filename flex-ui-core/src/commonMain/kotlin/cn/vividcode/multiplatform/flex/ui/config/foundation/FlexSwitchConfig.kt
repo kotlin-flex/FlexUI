@@ -1,6 +1,5 @@
 package cn.vividcode.multiplatform.flex.ui.config.foundation
 
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -13,28 +12,25 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 class FlexSwitchConfig internal constructor(
 	var height: Dp,
 	var padding: Dp,
-	var fontSize: TextUnit,
-	var fontWeight: FontWeight,
-	var letterSpacing: TextUnit,
-	var iconSize: Dp,
+	var textLabelSize: TextUnit,
+	var iconLabelSize: Dp,
 )
 
 internal object FlexSwitchSizeDefaults : FlexSizeDefaults<FlexSwitchConfig> {
 	
-	private const val ICON_SIZE_SCALE = 1f / 2f
 	private const val PADDING_SCALE = 1f / 12f
+	private const val TEXT_LABEL_SIZE_SCALE = 1f / 2f
+	private const val ICON_LABEL_SIZE_SCALE = 3f / 4f
 	
 	/**
 	 * 默认超小开关开关配置
 	 */
 	override val DefaultExtraSmall: FlexSwitchConfig
 		get() = FlexSwitchConfig(
-			height = 24.dp,
-			padding = 24.dp * PADDING_SCALE,
-			fontSize = 12.sp,
-			fontWeight = FontWeight.Medium,
-			letterSpacing = TextUnit.Unspecified,
-			iconSize = 24.dp * ICON_SIZE_SCALE,
+			height = 20.dp,
+			padding = 20.dp * PADDING_SCALE,
+			textLabelSize = 20.sp * TEXT_LABEL_SIZE_SCALE,
+			iconLabelSize = 20.dp * ICON_LABEL_SIZE_SCALE,
 		)
 	
 	/**
@@ -42,12 +38,10 @@ internal object FlexSwitchSizeDefaults : FlexSizeDefaults<FlexSwitchConfig> {
 	 */
 	override val DefaultSmall: FlexSwitchConfig
 		get() = FlexSwitchConfig(
-			height = 32.dp,
-			padding = 32.dp * PADDING_SCALE,
-			fontSize = 16.sp,
-			fontWeight = FontWeight.Medium,
-			letterSpacing = TextUnit.Unspecified,
-			iconSize = 32.dp * ICON_SIZE_SCALE
+			height = 28.dp,
+			padding = 28.dp * PADDING_SCALE,
+			textLabelSize = 28.sp * TEXT_LABEL_SIZE_SCALE,
+			iconLabelSize = 28.dp * ICON_LABEL_SIZE_SCALE,
 		)
 	
 	/**
@@ -55,12 +49,10 @@ internal object FlexSwitchSizeDefaults : FlexSizeDefaults<FlexSwitchConfig> {
 	 */
 	override val DefaultMedium: FlexSwitchConfig
 		get() = FlexSwitchConfig(
-			height = 40.dp,
-			padding = 40.dp * PADDING_SCALE,
-			fontSize = 20.sp,
-			fontWeight = FontWeight.Medium,
-			letterSpacing = TextUnit.Unspecified,
-			iconSize = 40.dp * ICON_SIZE_SCALE
+			height = 36.dp,
+			padding = 36.dp * PADDING_SCALE,
+			textLabelSize = 36.sp * TEXT_LABEL_SIZE_SCALE,
+			iconLabelSize = 36.dp * ICON_LABEL_SIZE_SCALE,
 		)
 	
 	/**
@@ -68,12 +60,10 @@ internal object FlexSwitchSizeDefaults : FlexSizeDefaults<FlexSwitchConfig> {
 	 */
 	override val DefaultLarge: FlexSwitchConfig
 		get() = FlexSwitchConfig(
-			height = 48.dp,
-			padding = 48.dp * PADDING_SCALE,
-			fontSize = 24.sp,
-			fontWeight = FontWeight.SemiBold,
-			letterSpacing = TextUnit.Unspecified,
-			iconSize = 48.dp * ICON_SIZE_SCALE
+			height = 44.dp,
+			padding = 44.dp * PADDING_SCALE,
+			textLabelSize = 44.sp * TEXT_LABEL_SIZE_SCALE,
+			iconLabelSize = 44.dp * ICON_LABEL_SIZE_SCALE,
 		)
 	
 	/**
@@ -81,11 +71,9 @@ internal object FlexSwitchSizeDefaults : FlexSizeDefaults<FlexSwitchConfig> {
 	 */
 	override val DefaultExtraLarge: FlexSwitchConfig
 		get() = FlexSwitchConfig(
-			height = 56.dp,
-			padding = 56.dp * PADDING_SCALE,
-			fontSize = 28.sp,
-			fontWeight = FontWeight.SemiBold,
-			letterSpacing = TextUnit.Unspecified,
-			iconSize = 56.dp * ICON_SIZE_SCALE,
+			height = 52.dp,
+			padding = 52.dp * PADDING_SCALE,
+			textLabelSize = 52.sp * TEXT_LABEL_SIZE_SCALE,
+			iconLabelSize = 52.dp * ICON_LABEL_SIZE_SCALE,
 		)
 }

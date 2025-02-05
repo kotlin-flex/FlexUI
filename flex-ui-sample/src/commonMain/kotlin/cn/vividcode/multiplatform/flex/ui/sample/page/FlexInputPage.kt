@@ -23,9 +23,9 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
+import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
-import cn.vividcode.multiplatform.flex.ui.sample.constant.booleanOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
@@ -236,7 +236,6 @@ fun ColumnScope.FlexInputPage() {
 				onSelectedKeyChange = { exampleType = it },
 				options = exampleTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -250,7 +249,6 @@ fun ColumnScope.FlexInputPage() {
 				onSelectedKeyChange = { sizeType = it },
 				options = sizeTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -278,7 +276,6 @@ fun ColumnScope.FlexInputPage() {
 				onSelectedKeyChange = { cornerType = it },
 				options = cornerTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -293,7 +290,6 @@ fun ColumnScope.FlexInputPage() {
 				onSelectedKeyChange = { prefixSuffixType = it },
 				options = prefixSuffixTypeOptions,
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
 			)
@@ -302,28 +298,22 @@ fun ColumnScope.FlexInputPage() {
 		TitleLayout(
 			title = "Enabled"
 		) {
-			FlexRadio(
-				selectedKey = enabled,
-				onSelectedKeyChange = { enabled = it },
-				options = booleanOptions,
+			FlexSwitch(
+				checked = enabled,
+				onCheckedChange = { enabled = it },
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
+				colorType = FlexColorType.Primary
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
 			title = "Read Only"
 		) {
-			FlexRadio(
-				selectedKey = readOnly,
-				onSelectedKeyChange = { readOnly = it },
-				options = booleanOptions,
+			FlexSwitch(
+				checked = readOnly,
+				onCheckedChange = { readOnly = it },
 				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
+				colorType = FlexColorType.Primary
 			)
 		}
 	}

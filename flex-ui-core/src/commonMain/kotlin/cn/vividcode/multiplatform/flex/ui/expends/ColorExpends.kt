@@ -61,7 +61,7 @@ internal val Color.disabledWithContent: Color
  * 禁用背景
  */
 internal val Color.disabledWithBackground: Color
-	get() = this.copy(alpha = 0.8f)
+	get() = this.copy(alpha = 0.6f)
 
 /**
  * RGB 转 HSL

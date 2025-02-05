@@ -128,7 +128,7 @@ fun RowScope.Code(
 					.fillMaxSize()
 			) {
 				Text(
-					text = codeString.lines().mapIndexed { index, _ -> index + 1 }.joinToString("\n"),
+					text = (1 .. codeString.lines().size).joinToString("\n"),
 					modifier = Modifier
 						.width(36.dp)
 						.fillMaxHeight()
@@ -137,7 +137,7 @@ fun RowScope.Code(
 						.padding(vertical = 4.dp),
 					fontSize = 13.sp,
 					lineHeight = 24.sp,
-					color = TextColor.copy(alpha = 0.6f),
+					color = TextColor.copy(alpha = 0.7f),
 					textAlign = TextAlign.Center,
 				)
 				VerticalDivider()
