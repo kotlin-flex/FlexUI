@@ -92,7 +92,7 @@ fun ColumnScope.FlexButtonPage() {
 	val verticalScrollState = rememberScrollState()
 	Column(
 		modifier = Modifier
-			.height(276.dp)
+			.height(252.dp)
 			.padding(4.dp)
 			.verticalScroll(verticalScrollState)
 			.padding(8.dp)

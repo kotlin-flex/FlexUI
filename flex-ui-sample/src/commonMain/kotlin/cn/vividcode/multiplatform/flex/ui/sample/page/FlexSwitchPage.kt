@@ -55,17 +55,19 @@ fun ColumnScope.FlexSwitchPage() {
 				label = when (labelType) {
 					FlexSwitchLabelType.None -> null
 					FlexSwitchLabelType.OnOff -> FlexSwitchLabels.DefaultTextLabel
-					FlexSwitchLabelType.OpenClose -> FlexSwitchLabels.textLabel(
-						checked = "开",
-						unchecked = "关"
-					)
-					
+					FlexSwitchLabelType.OpenClose -> FlexSwitchLabels.textLabel("开", "关")
 					FlexSwitchLabelType.Icon -> FlexSwitchLabels.DefaultIconLabel
 				},
 				enabled = enabled
 			)
 		}
 		Spacer(Modifier.width(12.dp))
+		val label = when (labelType) {
+			FlexSwitchLabelType.None -> "null"
+			FlexSwitchLabelType.OnOff -> "FlexSwitchLabels.DefaultTextLabel"
+			FlexSwitchLabelType.OpenClose -> "FlexSwitchLabels.textLabel(\"开\", \"关\")"
+			FlexSwitchLabelType.Icon -> "FlexSwitchLabels.DefaultIconLabel"
+		}
 		val code = """
 			var checked by remember { mutableStateOf(false) }
 			FlexSwitch(
@@ -73,7 +75,9 @@ fun ColumnScope.FlexSwitchPage() {
 				onCheckedChange = { checked = it },
 				sizeType = FlexSizeType.$sizeType,
 				colorType = FlexColorType.$colorType,
-				cornerType = FlexCornerType.$cornerType
+				cornerType = FlexCornerType.$cornerType,
+				label = $label,
+				enabled = $enabled
 			)
 		""".trimIndent()
 		Code(code)
@@ -82,7 +86,7 @@ fun ColumnScope.FlexSwitchPage() {
 	val verticalScrollState = rememberScrollState()
 	Column(
 		modifier = Modifier
-			.height(276.dp)
+			.height(252.dp)
 			.padding(4.dp)
 			.verticalScroll(verticalScrollState)
 			.padding(8.dp)

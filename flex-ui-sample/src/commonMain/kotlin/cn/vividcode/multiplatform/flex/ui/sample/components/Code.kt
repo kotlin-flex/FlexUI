@@ -75,7 +75,6 @@ fun RowScope.Code(
 						}
 						
 						char == '\t' -> append(" ".repeat(4))
-						
 						else -> append(char)
 					}
 				}
@@ -205,7 +204,7 @@ private val TextColor
 private val colorCodings = arrayOf(
 	StringColorCoding,
 	KeywordColorCoding,
-	BooleanColorCoding,
+	KeywordValueColorCoding,
 	OperatorSymbolColorCoding,
 	NumberColorCoding,
 	UppercaseWordColorCoding
@@ -247,7 +246,7 @@ private data object KeywordColorCoding : ColorCoding() {
 		"delegate", "do", "dynamic", "else", "enum", "expect", "external",
 		"final", "finally", "for", "fun", "get", "if", "import", "in", "infix",
 		"init", "inline", "inner", "interface", "internal", "is", "lateinit",
-		"noinline", "null", "object", "open", "operator", "out", "override", "package",
+		"noinline", "object", "open", "operator", "out", "override", "package",
 		"param", "private", "property", "protected", "public", "receiver", "reified",
 		"return", "sealed", "set", "super", "suspend", "tailrec", "this",
 		"throw", "try", "typealias", "typeof", "val", "var", "vararg", "when",
@@ -262,11 +261,11 @@ private data object KeywordColorCoding : ColorCoding() {
 }
 
 /**
- * 布尔值
+ * 关键字 值
  */
-private data object BooleanColorCoding : ColorCoding() {
+private data object KeywordValueColorCoding : ColorCoding() {
 	
-	override val regex = "\\b(true|false)\\b".toRegex()
+	override val regex = "\\b(true|false|null)\\b".toRegex()
 	
 	override val lightColor = Color(0xFF093B9E)
 	
