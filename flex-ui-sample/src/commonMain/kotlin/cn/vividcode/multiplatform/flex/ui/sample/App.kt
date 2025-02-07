@@ -182,6 +182,7 @@ fun App() {
 						PageRoute.FlexRadio -> FlexRadioPage()
 						PageRoute.FlexInput -> FlexInputPage()
 						PageRoute.FlexSwitch -> FlexSwitchPage()
+						PageRoute.FlexSlider -> FlexSliderPage()
 					}
 				}
 			}
@@ -276,7 +277,8 @@ enum class PageRoute {
 	FlexButton,
 	FlexRadio,
 	FlexInput,
-	FlexSwitch
+	FlexSwitch,
+	FlexSlider
 }
 
 @Composable

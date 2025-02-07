@@ -17,6 +17,8 @@ class FlexComposeDefaultConfig internal constructor() {
 	
 	internal var switch: FlexDefaultConfig? = null
 	
+	internal var slider: FlexDefaultConfig? = null
+	
 	fun common(config: FlexDefaultConfig.() -> Unit) {
 		this.common = FlexDefaultConfig().apply(config)
 	}
@@ -35,6 +37,12 @@ class FlexComposeDefaultConfig internal constructor() {
 	
 	fun switch(config: FlexDefaultConfig.() -> Unit) {
 		this.switch = FlexDefaultConfig(
+			cornerType = FlexCornerType.Circle
+		).apply(config)
+	}
+	
+	fun slider(config: FlexDefaultConfig.() -> Unit) {
+		this.slider = FlexDefaultConfig(
 			cornerType = FlexCornerType.Circle
 		).apply(config)
 	}

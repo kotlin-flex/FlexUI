@@ -22,6 +22,8 @@ class FlexConfig internal constructor() {
 	
 	internal val switch = FlexSizeConfig(FlexSwitchSizeDefaults)
 	
+	internal val slider = FlexSizeConfig(FlexSliderSizeDefaults)
+	
 	/**
 	 * 默认类型配置
 	 */
@@ -55,5 +57,12 @@ class FlexConfig internal constructor() {
 	 */
 	fun switch(config: FlexSizeConfig<FlexSwitchConfig>.() -> Unit) {
 		this.switch.apply(config)
+	}
+	
+	/**
+	 * 滑动条配置
+	 */
+	fun slider(config: FlexSizeConfig<FlexSliderConfig>.() -> Unit) {
+		this.slider.apply(config)
 	}
 }

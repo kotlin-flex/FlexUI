@@ -43,8 +43,7 @@ fun FlexSwitch(
 	label: FlexSwitchLabel? = null,
 	enabled: Boolean = true,
 ) {
-	val current = LocalFlexConfig.current
-	val config = current.switch.getConfig(sizeType)
+	val config = LocalFlexConfig.current.switch.getConfig(sizeType)
 	val height by animateDpAsState(config.height)
 	val padding by animateDpAsState(config.padding)
 	val corner by animateDpAsState(config.height * cornerType.scale)

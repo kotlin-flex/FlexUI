@@ -83,8 +83,7 @@ fun FlexInput(
 	keyboardActions: KeyboardActions = KeyboardActions.Default,
 	interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
-	val current = LocalFlexConfig.current
-	val config = current.input.getConfig(sizeType)
+	val config = LocalFlexConfig.current.input.getConfig(sizeType)
 	
 	CompositionLocalProvider(
 		LocalTextSelectionColors provides TextSelectionColors(
@@ -197,7 +196,7 @@ private fun FlexInputDecorationBox(
 	val borderWidth by animateDpAsState(config.borderWidth)
 	val minWidth by animateDpAsState(config.minWidth)
 	val height by animateDpAsState(config.height)
-	val corner = height * cornerType.scale
+	val corner by animateDpAsState(height * cornerType.scale)
 	val cornerShape by remember(corner) {
 		derivedStateOf { RoundedCornerShape(corner) }
 	}

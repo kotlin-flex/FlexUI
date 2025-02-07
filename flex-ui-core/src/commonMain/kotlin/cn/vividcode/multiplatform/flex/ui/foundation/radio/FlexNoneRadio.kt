@@ -55,8 +55,7 @@ internal fun <Key> FlexNoneRadio(
 	radioType: FlexRadioType,
 	scaleEffect: Boolean,
 ) {
-	val current = LocalFlexConfig.current
-	val config = current.radio.getConfig(sizeType)
+	val config = LocalFlexConfig.current.radio.getConfig(sizeType)
 	val height by animateDpAsState(config.height)
 	val corner by animateDpAsState(config.height * cornerType.scale)
 	val cornerShape by remember(corner) {

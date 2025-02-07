@@ -70,8 +70,7 @@ fun FlexButton(
 			else -> if (layoutDirection == LayoutDirection.Ltr) LayoutDirection.Rtl else LayoutDirection.Ltr
 		}
 	) {
-		val current = LocalFlexConfig.current
-		val config = current.button.getConfig(sizeType)
+		val config = LocalFlexConfig.current.button.getConfig(sizeType)
 		val interactionSource = remember { MutableInteractionSource() }
 		val isHovered by interactionSource.collectIsHoveredAsState()
 		val isPressed by interactionSource.collectIsPressedAsState()
