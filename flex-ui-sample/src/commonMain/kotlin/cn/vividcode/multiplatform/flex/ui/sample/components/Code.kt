@@ -55,31 +55,33 @@ fun RowScope.Code(
 	) {
 		val darkTheme = LocalDarkTheme.current
 		val spanStyles by remember(darkTheme) {
-			mutableStateOf(colorCodings.map { it.getSpanStyle(darkTheme) })
+			derivedStateOf { colorCodings.map { it.getSpanStyle(darkTheme) } }
 		}
 		val indices by remember(code) {
-			val indices = colorCodings.map { colorCoding ->
-				colorCoding.regex.findAll(code).flatMap { it.range.toList() }
+			derivedStateOf {
+				colorCodings.map { colorCoding ->
+					colorCoding.regex.findAll(code).flatMap { it.range.toList() }
+				}
 			}
-			mutableStateOf(indices)
 		}
 		val codeString by remember(code, indices, darkTheme) {
-			val codeString = buildAnnotatedString {
-				code.forEachIndexed { index, char ->
-					val typeIndex = indices.indexOfFirst { index in it }
-					when {
-						typeIndex != -1 -> {
-							withStyle(spanStyles[typeIndex]) {
-								append(char)
+			derivedStateOf {
+				buildAnnotatedString {
+					code.forEachIndexed { index, char ->
+						val typeIndex = indices.indexOfFirst { index in it }
+						when {
+							typeIndex != -1 -> {
+								withStyle(spanStyles[typeIndex]) {
+									append(char)
+								}
 							}
+							
+							char == '\t' -> append(" ".repeat(4))
+							else -> append(char)
 						}
-						
-						char == '\t' -> append(" ".repeat(4))
-						else -> append(char)
 					}
 				}
 			}
-			mutableStateOf(codeString)
 		}
 		Row(
 			modifier = Modifier

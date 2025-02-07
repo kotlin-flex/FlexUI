@@ -59,9 +59,7 @@ internal fun <Key> FlexNoneRadio(
 	val height by animateDpAsState(config.height)
 	val corner by animateDpAsState(config.height * cornerType.scale)
 	val cornerShape by remember(corner) {
-		derivedStateOf {
-			RoundedCornerShape(corner)
-		}
+		derivedStateOf { RoundedCornerShape(corner) }
 	}
 	val horizontalPadding by animateDpAsState(config.horizontalPadding)
 	val borderWidth by animateDpAsState(config.borderWidth)

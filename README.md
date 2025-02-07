@@ -3,6 +3,9 @@
 [![Maven](https://img.shields.io/badge/Maven-Central-download.svg)](https://central.sonatype.com/search?q=cn.vividcode.multiplatform:flex-ui)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vividcodex/flex-ui/blob/master/README.md)
 [![License](https://img.shields.io/badge/Apache-2.0-brightgreen.svg)](https://github.com/vividcodex/flex-ui/blob/master/LICENSE-2.0)
+![Kotlin Multiplatform](https://img.shields.io/badge/Kotlin-Multiplatform-blue.svg)
+
+<img src="image/logo.png" width="256" height="256">
 
 ## 项目介绍
 

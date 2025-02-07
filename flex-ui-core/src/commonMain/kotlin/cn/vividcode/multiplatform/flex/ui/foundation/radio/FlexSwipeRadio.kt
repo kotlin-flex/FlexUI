@@ -52,9 +52,7 @@ internal fun <Key> FlexSwipeRadio(
 	val config = LocalFlexConfig.current.radio.getConfig(sizeType)
 	val corner by animateDpAsState(config.height * cornerType.scale)
 	val cornerShape by remember(cornerType, corner) {
-		derivedStateOf {
-			RoundedCornerShape(corner)
-		}
+		derivedStateOf { RoundedCornerShape(corner) }
 	}
 	val horizontalPadding by animateDpAsState(config.horizontalPadding)
 	val height by animateDpAsState(config.height)

@@ -148,7 +148,7 @@ fun FlexButton(
 		}
 		val scale by animateFloatAsState(targetScale)
 		val targetText by remember(text) {
-			mutableStateOf(text.trim())
+			derivedStateOf { text.trim() }
 		}
 		val isTextEmpty by remember(text) {
 			derivedStateOf { targetText.isEmpty() }

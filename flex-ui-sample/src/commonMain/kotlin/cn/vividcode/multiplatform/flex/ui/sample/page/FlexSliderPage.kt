@@ -44,14 +44,15 @@ fun ColumnScope.FlexSliderPage() {
 				.fillMaxHeight(),
 			contentAlignment = Alignment.Center
 		) {
-			var value by remember { mutableIntStateOf(20) }
+			var value by remember { mutableFloatStateOf(20f) }
 			FlexSlider(
 				value = value,
 				onValueChange = { value = it },
 				sizeType = sizeType,
 				colorType = colorType,
 				cornerType = cornerType,
-				direction = direction
+				direction = direction,
+				steps = 5f
 			)
 		}
 		Spacer(Modifier.width(12.dp))
