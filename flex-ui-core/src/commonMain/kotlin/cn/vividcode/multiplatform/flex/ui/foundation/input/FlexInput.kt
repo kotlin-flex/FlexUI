@@ -87,8 +87,8 @@ fun FlexInput(
 	
 	CompositionLocalProvider(
 		LocalTextSelectionColors provides TextSelectionColors(
-			handleColor = colorType.backgroundColor,
-			backgroundColor = colorType.backgroundColor.copy(alpha = 0.15f)
+			handleColor = colorType.color,
+			backgroundColor = colorType.color.copy(alpha = 0.15f)
 		)
 	) {
 		val leadingIconInteractionSource = remember { MutableInteractionSource() }
@@ -103,7 +103,7 @@ fun FlexInput(
 		val fontSize by animateFloatAsState(config.fontSize.value)
 		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 		val contentColor by animateColorAsState(
-			targetValue = if (enabled) colorType.backgroundColor else colorType.backgroundColor.disabledWithBackground
+			targetValue = if (enabled) colorType.color else colorType.color.disabledWithBackground
 		)
 		val textStyle by remember(fontSize, config.fontWeight, letterSpacing, contentColor) {
 			derivedStateOf {
@@ -201,7 +201,7 @@ private fun FlexInputDecorationBox(
 		derivedStateOf { RoundedCornerShape(corner) }
 	}
 	val borderColor by animateColorAsState(
-		targetValue = if (isFocused) colorType.backgroundColor else colorType.backgroundColor.copy(alpha = 0f),
+		targetValue = if (isFocused) colorType.color else colorType.color.copy(alpha = 0f),
 	)
 	val backgroundColor by animateColorAsState(
 		targetValue = if (isFocused) Color.Gray.copy(alpha = 0f) else Color.Gray.copy(alpha = 0.15f),
@@ -229,7 +229,7 @@ private fun FlexInputDecorationBox(
 			FlexInputIcon(
 				icon = leadingIcon,
 				iconSize = iconSize,
-				iconColor = colorType.backgroundColor,
+				iconColor = colorType.color,
 				isFocused = isFocused,
 				focusRequester = focusRequester,
 				interactionSource = leadingIconInteractionSource
@@ -274,7 +274,7 @@ private fun FlexInputDecorationBox(
 			FlexInputIcon(
 				icon = trailingIcon,
 				iconSize = iconSize,
-				iconColor = colorType.backgroundColor,
+				iconColor = colorType.color,
 				isFocused = isFocused,
 				focusRequester = focusRequester,
 				interactionSource = trailingIconInteractionSource

@@ -21,16 +21,10 @@ import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.*
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
-import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
-import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
-import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
 
 /**
  * 按钮展示页
@@ -116,7 +110,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = buttonType,
 				onSelectedKeyChange = { buttonType = it },
-				options = buttonTypeOptions,
+				options = FlexButtonType.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -129,7 +123,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
-				options = sizeTypeOptions,
+				options = FlexSizeType.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -142,7 +136,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
-				options = colorTypeOptions,
+				options = FlexColorType.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				colorType = colorType,
 				radioType = FlexRadioType.Button,
@@ -156,7 +150,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
-				options = cornerTypeOptions,
+				options = FlexCornerType.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
@@ -170,7 +164,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = iconType,
 				onSelectedKeyChange = { iconType = it },
-				options = iconTypeOptions,
+				options = IconType.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -183,7 +177,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = iconPosition,
 				onSelectedKeyChange = { iconPosition = it },
-				options = iconPositionOptions,
+				options = FlexButtonIconPosition.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -214,10 +208,6 @@ fun ColumnScope.FlexButtonPage() {
 	}
 }
 
-private val iconPositionOptions = FlexButtonIconPosition.entries.map { RadioOption(it, it.toString()) }
-
-private val buttonTypeOptions = FlexButtonType.entries.map { RadioOption(it, it.toString()) }
-
 private enum class IconType(
 	val icon: ImageVector?,
 	val code: String,
@@ -243,5 +233,3 @@ private enum class IconType(
 		code = "null"
 	)
 }
-
-private val iconTypeOptions = IconType.entries.map { RadioOption(it, it.toString()) }

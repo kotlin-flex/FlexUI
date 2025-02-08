@@ -14,43 +14,43 @@ interface FlexColorType {
 	
 	val contentColor: Color
 		@Composable
-		get() = MaterialTheme.colorScheme.contentColorFor(backgroundColor)
+		get() = MaterialTheme.colorScheme.contentColorFor(color)
 	
-	val backgroundColor: Color
+	val color: Color
 		@Composable
 		get
 	
 	data object Primary : FlexColorType {
 		
-		override val backgroundColor: Color
+		override val color: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.primary
 	}
 	
 	data object Secondary : FlexColorType {
 		
-		override val backgroundColor: Color
+		override val color: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.secondary
 	}
 	
 	data object Tertiary : FlexColorType {
 		
-		override val backgroundColor: Color
+		override val color: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.tertiary
 	}
 	
 	data object Error : FlexColorType {
 		
-		override val backgroundColor: Color
+		override val color: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.error
 	}
 	
 	data object InverseSurface : FlexColorType {
 		
-		override val backgroundColor: Color
+		override val color: Color
 			@Composable
 			get() = MaterialTheme.colorScheme.inverseSurface
 	}
@@ -58,7 +58,7 @@ interface FlexColorType {
 	companion object {
 		
 		val entries by lazy {
-			arrayOf(
+			listOf(
 				Primary, Secondary, Tertiary, Error, InverseSurface
 			)
 		}

@@ -56,7 +56,7 @@ fun FlexSwitch(
 	val backgroundColor by animateColorAsState(
 		targetValue = run {
 			val color = when {
-				checked -> colorType.backgroundColor
+				checked -> colorType.color
 				else -> Color.Gray
 			}
 			when {

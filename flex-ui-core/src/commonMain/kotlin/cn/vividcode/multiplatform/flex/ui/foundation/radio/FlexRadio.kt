@@ -45,6 +45,7 @@ import kotlin.jvm.JvmName
  * @param switchType 切换类型
  * @param scaleEffect 缩放效果
  */
+@JvmName("FlexRadio")
 @Composable
 fun <Key> FlexRadio(
 	selectedKey: Key,
@@ -132,87 +133,28 @@ enum class FlexRadioSwitchType {
 }
 
 /**
- * FlexRadio 单选框
- *
- * @param selectedKey 选中的 key
- * @param onSelectedKeyChange 当选中改变事件
- * @param options 选项 [Pair] 类型
- * @param sizeType 尺寸类型
- * @param colorType 颜色类型
- * @param cornerType 圆角类型
- * @param radioType 单选框组类型
- */
-@JvmName("FlexRadioWithPairOption")
-@Composable
-fun <Key> FlexRadio(
-	selectedKey: Key,
-	onSelectedKeyChange: (Key) -> Unit,
-	options: List<Pair<Key, String>>,
-	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
-	colorType: FlexColorType = FlexRadioDefaults.DefaultColorType,
-	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
-	radioType: FlexRadioType = FlexRadioDefaults.DefaultRadioType,
-	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,
-	scaleEffect: Boolean = FlexRadioDefaults.DefaultScaleEffect,
-) {
-	FlexRadio(
-		selectedKey = selectedKey,
-		onSelectedKeyChange = onSelectedKeyChange,
-		options = options.map { RadioOption(it.first, it.second) },
-		sizeType = sizeType,
-		colorType = colorType,
-		cornerType = cornerType,
-		radioType = radioType,
-		switchType = switchType,
-		scaleEffect = scaleEffect,
-	)
-}
-
-/**
- * FlexRadioG 单选框
- *
- * @param selectedKey 选中的 key
- * @param onSelectedKeyChange 当选中改变事件
- * @param options 选项 [Pair] 类型
- * @param sizeType 尺寸类型
- * @param colorType 颜色类型
- * @param cornerType 圆角类型
- * @param radioType 单选框组类型
- */
-@JvmName("FlexRadioWithStringOption")
-@Composable
-fun FlexRadio(
-	selectedKey: String,
-	onSelectedKeyChange: (String) -> Unit,
-	options: List<String>,
-	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
-	colorType: FlexColorType = FlexRadioDefaults.DefaultColorType,
-	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
-	radioType: FlexRadioType = FlexRadioDefaults.DefaultRadioType,
-	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,
-	scaleEffect: Boolean = FlexRadioDefaults.DefaultScaleEffect,
-) {
-	FlexRadio(
-		selectedKey = selectedKey,
-		onSelectedKeyChange = onSelectedKeyChange,
-		options = options.map { RadioOption(it, it) },
-		sizeType = sizeType,
-		colorType = colorType,
-		cornerType = cornerType,
-		radioType = radioType,
-		switchType = switchType,
-		scaleEffect = scaleEffect,
-	)
-}
-
-/**
  * 选项
  */
 class RadioOption<Key>(
 	val key: Key,
-	val value: String,
+	val value: String = key.toString(),
 	val enabled: Boolean = true,
 )
+
+fun <T> List<T>.toRadioOptions(
+	valueTransform: (T) -> String = { it.toString() },
+	enabledTransform: (T) -> Boolean = { true },
+): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
+
+fun <T> Array<T>.toRadioOptions(
+	valueTransform: (T) -> String = { it.toString() },
+	enabledTransform: (T) -> Boolean = { true },
+): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
+
+fun <T> Iterable<T>.toRadioOptions(
+	valueTransform: (T) -> String = { it.toString() },
+	enabledTransform: (T) -> Boolean = { true },
+): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
 
 internal val DisabledBackgroundColor: Color
 	@Composable
@@ -246,13 +188,13 @@ internal fun FlexRadioText(
 		targetValue = when {
 			!enabled -> MaterialTheme.colorScheme.outline
 			!selected -> when {
-				isPressed || isHovered -> colorType.backgroundColor
+				isPressed || isHovered -> colorType.color
 				else -> MaterialTheme.colorScheme.outline
 			}
 			
 			radioType == Button -> colorType.contentColor
 			else -> {
-				val color = colorType.backgroundColor
+				val color = colorType.color
 				when {
 					isPressed -> color.darkenWithContent
 					isHovered -> color.lightenWithContent

@@ -92,7 +92,7 @@ internal fun <Key> FlexNoneRadio(
 			val isPressed by interactionSource.collectIsPressedAsState()
 			val borderColor by animateColorAsState(
 				targetValue = run {
-					val color = colorType.backgroundColor
+					val color = colorType.color
 					when {
 						!option.enabled -> color.copy(alpha = 0f)
 						selectedKey != option.key -> color.copy(alpha = 0f)
@@ -109,7 +109,7 @@ internal fun <Key> FlexNoneRadio(
 			)
 			val backgroundColor by animateColorAsState(
 				targetValue = run {
-					val color = colorType.backgroundColor
+					val color = colorType.color
 					when {
 						!option.enabled -> DisabledBackgroundColor
 						selectedKey != option.key || radioType == FlexRadioType.Default -> color.copy(alpha = 0f)

@@ -14,14 +14,12 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderDirection
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderTooltipPosition
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
-import cn.vividcode.multiplatform.flex.ui.sample.constant.colorTypeOptions
-import cn.vividcode.multiplatform.flex.ui.sample.constant.cornerTypeOptions
-import cn.vividcode.multiplatform.flex.ui.sample.constant.sizeTypeOptions
 
 /**
  * 按钮展示页
@@ -32,6 +30,7 @@ fun ColumnScope.FlexSliderPage() {
 	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Circle) }
 	var direction by remember { mutableStateOf(FlexSliderDirection.Horizontal) }
+	var tooltipPosition by remember { mutableStateOf(FlexSliderTooltipPosition.TopSide) }
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -52,7 +51,8 @@ fun ColumnScope.FlexSliderPage() {
 				colorType = colorType,
 				cornerType = cornerType,
 				direction = direction,
-				steps = 5f
+				stepCount = 100,
+				tooltipPosition = tooltipPosition
 			)
 		}
 		Spacer(Modifier.width(12.dp))
@@ -84,7 +84,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
-				options = sizeTypeOptions,
+				options = FlexSizeType.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -97,7 +97,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
-				options = colorTypeOptions,
+				options = FlexColorType.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				colorType = colorType,
 				radioType = FlexRadioType.Button,
@@ -111,7 +111,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
-				options = cornerTypeOptions,
+				options = FlexCornerType.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
@@ -125,7 +125,20 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = direction,
 				onSelectedKeyChange = { direction = it },
-				options = directionOptions,
+				options = FlexSliderDirection.entries.toRadioOptions(),
+				sizeType = FlexSizeType.Small,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
+			title = "Tooltip Position"
+		) {
+			FlexRadio(
+				selectedKey = tooltipPosition,
+				onSelectedKeyChange = { tooltipPosition = it },
+				options = FlexSliderTooltipPosition.entries.toRadioOptions(),
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -133,5 +146,3 @@ fun ColumnScope.FlexSliderPage() {
 		}
 	}
 }
-
-private val directionOptions = FlexSliderDirection.entries.map { RadioOption(it, it.toString()) }

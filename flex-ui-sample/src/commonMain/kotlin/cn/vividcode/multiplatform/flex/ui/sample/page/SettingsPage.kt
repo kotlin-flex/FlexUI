@@ -9,12 +9,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.theme.HighContrastColorSchemes
 import cn.vividcode.multiplatform.flex.ui.sample.theme.MediumContrastColorSchemes
@@ -47,7 +46,7 @@ fun SettingsPage(
 						contrastType = it
 						currentColorSchemes = it.colorSchemes
 					},
-					options = contrastTypeOptions,
+					options = ContrastType.entries.toRadioOptions(),
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
@@ -70,8 +69,6 @@ private enum class ContrastType(
 	
 	High(HighContrastColorSchemes)
 }
-
-private val contrastTypeOptions = ContrastType.entries.map { RadioOption(it, it.toString()) }
 
 @Composable
 fun GroupLayout(

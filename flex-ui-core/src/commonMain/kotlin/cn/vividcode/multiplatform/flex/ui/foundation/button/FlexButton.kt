@@ -76,7 +76,7 @@ fun FlexButton(
 		val isPressed by interactionSource.collectIsPressedAsState()
 		val borderColor by animateColorAsState(
 			targetValue = run {
-				val color = colorType.backgroundColor
+				val color = colorType.color
 				when (buttonType) {
 					FlexButtonType.Default, FlexButtonType.Dashed -> {
 						when {
@@ -87,13 +87,13 @@ fun FlexButton(
 						}
 					}
 					
-					else -> colorType.backgroundColor.copy(alpha = 0f)
+					else -> colorType.color.copy(alpha = 0f)
 				}
 			}
 		)
 		val backgroundColor by animateColorAsState(
 			targetValue = run {
-				val color = colorType.backgroundColor
+				val color = colorType.color
 				when (buttonType) {
 					FlexButtonType.Primary -> {
 						when {
@@ -180,12 +180,12 @@ fun FlexButton(
 					FlexButtonType.Primary -> colorType.contentColor
 					
 					FlexButtonType.Filled, FlexButtonType.Text -> {
-						val color = colorType.backgroundColor
+						val color = colorType.color
 						if (enabled) color else color.disabledWithContent
 					}
 					
 					FlexButtonType.Link -> {
-						val color = colorType.backgroundColor
+						val color = colorType.color
 						when {
 							!enabled -> color.disabledWithContent
 							isPressed -> color.darkenWithContent
@@ -195,7 +195,7 @@ fun FlexButton(
 					}
 					
 					FlexButtonType.Default, FlexButtonType.Dashed -> {
-						val color = colorType.backgroundColor
+						val color = colorType.color
 						when {
 							!enabled -> color.disabledWithContent
 							isPressed -> color.darkenWithContent

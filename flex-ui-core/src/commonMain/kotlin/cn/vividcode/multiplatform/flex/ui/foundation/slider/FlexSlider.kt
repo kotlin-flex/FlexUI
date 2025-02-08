@@ -1,6 +1,8 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.slider
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -8,16 +10,25 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
+import kotlin.math.sqrt
 
 /**
  * FlexSlider 滑动条
@@ -31,9 +42,14 @@ fun FlexSlider(
 	colorType: FlexColorType = FlexSliderDefaults.DefaultColorType,
 	cornerType: FlexCornerType = FlexSliderDefaults.DefaultCornerType,
 	direction: FlexSliderDirection = FlexSliderDefaults.DefaultSliderDirection,
-	minValue: Float = 0f,
-	maxValue: Float = 100f,
-	steps: Float? = null,
+	minValue: Float = FlexSliderDefaults.MIN_VALUE,
+	maxValue: Float = FlexSliderDefaults.MAX_VALUE,
+	stepCount: Int? = null,
+	tooltipPosition: FlexSliderTooltipPosition = FlexSliderDefaults.DefaultTooltipPosition,
+	tooltipFormatter: ((Float) -> String)? = {
+		val percent = (it / (maxValue - minValue) * 1000).toInt() / 10f
+		"$percent%"
+	},
 ) {
 	val config = LocalFlexConfig.current.slider.getConfig(sizeType)
 	var length by remember { mutableStateOf(1) }
@@ -54,7 +70,8 @@ fun FlexSlider(
 		}
 		var newValue = ((maxValue - minValue) * ((offsetTotal - thicknessPx / 2) / (length - thicknessPx)) + minValue)
 			.coerceIn(minValue, maxValue)
-		if (steps != null && steps > 0f) {
+		if (stepCount != null && stepCount >= 1f) {
+			val steps = (maxValue - minValue) / stepCount
 			val diff = newValue % steps
 			if (diff >= steps / 2) {
 				newValue += steps - diff
@@ -138,10 +155,11 @@ fun FlexSlider(
 					shape = sliderCornerShape
 				)
 		)
-		val thumbOffsetStart by remember(value, length, thickness, maxValue, minValue, steps) {
+		val thumbOffsetStart by remember(value, length, thickness, maxValue, minValue, stepCount) {
 			derivedStateOf {
 				var value = value.coerceIn(minValue, maxValue)
-				if (steps != null && steps > 0f) {
+				if (stepCount != null && stepCount >= 1f) {
+					val steps = (maxValue - minValue) / stepCount
 					val diff = value % steps
 					if (value - diff >= steps / 2) {
 						value += diff
@@ -153,6 +171,8 @@ fun FlexSlider(
 				with(density) { offsetStart.toDp() }
 			}
 		}
+		val color by animateColorAsState(colorType.color)
+		val contentColor by animateColorAsState(colorType.contentColor)
 		Box(
 			modifier = Modifier
 				.width(if (isHorizontal) thumbOffsetStart + config.thickness else sliderThickness)
@@ -163,7 +183,7 @@ fun FlexSlider(
 				)
 				.clip(sliderCornerShape)
 				.background(
-					color = colorType.backgroundColor,
+					color = color,
 					shape = sliderCornerShape
 				)
 		)
@@ -187,17 +207,214 @@ fun FlexSlider(
 				.clip(thumbCornerShape)
 				.border(
 					width = thumbBorderWidth,
-					color = colorType.backgroundColor,
+					color = color,
 					shape = thumbCornerShape
 				)
 				.background(
-					color = colorType.contentColor,
+					color = contentColor,
 					shape = thumbCornerShape
 				)
 		)
+		if (tooltipFormatter != null) {
+			TooltipPopup(
+				value = value,
+				color = color,
+				contentColor = contentColor,
+				isHorizontal = isHorizontal,
+				thumbOffsetStart = thumbOffsetStart,
+				thickness = thickness,
+				config = config,
+				tooltipPosition = tooltipPosition,
+				tooltipFormatter = tooltipFormatter,
+			)
+		}
 	}
 }
 
+@Composable
+private fun TooltipPopup(
+	value: Float,
+	color: Color,
+	contentColor: Color,
+	isHorizontal: Boolean,
+	thumbOffsetStart: Dp,
+	thickness: Dp,
+	config: FlexSliderConfig,
+	tooltipPosition: FlexSliderTooltipPosition,
+	tooltipFormatter: (Float) -> String,
+) {
+	val density = LocalDensity.current
+	var size by remember { mutableStateOf(IntSize.Zero) }
+	val isTopSide by remember(tooltipPosition) {
+		derivedStateOf { tooltipPosition == FlexSliderTooltipPosition.TopSide }
+	}
+	val offset by remember(thumbOffsetStart, thickness, size, isTopSide, isHorizontal) {
+		derivedStateOf {
+			val thumbOffsetStartPx = with(density) { thumbOffsetStart.roundToPx() }
+			val thicknessPx = with(density) { thickness.roundToPx() }
+			if (isHorizontal) {
+				val x = thumbOffsetStartPx - size.width / 2 + thicknessPx / 2
+				val y = if (isTopSide) -size.height else thicknessPx
+				IntOffset(x, y)
+			} else {
+				val x = if (isTopSide) thicknessPx else -size.width
+				val y = (thumbOffsetStartPx - size.height / 2 + thicknessPx / 2).toInt()
+				IntOffset(x, y)
+			}
+		}
+	}
+	Popup(
+		alignment = Alignment.TopStart,
+		offset = offset,
+	) {
+		val tooltipHeight by animateDpAsState(config.toolbarHeight)
+		val arrowSize by remember {
+			derivedStateOf { tooltipHeight / 2 * sqrt(2.0).toFloat() / 2 }
+		}
+		val tooltipCorner by animateDpAsState(config.toolbarHeight / 8)
+		val tooltipCornerShape by remember(tooltipCorner) {
+			derivedStateOf { RoundedCornerShape(tooltipCorner) }
+		}
+		val arrowCorner by animateDpAsState(config.toolbarHeight / 16)
+		val arrowCornerShape by remember(arrowCorner) {
+			derivedStateOf {
+				RoundedCornerShape(
+					bottomEnd = arrowCorner,
+				)
+			}
+		}
+		if (isHorizontal) {
+			Column(
+				modifier = Modifier
+					.onGloballyPositioned {
+						size = it.size
+					},
+				horizontalAlignment = Alignment.CenterHorizontally,
+			) {
+				if (!isTopSide) {
+					Box(
+						modifier = Modifier
+							.offset(
+								y = arrowSize / 2
+							)
+							.rotate(-135f)
+							.size(arrowSize)
+							.background(
+								color = color,
+								shape = arrowCornerShape
+							)
+					)
+				}
+				TooltipText(
+					value = value,
+					config = config,
+					color = color,
+					contentColor = contentColor,
+					tooltipCornerShape = tooltipCornerShape,
+					tooltipFormatter = tooltipFormatter,
+				)
+				if (isTopSide) {
+					Box(
+						modifier = Modifier
+							.offset(
+								y = -arrowSize / 2
+							)
+							.rotate(45f)
+							.size(arrowSize)
+							.background(
+								color = color,
+								shape = arrowCornerShape
+							)
+					)
+				}
+			}
+		} else {
+			Row(
+				modifier = Modifier
+					.onGloballyPositioned {
+						size = it.size
+					},
+				verticalAlignment = Alignment.CenterVertically,
+			) {
+				if (isTopSide) {
+					Box(
+						modifier = Modifier
+							.offset(
+								x = arrowSize / 2
+							)
+							.rotate(135f)
+							.size(arrowSize)
+							.background(
+								color = color,
+								shape = arrowCornerShape
+							)
+					)
+				}
+				TooltipText(
+					value = value,
+					config = config,
+					color = color,
+					contentColor = contentColor,
+					tooltipCornerShape = tooltipCornerShape,
+					tooltipFormatter = tooltipFormatter,
+				)
+				if (!isTopSide) {
+					Box(
+						modifier = Modifier
+							.offset(
+								x = -arrowSize / 2
+							)
+							.rotate(-45f)
+							.size(arrowSize)
+							.background(
+								color = color,
+								shape = arrowCornerShape
+							)
+					)
+				}
+			}
+		}
+	}
+}
+
+@Composable
+private fun TooltipText(
+	value: Float,
+	config: FlexSliderConfig,
+	color: Color,
+	contentColor: Color,
+	tooltipCornerShape: RoundedCornerShape,
+	tooltipFormatter: (Float) -> String,
+) {
+	val tooltipHeight by animateDpAsState(config.toolbarHeight)
+	val tooltipHorizontalPadding by animateDpAsState(config.toolbarHorizontalPadding)
+	Box(
+		modifier = Modifier
+			.height(tooltipHeight)
+			.clip(tooltipCornerShape)
+			.background(
+				color = color,
+				shape = tooltipCornerShape
+			)
+			.padding(
+				horizontal = tooltipHorizontalPadding
+			),
+		contentAlignment = Alignment.Center
+	) {
+		val text by remember(value) {
+			derivedStateOf { tooltipFormatter(value) }
+		}
+		val fontSize by animateFloatAsState(config.toolbarFontSize.value)
+		Text(
+			text = text,
+			color = contentColor,
+			fontSize = fontSize.sp,
+			fontWeight = config.toolbarFontWeight,
+			lineHeight = fontSize.sp,
+			letterSpacing = config.toolbarFontLetterSpacing
+		)
+	}
+}
 
 object FlexSliderDefaults : FlexDefaults(
 	defaultCornerType = FlexCornerType.Circle
@@ -206,6 +423,12 @@ object FlexSliderDefaults : FlexDefaults(
 		get() = this.slider
 	
 	val DefaultSliderDirection = FlexSliderDirection.Horizontal
+	
+	const val MIN_VALUE = 0f
+	
+	const val MAX_VALUE = 100f
+	
+	val DefaultTooltipPosition = FlexSliderTooltipPosition.TopSide
 }
 
 enum class FlexSliderDirection {
@@ -213,4 +436,11 @@ enum class FlexSliderDirection {
 	Horizontal,
 	
 	Vertical
+}
+
+enum class FlexSliderTooltipPosition {
+	
+	TopSide,
+	
+	BottomSide
 }
