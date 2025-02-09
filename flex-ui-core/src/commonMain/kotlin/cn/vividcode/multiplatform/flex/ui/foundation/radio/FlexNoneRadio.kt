@@ -26,9 +26,9 @@ import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.darkenWithColor
 import cn.vividcode.multiplatform.flex.ui.expends.darkenWithContent
-import cn.vividcode.multiplatform.flex.ui.expends.lightenWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
 import cn.vividcode.multiplatform.flex.ui.expends.lightenWithContent
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 
@@ -114,8 +114,8 @@ internal fun <Key> FlexNoneRadio(
 						!option.enabled -> DisabledBackgroundColor
 						selectedKey != option.key || radioType == FlexRadioType.Default -> color.copy(alpha = 0f)
 						else -> when {
-							isPressed -> color.darkenWithBackground
-							isHovered -> color.lightenWithBackground
+							isPressed -> color.darkenWithColor
+							isHovered -> color.lightenWithColor
 							else -> color
 						}
 					}

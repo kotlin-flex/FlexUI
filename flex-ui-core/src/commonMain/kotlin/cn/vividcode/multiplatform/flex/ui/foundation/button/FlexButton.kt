@@ -97,9 +97,9 @@ fun FlexButton(
 				when (buttonType) {
 					FlexButtonType.Primary -> {
 						when {
-							!enabled -> color.disabledWithBackground
-							isPressed -> color.darkenWithBackground
-							isHovered -> color.lightenWithBackground
+							!enabled -> color.disabledWithColor
+							isPressed -> color.darkenWithColor
+							isHovered -> color.lightenWithColor
 							else -> color
 						}
 					}

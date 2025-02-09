@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexInputConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.disabledWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
 
 /**
  * FlexInput 输入框
@@ -103,7 +103,7 @@ fun FlexInput(
 		val fontSize by animateFloatAsState(config.fontSize.value)
 		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 		val contentColor by animateColorAsState(
-			targetValue = if (enabled) colorType.color else colorType.color.disabledWithBackground
+			targetValue = if (enabled) colorType.color else colorType.color.disabledWithColor
 		)
 		val textStyle by remember(fontSize, config.fontWeight, letterSpacing, contentColor) {
 			derivedStateOf {

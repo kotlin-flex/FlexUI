@@ -20,7 +20,7 @@ private fun Color.brightness(factor: Float): Color {
 }
 
 /**
- * 内容变深
+ * 内容颜色变深
  */
 internal val Color.darkenWithContent: Color
 	@Composable
@@ -29,7 +29,7 @@ internal val Color.darkenWithContent: Color
 	)
 
 /**
- * 内容变浅
+ * 内容颜色变浅
  */
 internal val Color.lightenWithContent: Color
 	@Composable
@@ -38,29 +38,29 @@ internal val Color.lightenWithContent: Color
 	)
 
 /**
- * 背景变深
+ * 颜色变深
  */
-internal val Color.darkenWithBackground: Color
+internal val Color.darkenWithColor: Color
 	@Composable
 	get() = this.brightness(0.95f)
 
 /**
- * 背景变浅
+ * 颜色变浅
  */
-internal val Color.lightenWithBackground: Color
+internal val Color.lightenWithColor: Color
 	@Composable
 	get() = this.brightness(1.05f)
 
 /**
- * 禁用内容
+ * 内容颜色 (禁用)
  */
 internal val Color.disabledWithContent: Color
 	get() = this.copy(alpha = 0.8f)
 
 /**
- * 禁用背景
+ * 颜色 (禁用)
  */
-internal val Color.disabledWithBackground: Color
+internal val Color.disabledWithColor: Color
 	get() = this.copy(alpha = 0.6f)
 
 /**

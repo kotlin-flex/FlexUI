@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.expends.darkenWithContent
-import cn.vividcode.multiplatform.flex.ui.expends.disabledWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
 import cn.vividcode.multiplatform.flex.ui.expends.lightenWithContent
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
@@ -158,7 +158,7 @@ fun <T> Iterable<T>.toRadioOptions(
 
 internal val DisabledBackgroundColor: Color
 	@Composable
-	get() = (if (LocalDarkTheme.current) Color.DarkGray else Color.LightGray).disabledWithBackground
+	get() = (if (LocalDarkTheme.current) Color.DarkGray else Color.LightGray).disabledWithColor
 
 /**
  * 单选框文本

@@ -117,8 +117,8 @@ internal fun <Key> FlexSwipeRadio(
 						!option.enabled -> DisabledBackgroundColor
 						selectedKey != option.key || radioType == FlexRadioType.Default -> color.copy(alpha = 0f)
 						else -> when {
-							isButtonPressed -> color.darkenWithBackground
-							isButtonHovered -> color.lightenWithBackground
+							isButtonPressed -> color.darkenWithColor
+							isButtonHovered -> color.lightenWithColor
 							else -> color
 						}
 					}

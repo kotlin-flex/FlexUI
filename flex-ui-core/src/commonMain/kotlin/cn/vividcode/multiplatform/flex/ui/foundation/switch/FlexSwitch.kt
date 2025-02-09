@@ -27,10 +27,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithBackground
-import cn.vividcode.multiplatform.flex.ui.expends.disabledWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.darkenWithColor
+import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
 import cn.vividcode.multiplatform.flex.ui.expends.disabledWithContent
-import cn.vividcode.multiplatform.flex.ui.expends.lightenWithBackground
+import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
 
 @Composable
 fun FlexSwitch(
@@ -60,9 +60,9 @@ fun FlexSwitch(
 				else -> Color.Gray
 			}
 			when {
-				!enabled -> color.disabledWithBackground
-				isPressed -> color.darkenWithBackground
-				isHovered -> color.lightenWithBackground
+				!enabled -> color.disabledWithColor
+				isPressed -> color.darkenWithColor
+				isHovered -> color.lightenWithColor
 				else -> color
 			}
 		}

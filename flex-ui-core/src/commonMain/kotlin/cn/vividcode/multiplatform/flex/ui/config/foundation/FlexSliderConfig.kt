@@ -20,7 +20,7 @@ class FlexSliderConfig internal constructor(
 
 internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 	
-	private const val SLIDER_THICKNESS_SCALE = 1f / 3f
+	private const val SLIDER_THICKNESS_SCALE = 3f / 8f
 	private const val THUMB_BORDER_WIDTH_SCALE = 1f / 7f
 	
 	/**
@@ -32,10 +32,10 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 12.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 12.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 9.sp,
-			toolbarFontWeight = FontWeight.Normal,
+			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 20.dp,
-			toolbarHorizontalPadding = 3.dp
+			toolbarHorizontalPadding = 4.dp
 		)
 	
 	/**
@@ -47,10 +47,10 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 16.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 16.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 12.sp,
-			toolbarFontWeight = FontWeight.Normal,
+			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 28.dp,
-			toolbarHorizontalPadding = 4.dp
+			toolbarHorizontalPadding = 6.dp
 		)
 	
 	/**
@@ -62,10 +62,10 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 20.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 20.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 15.sp,
-			toolbarFontWeight = FontWeight.Normal,
+			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 36.dp,
-			toolbarHorizontalPadding = 5.dp
+			toolbarHorizontalPadding = 8.dp
 		)
 	
 	/**
@@ -77,10 +77,10 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 24.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 24.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 18.sp,
-			toolbarFontWeight = FontWeight.Normal,
+			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 44.dp,
-			toolbarHorizontalPadding = 6.dp
+			toolbarHorizontalPadding = 10.dp
 		)
 	
 	/**
@@ -92,9 +92,9 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 28.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 28.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 21.sp,
-			toolbarFontWeight = FontWeight.Normal,
+			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 52.dp,
-			toolbarHorizontalPadding = 7.dp
+			toolbarHorizontalPadding = 12.dp
 		)
 }
