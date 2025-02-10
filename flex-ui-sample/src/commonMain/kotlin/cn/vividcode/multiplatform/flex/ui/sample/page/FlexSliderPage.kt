@@ -17,6 +17,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderDirection
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderSteps
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderTooltipPosition
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
@@ -51,7 +52,7 @@ fun ColumnScope.FlexSliderPage() {
 				colorType = colorType,
 				cornerType = cornerType,
 				direction = direction,
-				stepCount = 100,
+				steps = FlexSliderSteps.averageSteps(20),
 				tooltipPosition = tooltipPosition
 			)
 		}

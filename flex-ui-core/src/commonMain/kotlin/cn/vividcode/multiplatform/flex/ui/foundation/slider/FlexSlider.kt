@@ -33,7 +33,7 @@ import androidx.compose.ui.window.Popup
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithColor
+import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
 import kotlin.math.min
 import kotlin.math.sqrt
 
@@ -51,7 +51,7 @@ fun FlexSlider(
 	direction: FlexSliderDirection = FlexSliderDefaults.DefaultSliderDirection,
 	minValue: Float = FlexSliderDefaults.MIN_VALUE,
 	maxValue: Float = FlexSliderDefaults.MAX_VALUE,
-	stepCount: Int? = null,
+	steps: FlexSliderSteps? = null,
 	tooltipPosition: FlexSliderTooltipPosition = FlexSliderDefaults.DefaultTooltipPosition,
 	tooltipFormatter: ((Float) -> String)? = { FlexSliderDefaults.defaultTooltipFormatter(it, minValue, maxValue) },
 ) {
@@ -74,20 +74,29 @@ fun FlexSlider(
 		}
 		var newValue = ((maxValue - minValue) * ((offsetTotal - thicknessPx / 2) / (length - thicknessPx)) + minValue)
 			.coerceIn(minValue, maxValue)
-		if (stepCount != null && stepCount >= 1f) {
-			val steps = (maxValue - minValue) / stepCount
-			val diff = newValue % steps
-			if (diff >= steps / 2) {
-				newValue += steps - diff
-			} else {
-				newValue -= diff
+		
+		when (steps) {
+			is FlexSliderAverageSteps -> {
+				val count = steps.count
+				if (count >= 1f) {
+					val steps = (maxValue - minValue) / count
+					val diff = newValue % steps
+					if (diff >= count / 2) {
+						newValue += steps - diff
+					} else {
+						newValue -= diff
+					}
+				}
 			}
+			
+			else -> {}
 		}
 		onValueChange(newValue)
 	}
 	
 	val interactionSource = remember { MutableInteractionSource() }
-	var isDrag by remember { mutableStateOf(false) }
+	var isDragging by remember { mutableStateOf(false) }
+	var isTap by remember { mutableStateOf(false) }
 	Box(
 		modifier = modifier
 			.then(
@@ -113,18 +122,21 @@ fun FlexSlider(
 						)
 					},
 					onDragEnd = {
-						isDrag = false
+						isDragging = false
 					}
 				)
 			}
 			.pointerInput(isHorizontal) {
 				detectTapGestures(
 					onPress = {
-						isDrag = true
+						isDragging = true
 						updateOffset(
 							offset = if (isHorizontal) it.x else it.y,
 							isRefresh = true
 						)
+					},
+					onTap = {
+						isTap = true
 					}
 				)
 			}
@@ -163,25 +175,16 @@ fun FlexSlider(
 					shape = sliderCornerShape
 				)
 		)
-		val thumbOffsetStart by remember(value, length, thickness, maxValue, minValue, stepCount) {
+		val thumbOffsetStart by remember(value, length, thickness, maxValue, minValue, steps) {
 			derivedStateOf {
 				var value = value.coerceIn(minValue, maxValue)
-				if (stepCount != null && stepCount >= 1f) {
-					val steps = (maxValue - minValue) / stepCount
-					val diff = value % steps
-					if (value - diff >= steps / 2) {
-						value += diff
-					} else {
-						value -= diff
-					}
-				}
 				val offsetStart = (length - thicknessPx) / (maxValue - minValue) * (value - minValue)
 				with(density) { offsetStart.toDp() }
 			}
 		}
 		val isHovered by interactionSource.collectIsHoveredAsState()
-		val isFocused by remember(isHovered, isDrag) {
-			derivedStateOf { isHovered || isDrag }
+		val isFocused by remember(isHovered, isDragging) {
+			derivedStateOf { isHovered || isDragging }
 		}
 		val color by animateColorAsState(
 			targetValue = run {
@@ -215,20 +218,26 @@ fun FlexSlider(
 		}
 		val thumbInteractionSource = remember { MutableInteractionSource() }
 		val isThumbHovered by thumbInteractionSource.collectIsHoveredAsState()
-		val isThumbFocused by remember(isThumbHovered, isDrag) {
-			derivedStateOf { isThumbHovered || isDrag }
+		LaunchedEffect(isTap, isThumbHovered) {
+			if (isTap && isThumbHovered) {
+				isTap = false
+				isDragging = false
+			}
+		}
+		val isThumbFocused by remember(isThumbHovered, isDragging) {
+			derivedStateOf { isThumbHovered || isDragging }
 		}
 		val scale by animateFloatAsState(
-			targetValue = if (isThumbFocused) 1.1f else 1f
+			targetValue = if (isThumbFocused) 1.25f else 1f
 		)
 		val thumbBorderWidth by animateDpAsState(
-			targetValue = if (isThumbFocused) config.thumbBorderWidth * 1.2f else config.thumbBorderWidth
+			targetValue = if (isThumbFocused) config.thumbBorderWidth * 1.1f else config.thumbBorderWidth
 		)
 		val borderColor by animateColorAsState(
 			targetValue = run {
 				val color = colorType.color
 				when {
-					isThumbFocused -> color.darkenWithColor
+					isThumbFocused -> color.lightenWithColor
 					isFocused -> color
 					else -> color.copy(alpha = 0.8f)
 				}
@@ -236,12 +245,9 @@ fun FlexSlider(
 		)
 		Box(
 			modifier = Modifier
-				.then(
-					if (isHorizontal) {
-						Modifier.offset(x = thumbOffsetStart)
-					} else {
-						Modifier.offset(y = thumbOffsetStart)
-					}
+				.offset(
+					x = if (isHorizontal) thumbOffsetStart else Dp.Hairline,
+					y = if (isHorizontal) Dp.Hairline else thumbOffsetStart
 				)
 				.scale(scale)
 				.size(thickness)
@@ -517,3 +523,18 @@ enum class FlexSliderTooltipPosition {
 	
 	BottomSide
 }
+
+sealed interface FlexSliderSteps {
+	
+	companion object {
+		
+		/**
+		 * 按照数量平均分配
+		 */
+		fun averageSteps(count: Int) = FlexSliderAverageSteps(count)
+	}
+}
+
+class FlexSliderAverageSteps internal constructor(
+	val count: Int,
+) : FlexSliderSteps
