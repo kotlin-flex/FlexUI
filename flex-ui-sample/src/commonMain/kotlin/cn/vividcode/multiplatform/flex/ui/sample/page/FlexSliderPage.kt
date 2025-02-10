@@ -52,6 +52,8 @@ fun ColumnScope.FlexSliderPage() {
 				colorType = colorType,
 				cornerType = cornerType,
 				direction = direction,
+				minValue = 0f,
+				maxValue = 100f,
 				steps = FlexSliderSteps.averageSteps(20),
 				tooltipPosition = tooltipPosition
 			)
@@ -65,7 +67,11 @@ fun ColumnScope.FlexSliderPage() {
 				sizeType = FlexSizeType.$sizeType,
 				colorType = FlexColorType.$colorType,
 				cornerType = FlexCornerType.$cornerType,
-				direction = FlexSliderDirection.$direction
+				direction = FlexSliderDirection.$direction,
+				minValue = 0f,
+				maxValue = 100f,
+				steps = FlexSliderSteps.averageSteps(20),
+				tooltipPosition = FlexSliderTooltipPosition.$tooltipPosition
 			)
 		""".trimIndent()
 		Code(code)
