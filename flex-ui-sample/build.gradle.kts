@@ -35,16 +35,16 @@ kotlin {
 		iosSimulatorArm64()
 	).forEach { iosTarget ->
 		iosTarget.binaries.framework {
-			baseName = "FlexUiSample"
+			baseName = "FlexUISample"
 			isStatic = true
 		}
 	}
 	
 	js {
-		moduleName = "flexUiSample"
+		moduleName = "flexUISample"
 		browser {
 			commonWebpackConfig {
-				outputFileName = "flexUiSample.js"
+				outputFileName = "flexUISample.js"
 			}
 		}
 		binaries.executable()
@@ -53,12 +53,12 @@ kotlin {
 	
 	@OptIn(ExperimentalWasmDsl::class)
 	wasmJs {
-		moduleName = "flexUiSample"
+		moduleName = "flexUISample"
 		browser {
 			val rootDirPath = project.rootDir.path
 			val projectDirPath = project.projectDir.path
 			commonWebpackConfig {
-				outputFileName = "flexUiSample.js"
+				outputFileName = "flexUISample.js"
 				devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
 					static = (static ?: mutableListOf()).apply {
 						add(rootDirPath)

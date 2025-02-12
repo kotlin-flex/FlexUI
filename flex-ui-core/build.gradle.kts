@@ -12,56 +12,56 @@ plugins {
 	alias(libs.plugins.maven.publish)
 }
 
-val flexUiVersion = property("flex-ui.version").toString()
+val flexUIVersion = property("flex-ui.version").toString()
 
 group = "cn.vividcode.multiplatform.flex.ui.api"
-version = flexUiVersion
+version = flexUIVersion
 
 kotlin {
 	jvmToolchain(21)
-	
+
 	androidTarget {
 		compilerOptions {
 			jvmTarget.set(JvmTarget.JVM_21)
 		}
 	}
-	
+
 	jvm("desktop") {
 		compilerOptions {
 			jvmTarget.set(JvmTarget.JVM_21)
 		}
 	}
-	
+
 	listOf(
 		iosX64(),
 		iosArm64(),
 		iosSimulatorArm64()
 	).forEach { iosTarget ->
 		iosTarget.binaries.framework {
-			baseName = "FlexUi"
+			baseName = "FlexUI"
 			isStatic = true
 		}
 	}
-	
+
 	js {
-		moduleName = "flexUi"
+		moduleName = "flexUI"
 		browser {
 			commonWebpackConfig {
-				outputFileName = "flexUi.js"
+				outputFileName = "flexUI.js"
 			}
 		}
 		binaries.executable()
 		useEsModules()
 	}
-	
+
 	@OptIn(ExperimentalWasmDsl::class)
 	wasmJs {
-		moduleName = "flexUi"
+		moduleName = "flexUI"
 		browser {
 			val rootDirPath = project.rootDir.path
 			val projectDirPath = project.projectDir.path
 			commonWebpackConfig {
-				outputFileName = "flexUi.js"
+				outputFileName = "flexUI.js"
 				devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
 					static = (static ?: mutableListOf()).apply {
 						add(rootDirPath)
@@ -72,7 +72,7 @@ kotlin {
 		}
 		binaries.executable()
 	}
-	
+
 	sourceSets {
 		commonMain {
 			dependencies {
@@ -90,13 +90,13 @@ kotlin {
 android {
 	namespace = "cn.vividcode.multiplatform.flex.ui"
 	compileSdk = libs.versions.android.compileSdk.get().toInt()
-	
+
 	sourceSets["main"].apply {
 		manifest.srcFile("src/androidMain/AndroidManifest.xml")
 		res.srcDirs("src/androidMain/res")
 		resources.srcDirs("src/commonMain/resources")
 	}
-	
+
 	defaultConfig {
 		minSdk = libs.versions.android.minSdk.get().toInt()
 	}
@@ -135,18 +135,18 @@ fun String.isReleaseVersion(): Boolean {
 }
 
 mavenPublishing {
-	val release = flexUiVersion.isReleaseVersion()
+	val release = flexUIVersion.isReleaseVersion()
 	publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = release)
 	signAllPublications()
-	
-	coordinates("cn.vividcode.multiplatform", "flex-ui", flexUiVersion)
-	
+
+	coordinates("cn.vividcode.multiplatform", "flex-ui", flexUIVersion)
+
 	pom {
 		name = "flex-ui"
-		description = "FlexUi 基于 Kotlin Multiplatform 的 UI 组件库"
+		description = "FlexUI 基于 Kotlin Multiplatform 的 UI 组件库"
 		inceptionYear = "2025"
 		url = "https://github.com/vividcodex/flex-ui"
-		
+
 		licenses {
 			license {
 				name = "The Apache License, Version 2.0"

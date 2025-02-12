@@ -1,6 +1,6 @@
 import UIKit
 import SwiftUI
-import FlexUi
+import FlexUI
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
