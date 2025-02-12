@@ -19,19 +19,19 @@ version = flexUIVersion
 
 kotlin {
 	jvmToolchain(21)
-
+	
 	androidTarget {
 		compilerOptions {
 			jvmTarget.set(JvmTarget.JVM_21)
 		}
 	}
-
+	
 	jvm("desktop") {
 		compilerOptions {
 			jvmTarget.set(JvmTarget.JVM_21)
 		}
 	}
-
+	
 	listOf(
 		iosX64(),
 		iosArm64(),
@@ -42,7 +42,7 @@ kotlin {
 			isStatic = true
 		}
 	}
-
+	
 	js {
 		moduleName = "flexUI"
 		browser {
@@ -53,7 +53,7 @@ kotlin {
 		binaries.executable()
 		useEsModules()
 	}
-
+	
 	@OptIn(ExperimentalWasmDsl::class)
 	wasmJs {
 		moduleName = "flexUI"
@@ -72,7 +72,7 @@ kotlin {
 		}
 		binaries.executable()
 	}
-
+	
 	sourceSets {
 		commonMain {
 			dependencies {
@@ -90,13 +90,13 @@ kotlin {
 android {
 	namespace = "cn.vividcode.multiplatform.flex.ui"
 	compileSdk = libs.versions.android.compileSdk.get().toInt()
-
+	
 	sourceSets["main"].apply {
 		manifest.srcFile("src/androidMain/AndroidManifest.xml")
 		res.srcDirs("src/androidMain/res")
 		resources.srcDirs("src/commonMain/resources")
 	}
-
+	
 	defaultConfig {
 		minSdk = libs.versions.android.minSdk.get().toInt()
 	}
@@ -138,15 +138,15 @@ mavenPublishing {
 	val release = flexUIVersion.isReleaseVersion()
 	publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = release)
 	signAllPublications()
-
+	
 	coordinates("cn.vividcode.multiplatform", "flex-ui", flexUIVersion)
-
+	
 	pom {
 		name = "flex-ui"
 		description = "FlexUI 基于 Kotlin Multiplatform 的 UI 组件库"
 		inceptionYear = "2025"
-		url = "https://github.com/vividcodex/flex-ui"
-
+		url = "https://github.com/vividcodex/FlexUI"
+		
 		licenses {
 			license {
 				name = "The Apache License, Version 2.0"
@@ -158,13 +158,13 @@ mavenPublishing {
 			developer {
 				id = "li-jia-wei"
 				name = "li-jia-wei"
-				url = "https://github.com/vividcodex/flex-ui"
+				url = "https://github.com/vividcodex/FlexUI"
 			}
 		}
 		scm {
-			url = "https://github.com/vividcodex/flex-ui"
-			connection = "scm:git:git://github.com/vividcodex/flex-ui.git"
-			developerConnection = "scm:git:ssh://git@github.com:vividcodex/flex-ui.git"
+			url = "https://github.com/vividcodex/FlexUI"
+			connection = "scm:git:git://github.com/vividcodex/FlexUI.git"
+			developerConnection = "scm:git:ssh://git@github.com:vividcodex/FlexUI.git"
 		}
 	}
 }
