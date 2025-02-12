@@ -53,7 +53,7 @@ fun FlexSlider(
 	maxValue: Float = FlexSliderDefaults.MAX_VALUE,
 	steps: FlexSliderSteps? = null,
 	tooltipPosition: FlexSliderTooltipPosition = FlexSliderDefaults.DefaultTooltipPosition,
-	tooltipFormatter: ((Float) -> String)? = { FlexSliderDefaults.defaultTooltipFormatter(it, minValue, maxValue) },
+	tooltipFormatter: ((Float) -> String)? = null,
 ) {
 	val config = LocalFlexConfig.current.slider.getConfig(sizeType)
 	var length by remember { mutableStateOf(1) }
@@ -503,11 +503,6 @@ object FlexSliderDefaults : FlexDefaults(
 	const val MAX_VALUE = 100f
 	
 	val DefaultTooltipPosition = FlexSliderTooltipPosition.TopSide
-	
-	fun defaultTooltipFormatter(value: Float, minValue: Float, maxValue: Float): String {
-		val percent = (value / (maxValue - minValue) * 1000).toInt() / 10f
-		return "$percent%"
-	}
 }
 
 enum class FlexSliderDirection {

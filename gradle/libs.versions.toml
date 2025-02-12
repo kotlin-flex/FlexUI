@@ -5,7 +5,7 @@ android-targetSdk = "35"
 kotlin = "2.1.10"
 agp = "8.7.3"
 maven-publish = "0.30.0"
-compose-plugin = "1.7.3"
+compose-plugin = "1.8.0-alpha02"
 androidx-activity-compose = "1.10.0"
 
 [libraries]

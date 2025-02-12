@@ -3,23 +3,27 @@ package cn.vividcode.multiplatform.flex.ui.sample.page
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderSteps
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
+import cn.vividcode.multiplatform.flex.ui.sample.generated.resources.MiSans_VF
+import cn.vividcode.multiplatform.flex.ui.sample.generated.resources.Res
 import cn.vividcode.multiplatform.flex.ui.sample.theme.HighContrastColorSchemes
 import cn.vividcode.multiplatform.flex.ui.sample.theme.MediumContrastColorSchemes
 import cn.vividcode.multiplatform.flex.ui.sample.theme.StandardContrastColorSchemes
 import cn.vividcode.multiplatform.flex.ui.sample.theme.currentColorSchemes
 import cn.vividcode.multiplatform.flex.ui.theme.ColorSchemes
+import org.jetbrains.compose.resources.Font
 
 /**
  * 设置页
@@ -53,6 +57,39 @@ fun SettingsPage(
 				)
 			}
 		}
+		Spacer(modifier = Modifier.height(24.dp))
+		GroupLayout(
+			title = "Variable Font"
+		) {
+			var value by remember { mutableStateOf(100f) }
+			TitleLayout(
+				title = "Weight"
+			) {
+				FlexSlider(
+					value = value,
+					onValueChange = { value = it },
+					sizeType = FlexSizeType.Small,
+					minValue = 100f,
+					maxValue = 900f,
+					steps = FlexSliderSteps.averageSteps(8)
+				)
+			}
+			Spacer(modifier = Modifier.height(12.dp))
+			TitleLayout(
+				title = "Text"
+			) {
+				Text(
+					text = "这是一段测试可变字体的内容",
+					fontFamily = FontFamily(
+						Font(
+							resource = Res.font.MiSans_VF,
+							variationSettings = FontVariation.Settings(FontVariation.weight(value.toInt()))
+						)
+					)
+				)
+			}
+		}
+		
 	}
 	
 }

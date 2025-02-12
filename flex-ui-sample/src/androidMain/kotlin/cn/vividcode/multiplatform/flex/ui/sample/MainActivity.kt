@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import cn.vividcode.multiplatform.flex.ui.sample.theme.currentColorSchemes
+import cn.vividcode.multiplatform.flex.ui.sample.theme.getTypography
 import cn.vividcode.multiplatform.flex.ui.theme.FlexTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +13,10 @@ class MainActivity : ComponentActivity() {
 		super.onCreate(savedInstanceState)
 		enableEdgeToEdge()
 		setContent {
-			FlexTheme {
+			FlexTheme(
+				colorSchemes = currentColorSchemes,
+				typography = getTypography()
+			) {
 				App()
 			}
 		}

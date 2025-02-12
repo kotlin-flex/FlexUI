@@ -141,3 +141,8 @@ compose.desktop {
 		}
 	}
 }
+
+compose.resources {
+	packageOfResClass = "cn.vividcode.multiplatform.flex.ui.sample.generated.resources"
+	publicResClass = true
+}
