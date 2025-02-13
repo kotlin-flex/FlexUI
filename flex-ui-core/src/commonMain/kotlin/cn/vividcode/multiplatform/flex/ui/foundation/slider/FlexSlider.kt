@@ -53,45 +53,42 @@ fun FlexSlider(
 	maxValue: Float = FlexSliderDefaults.MAX_VALUE,
 	steps: FlexSliderSteps? = null,
 	tooltipPosition: FlexSliderTooltipPosition = FlexSliderDefaults.DefaultTooltipPosition,
-	tooltipFormatter: ((Float) -> String)? = null,
+	tooltipFormatter: ((Float) -> Any?)? = null,
 ) {
 	val config = LocalFlexConfig.current.slider.getConfig(sizeType)
-	var length by remember { mutableStateOf(1) }
+	var length by remember { mutableStateOf(Dp.Unspecified) }
 	val thickness by animateDpAsState(config.thickness)
 	val density = LocalDensity.current
-	val thicknessPx by remember(thickness) {
-		derivedStateOf { with(density) { thickness.toPx() } }
-	}
 	val isHorizontal by remember(direction) {
 		derivedStateOf { direction == FlexSliderDirection.Horizontal }
 	}
-	var offsetTotal = 0f
-	fun updateOffset(offset: Float, isRefresh: Boolean) {
-		if (isRefresh) {
-			offsetTotal = offset
-		} else {
-			offsetTotal += offset
+	
+	val stepValues by remember(steps, minValue, maxValue) {
+		derivedStateOf {
+			if (steps == null) return@derivedStateOf null
+			steps.calcStepValues(minValue, maxValue)
 		}
-		var newValue = ((maxValue - minValue) * ((offsetTotal - thicknessPx / 2) / (length - thicknessPx)) + minValue)
-			.coerceIn(minValue, maxValue)
-		
-		when (steps) {
-			is FlexSliderAverageSteps -> {
-				val count = steps.count
-				if (count >= 1f) {
-					val steps = (maxValue - minValue) / count
-					val diff = newValue % steps
-					if (diff >= count / 2) {
-						newValue += steps - diff
+	}
+	
+	var offsetX by remember { mutableStateOf(Dp.Unspecified) }
+	LaunchedEffect(offsetX) {
+		if (length == Dp.Hairline || offsetX == Dp.Unspecified) return@LaunchedEffect
+		var value = offsetX / length * (maxValue - minValue) + minValue
+		stepValues?.also { values ->
+			for (i in 1 ..< values.size) {
+				if (value <= values[i]) {
+					val leftDistance = value - values[i - 1]
+					val rightDistance = values[i] - value
+					if (leftDistance > rightDistance) {
+						value += rightDistance
 					} else {
-						newValue -= diff
+						value -= leftDistance
 					}
+					break
 				}
 			}
-			
-			else -> {}
 		}
-		onValueChange(newValue)
+		onValueChange(value.coerceIn(minValue, maxValue))
 	}
 	
 	val interactionSource = remember { MutableInteractionSource() }
@@ -111,15 +108,17 @@ fun FlexSlider(
 				}
 			)
 			.onGloballyPositioned {
-				length = if (isHorizontal) it.size.width else it.size.height
+				length = with(density) {
+					if (isHorizontal) it.size.width.toDp() else it.size.height.toDp()
+				}
 			}
 			.pointerInput(isHorizontal) {
 				detectDragGestures(
-					onDrag = { _, dragAmount ->
-						updateOffset(
-							offset = if (isHorizontal) dragAmount.x else dragAmount.y,
-							isRefresh = false
-						)
+					onDrag = { change, dragAmount ->
+						change.consume()
+						offsetX += with(density) {
+							if (isHorizontal) dragAmount.x.toDp() else dragAmount.y.toDp()
+						}
 					},
 					onDragEnd = {
 						isDragging = false
@@ -130,10 +129,9 @@ fun FlexSlider(
 				detectTapGestures(
 					onPress = {
 						isDragging = true
-						updateOffset(
-							offset = if (isHorizontal) it.x else it.y,
-							isRefresh = true
-						)
+						offsetX = with(density) {
+							(if (isHorizontal) it.x else it.y).toDp()
+						}
 					},
 					onTap = {
 						isTap = true
@@ -175,11 +173,11 @@ fun FlexSlider(
 					shape = sliderCornerShape
 				)
 		)
-		val thumbOffsetStart by remember(value, length, thickness, maxValue, minValue, steps) {
+		val thumbOffsetStart by remember(value, density, length, thickness, maxValue, minValue) {
 			derivedStateOf {
+				if (length == Dp.Unspecified) return@derivedStateOf Dp.Hairline
 				var value = value.coerceIn(minValue, maxValue)
-				val offsetStart = (length - thicknessPx) / (maxValue - minValue) * (value - minValue)
-				with(density) { offsetStart.toDp() }
+				(length - thickness) / (maxValue - minValue) * (value - minValue)
 			}
 		}
 		val isHovered by interactionSource.collectIsHoveredAsState()
@@ -210,6 +208,7 @@ fun FlexSlider(
 					shape = sliderCornerShape
 				)
 		)
+		
 		val thumbCorner by animateDpAsState(
 			targetValue = config.thickness * cornerType.scale
 		)
@@ -265,9 +264,14 @@ fun FlexSlider(
 					interactionSource = thumbInteractionSource
 				)
 		)
-		if (tooltipFormatter != null) {
+		val tooltipText by remember(value, tooltipFormatter) {
+			derivedStateOf {
+				tooltipFormatter?.invoke(value)?.toString()
+			}
+		}
+		tooltipText?.let {
 			TooltipPopup(
-				value = value,
+				tooltipText = it,
 				colorType = colorType,
 				cornerType = cornerType,
 				isHorizontal = isHorizontal,
@@ -275,8 +279,7 @@ fun FlexSlider(
 				thumbOffsetStart = thumbOffsetStart,
 				thickness = thickness,
 				config = config,
-				tooltipPosition = tooltipPosition,
-				tooltipFormatter = tooltipFormatter
+				tooltipPosition = tooltipPosition
 			)
 		}
 	}
@@ -284,7 +287,7 @@ fun FlexSlider(
 
 @Composable
 private fun TooltipPopup(
-	value: Float,
+	tooltipText: String,
 	colorType: FlexColorType,
 	cornerType: FlexCornerType,
 	isHorizontal: Boolean,
@@ -293,7 +296,6 @@ private fun TooltipPopup(
 	thickness: Dp,
 	config: FlexSliderConfig,
 	tooltipPosition: FlexSliderTooltipPosition,
-	tooltipFormatter: (Float) -> String,
 ) {
 	val density = LocalDensity.current
 	var size by remember { mutableStateOf(IntSize.Zero) }
@@ -379,12 +381,11 @@ private fun TooltipPopup(
 					)
 				}
 				TooltipText(
-					value = value,
+					tooltipText = tooltipText,
 					config = config,
 					color = color,
 					contentColor = contentColor,
-					tooltipCornerShape = tooltipCornerShape,
-					tooltipFormatter = tooltipFormatter,
+					tooltipCornerShape = tooltipCornerShape
 				)
 				if (isTopSide) {
 					Box(
@@ -425,12 +426,11 @@ private fun TooltipPopup(
 					)
 				}
 				TooltipText(
-					value = value,
+					tooltipText = tooltipText,
 					config = config,
 					color = color,
 					contentColor = contentColor,
 					tooltipCornerShape = tooltipCornerShape,
-					tooltipFormatter = tooltipFormatter,
 				)
 				if (!isTopSide) {
 					Box(
@@ -453,12 +453,11 @@ private fun TooltipPopup(
 
 @Composable
 private fun TooltipText(
-	value: Float,
+	tooltipText: String,
 	config: FlexSliderConfig,
 	color: Color,
 	contentColor: Color,
 	tooltipCornerShape: RoundedCornerShape,
-	tooltipFormatter: (Float) -> String,
 ) {
 	val tooltipHeight by animateDpAsState(config.toolbarHeight)
 	val tooltipHorizontalPadding by animateDpAsState(config.toolbarHorizontalPadding)
@@ -475,12 +474,9 @@ private fun TooltipText(
 			),
 		contentAlignment = Alignment.Center
 	) {
-		val text by remember(value) {
-			derivedStateOf { tooltipFormatter(value) }
-		}
 		val fontSize by animateFloatAsState(config.toolbarFontSize.value)
 		Text(
-			text = text,
+			text = tooltipText,
 			color = contentColor,
 			fontSize = fontSize.sp,
 			fontWeight = config.toolbarFontWeight,
@@ -519,17 +515,65 @@ enum class FlexSliderTooltipPosition {
 	BottomSide
 }
 
+/**
+ * 滑动条步骤
+ */
 sealed interface FlexSliderSteps {
+	
+	fun calcStepValues(minValue: Float, maxValue: Float): List<Float>
 	
 	companion object {
 		
 		/**
-		 * 按照数量平均分配
+		 * 根据步幅数量平均分配
 		 */
-		fun averageSteps(count: Int) = FlexSliderAverageSteps(count)
+		fun averageSteps(count: Int): FlexSliderSteps = FlexSliderAverageSteps(count)
+		
+		/**
+		 * 根据值分配步幅
+		 */
+		fun valuesSteps(vararg values: Float): FlexSliderSteps = FlexSliderValuesSteps(values.toList())
+		
+		/**
+		 * 根据百分比分配步幅
+		 */
+		fun percentSteps(vararg percents: Float): FlexSliderSteps = FlexSliderPercentSteps(percents.toList())
 	}
 }
 
-class FlexSliderAverageSteps internal constructor(
-	val count: Int,
-) : FlexSliderSteps
+internal class FlexSliderAverageSteps(
+	private val count: Int,
+) : FlexSliderSteps {
+	
+	override fun calcStepValues(minValue: Float, maxValue: Float): List<Float> {
+		val steps = (maxValue - minValue) / count
+		return (0 ..< count).map { minValue + steps * it } + maxValue
+	}
+}
+
+internal class FlexSliderValuesSteps(
+	private val values: List<Float>,
+) : FlexSliderSteps {
+	
+	override fun calcStepValues(minValue: Float, maxValue: Float): List<Float> {
+		return (values + minValue + maxValue).asSequence()
+			.distinct()
+			.filter { it in minValue .. maxValue }
+			.sorted()
+			.toList()
+	}
+}
+
+internal class FlexSliderPercentSteps(
+	private val percents: List<Float>,
+) : FlexSliderSteps {
+	
+	override fun calcStepValues(minValue: Float, maxValue: Float): List<Float> {
+		return (percents + 0f + 1f).asSequence()
+			.distinct()
+			.filter { it in 0f .. 1f }
+			.sorted()
+			.map { (maxValue - minValue) * it + minValue }
+			.toList()
+	}
+}

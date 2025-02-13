@@ -19,8 +19,10 @@ import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderDirection
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderSteps
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderTooltipPosition
+import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
+import kotlin.math.floor
 
 /**
  * 按钮展示页
@@ -31,6 +33,8 @@ fun ColumnScope.FlexSliderPage() {
 	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Circle) }
 	var direction by remember { mutableStateOf(FlexSliderDirection.Horizontal) }
+	var stepsType by remember { mutableStateOf(FlexSliderStepsType.None) }
+	var showTooltip by remember { mutableStateOf(false) }
 	var tooltipPosition by remember { mutableStateOf(FlexSliderTooltipPosition.TopSide) }
 	Row(
 		modifier = Modifier
@@ -54,8 +58,16 @@ fun ColumnScope.FlexSliderPage() {
 				direction = direction,
 				minValue = 0f,
 				maxValue = 100f,
-				steps = FlexSliderSteps.averageSteps(20),
-				tooltipPosition = tooltipPosition
+				steps = when (stepsType) {
+					FlexSliderStepsType.None -> null
+					FlexSliderStepsType.AverageStep -> FlexSliderSteps.averageSteps(10)
+					FlexSliderStepsType.Values -> FlexSliderSteps.valuesSteps(10f, 20f, 50f, 70f)
+					FlexSliderStepsType.Percents -> FlexSliderSteps.percentSteps(0.1f, 0.2f, 0.5f, 0.7f)
+				},
+				tooltipPosition = tooltipPosition,
+				tooltipFormatter = if (showTooltip) {
+					{ floor(it * 10) / 10 }
+				} else null
 			)
 		}
 		Spacer(Modifier.width(12.dp))
@@ -140,6 +152,29 @@ fun ColumnScope.FlexSliderPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
+			title = "Steps Type"
+		) {
+			FlexRadio(
+				selectedKey = stepsType,
+				onSelectedKeyChange = { stepsType = it },
+				options = FlexSliderStepsType.entries.toRadioOptions(),
+				sizeType = FlexSizeType.Small,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
+			title = "Show Tooltip"
+		) {
+			FlexSwitch(
+				checked = showTooltip,
+				onCheckedChange = { showTooltip = it },
+				sizeType = FlexSizeType.Small,
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
 			title = "Tooltip Position"
 		) {
 			FlexRadio(
@@ -152,4 +187,15 @@ fun ColumnScope.FlexSliderPage() {
 			)
 		}
 	}
+}
+
+private enum class FlexSliderStepsType {
+	
+	None,
+	
+	AverageStep,
+	
+	Values,
+	
+	Percents
 }
