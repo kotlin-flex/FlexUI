@@ -35,7 +35,6 @@ fun ColumnScope.FlexSliderPage() {
 	var stepsType by remember { mutableStateOf(FlexSliderStepsType.None) }
 	var marksType by remember { mutableStateOf(FlexSliderMarksType.None) }
 	var showTooltip by remember { mutableStateOf(false) }
-	var tooltipPosition by remember { mutableStateOf(FlexSliderTooltipPosition.TopSide) }
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -77,17 +76,17 @@ fun ColumnScope.FlexSliderPage() {
 					)
 					
 					FlexSliderMarksType.Mark -> FlexSliderMarks.rememberMarks(
-						FlexSliderMark(
+						FlexSliderTextMark(
 							value = 0f,
 							text = "0%",
 							color = MaterialTheme.colorScheme.error,
 							weight = FontWeight.Bold
 						),
-						FlexSliderMark(
+						FlexSliderTextMark(
 							value = 50f,
 							text = "50%"
 						),
-						FlexSliderMark(
+						FlexSliderTextMark(
 							value = 100f,
 							text = "100%",
 							color = MaterialTheme.colorScheme.error,
@@ -95,14 +94,13 @@ fun ColumnScope.FlexSliderPage() {
 						)
 					)
 				},
-				tooltipPosition = tooltipPosition,
 				tooltipFormatter = if (showTooltip) {
 					{ floor(it * 10) / 10 }
 				} else null
 			)
 		}
 		Spacer(Modifier.width(12.dp))
-		val code by remember(sizeType, colorType, cornerType, direction, stepsType, tooltipPosition, showTooltip) {
+		val code by remember(sizeType, colorType, cornerType, direction, stepsType, showTooltip) {
 			derivedStateOf {
 				val stepsCode = when (stepsType) {
 					FlexSliderStepsType.None -> "null"
@@ -159,7 +157,6 @@ fun ColumnScope.FlexSliderPage() {
 						valueRange = 0f .. 100f,
 						steps = $stepsCode,
 						marks = $marksCode,
-						tooltipPosition = FlexSliderTooltipPosition.$tooltipPosition,
 						tooltipFormatter = $tooltipFormatterCode
 					)
 				""".trimIndent()
@@ -263,19 +260,6 @@ fun ColumnScope.FlexSliderPage() {
 				checked = showTooltip,
 				onCheckedChange = { showTooltip = it },
 				sizeType = FlexSizeType.Small,
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Tooltip Position"
-		) {
-			FlexRadio(
-				selectedKey = tooltipPosition,
-				onSelectedKeyChange = { tooltipPosition = it },
-				options = FlexSliderTooltipPosition.entries.toRadioOptions(),
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
 			)
 		}
 	}

@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,11 +46,12 @@ import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
  * @param value 输入框的当前值
  * @param onValueChange 当输入值发生变化时调用的回调函数
  * @param modifier 应用于输入框的修饰符
- * @param sizeType 输入框的尺寸类型。
- * @param colorType 输入框的颜色类型。
- * @param cornerType 输入框的圆角类型。
+ * @param sizeType 输入框的尺寸类型
+ * @param colorType 输入框的颜色类型
+ * @param cornerType 输入框的圆角类型
+ * @param inputType 输入框类型
  * @param enabled 是否启用输入框，默认为 `true`
- * @param readOnly 是否为只读模式，默认为 `false`。
+ * @param readOnly 是否为只读模式，默认为 `false`
  * @param maxLength 允许输入的最大字符数，默认为 `Int.MAX_VALUE`
  * @param inputRegex 限制输入内容的正则表达式，为 `null` 时不限制
  * @param placeholder 输入框的占位内容
@@ -69,6 +71,7 @@ fun FlexInput(
 	sizeType: FlexSizeType = FlexInputDefaults.DefaultSizeType,
 	colorType: FlexColorType = FlexInputDefaults.DefaultColorType,
 	cornerType: FlexCornerType = FlexInputDefaults.DefaultCornerType,
+	inputType: FlexInputType = FlexInputDefaults.DefaultInputType,
 	enabled: Boolean = true,
 	readOnly: Boolean = false,
 	maxLength: Int = Int.MAX_VALUE,
@@ -140,8 +143,10 @@ fun FlexInput(
 				FlexInputDecorationBox(
 					value = value,
 					modifier = modifier,
+					enabled = enabled,
 					colorType = colorType,
 					cornerType = cornerType,
+					inputType = inputType,
 					innerTextField = innerTextField,
 					config = config,
 					textStyle = textStyle,
@@ -165,6 +170,10 @@ object FlexInputDefaults : FlexDefaults() {
 	override val FlexComposeDefaultConfig.defaultConfig
 		get() = this.input
 	
+	val DefaultInputType: FlexInputType
+		@Composable
+		get() = LocalFlexInput.current
+	
 	fun icon(
 		icon: ImageVector,
 		tint: Color = Color.Unspecified,
@@ -174,12 +183,29 @@ object FlexInputDefaults : FlexDefaults() {
 	) = FlexInputIcon(icon, tint, rotate, size, onClick)
 }
 
+enum class FlexInputType {
+	
+	/**
+	 * 默认样式
+	 */
+	Default,
+	
+	/**
+	 * 线框样式
+	 */
+	Outlined
+}
+
+internal val LocalFlexInput = compositionLocalOf { FlexInputType.Default }
+
 @Composable
 private fun FlexInputDecorationBox(
 	value: String,
 	modifier: Modifier,
+	enabled: Boolean,
 	colorType: FlexColorType,
 	cornerType: FlexCornerType,
+	inputType: FlexInputType,
 	innerTextField: @Composable () -> Unit,
 	config: FlexInputConfig,
 	textStyle: TextStyle,
@@ -201,10 +227,20 @@ private fun FlexInputDecorationBox(
 		derivedStateOf { RoundedCornerShape(corner) }
 	}
 	val borderColor by animateColorAsState(
-		targetValue = if (isFocused) colorType.color else colorType.color.copy(alpha = 0f),
+		targetValue = when {
+			isFocused -> colorType.color
+			inputType == FlexInputType.Default -> colorType.color.copy(alpha = 0f)
+			enabled -> colorType.color.copy(alpha = 0.7f)
+			else -> colorType.color.disabledWithColor
+		},
 	)
 	val backgroundColor by animateColorAsState(
-		targetValue = Color.Gray.copy(alpha = if (isFocused) 0f else 0.15f)
+		targetValue = MaterialTheme.colorScheme.surfaceVariant.copy(
+			alpha = when {
+				isFocused || inputType == FlexInputType.Outlined -> 0f
+				else -> 0.7f
+			}
+		)
 	)
 	val interval by animateDpAsState(config.horizontalPadding / 2)
 	Row(

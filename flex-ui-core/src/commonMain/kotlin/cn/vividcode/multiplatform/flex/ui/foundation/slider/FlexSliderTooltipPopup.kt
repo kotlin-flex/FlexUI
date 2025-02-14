@@ -41,23 +41,19 @@ internal fun FlexSliderTooltipPopup(
 	thumbOffsetStart: Dp,
 	thickness: Dp,
 	config: FlexSliderConfig,
-	tooltipPosition: FlexSliderTooltipPosition,
 ) {
 	val density = LocalDensity.current
 	var size by remember { mutableStateOf(IntSize.Zero) }
-	val isTopSide by remember(tooltipPosition) {
-		derivedStateOf { tooltipPosition == FlexSliderTooltipPosition.TopSide }
-	}
-	val offset by remember(thumbOffsetStart, thickness, size, isTopSide, isHorizontal) {
+	val offset by remember(thumbOffsetStart, thickness, size, isHorizontal) {
 		derivedStateOf {
 			val thumbOffsetStartPx = with(density) { thumbOffsetStart.roundToPx() }
 			val thicknessPx = with(density) { thickness.roundToPx() }
 			if (isHorizontal) {
 				val x = thumbOffsetStartPx - size.width / 2 + thicknessPx / 2
-				val y = if (isTopSide) -size.height else thicknessPx
+				val y = -size.height
 				IntOffset(x, y)
 			} else {
-				val x = if (isTopSide) thicknessPx else -size.width
+				val x = thicknessPx
 				val y = (thumbOffsetStartPx - size.height / 2 + thicknessPx / 2).toInt()
 				IntOffset(x, y)
 			}
@@ -112,20 +108,6 @@ internal fun FlexSliderTooltipPopup(
 					},
 				horizontalAlignment = Alignment.CenterHorizontally,
 			) {
-				if (!isTopSide) {
-					Box(
-						modifier = Modifier
-							.offset(
-								y = arrowSize / 2
-							)
-							.rotate(-135f)
-							.size(arrowSize)
-							.background(
-								color = color,
-								shape = arrowCornerShape
-							)
-					)
-				}
 				TooltipText(
 					tooltipText = tooltipText,
 					config = config,
@@ -133,20 +115,18 @@ internal fun FlexSliderTooltipPopup(
 					contentColor = contentColor,
 					tooltipCornerShape = tooltipCornerShape
 				)
-				if (isTopSide) {
-					Box(
-						modifier = Modifier
-							.offset(
-								y = -arrowSize / 2
-							)
-							.rotate(45f)
-							.size(arrowSize)
-							.background(
-								color = color,
-								shape = arrowCornerShape
-							)
-					)
-				}
+				Box(
+					modifier = Modifier
+						.offset(
+							y = -arrowSize / 2
+						)
+						.rotate(45f)
+						.size(arrowSize)
+						.background(
+							color = color,
+							shape = arrowCornerShape
+						)
+				)
 			}
 		} else {
 			Row(
@@ -157,20 +137,18 @@ internal fun FlexSliderTooltipPopup(
 					},
 				verticalAlignment = Alignment.CenterVertically,
 			) {
-				if (isTopSide) {
-					Box(
-						modifier = Modifier
-							.offset(
-								x = arrowSize / 2
-							)
-							.rotate(135f)
-							.size(arrowSize)
-							.background(
-								color = color,
-								shape = arrowCornerShape
-							)
-					)
-				}
+				Box(
+					modifier = Modifier
+						.offset(
+							x = arrowSize / 2
+						)
+						.rotate(135f)
+						.size(arrowSize)
+						.background(
+							color = color,
+							shape = arrowCornerShape
+						)
+				)
 				TooltipText(
 					tooltipText = tooltipText,
 					config = config,
@@ -178,20 +156,6 @@ internal fun FlexSliderTooltipPopup(
 					contentColor = contentColor,
 					tooltipCornerShape = tooltipCornerShape,
 				)
-				if (!isTopSide) {
-					Box(
-						modifier = Modifier
-							.offset(
-								x = -arrowSize / 2
-							)
-							.rotate(-45f)
-							.size(arrowSize)
-							.background(
-								color = color,
-								shape = arrowCornerShape
-							)
-					)
-				}
 			}
 		}
 	}

@@ -11,7 +11,6 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -25,7 +24,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithColor
 import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
 
 /**
@@ -39,10 +37,10 @@ import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
  * @param cornerType 滑块的圆角类型，默认为 [FlexSliderDefaults.DefaultCornerType]
  * @param direction 滑块的滑动方向，默认为 [FlexSliderDefaults.DefaultSliderDirection]
  * @param valueRange 滑块的取值范围，默认为 [FlexSliderDefaults.DefaultValueRange]
- * @param steps 可选参数，定义滑块的分步设置，如果为 null，则为连续滑动
- * @param marks 可选参数，定义滑块上的标记点，如果为 null，则不显示
+ * @param steps 可选参数，定义滑块的分步设置，如果为 `null`，则为连续滑动
+ * @param marks 可选参数，定义滑块上的标记点，如果为 `null`，则不显示
  * @param tooltipPosition 滑块提示框的位置，默认为 [FlexSliderDefaults.DefaultTooltipPosition]
- * @param tooltipFormatter 可选参数，自定义提示框格式化函数，如果为 null 则不显示滑块提示框
+ * @param tooltipFormatter 可选参数，自定义提示框格式化函数，如果为 `null` 则不显示滑块提示框
  */
 @Composable
 fun FlexSlider(
@@ -56,7 +54,6 @@ fun FlexSlider(
 	valueRange: FloatRange = FlexSliderDefaults.DefaultValueRange,
 	steps: FlexSliderSteps? = null,
 	marks: FlexSliderMarks? = null,
-	tooltipPosition: FlexSliderTooltipPosition = FlexSliderDefaults.DefaultTooltipPosition,
 	tooltipFormatter: ((Float) -> Any?)? = null,
 ) {
 	val config = LocalFlexConfig.current.slider.getConfig(sizeType)
@@ -219,41 +216,18 @@ fun FlexSlider(
 		)
 		
 		if (marks != null && length != Dp.Unspecified) {
-			val realMarks by remember(marks, valueRange) {
-				derivedStateOf {
-					marks.marks.filter { it.value in valueRange }
-				}
-			}
-			val markBorderWidth by animateDpAsState(
-				targetValue = config.markBorderWidth
+			FlexSliderMarks(
+				value = value,
+				colorType = colorType,
+				marks = marks,
+				valueRange = valueRange,
+				config = config,
+				length = length,
+				thickness = thickness,
+				sliderThickness = sliderThickness,
+				isHorizontal = isHorizontal,
+				contentColor = contentColor
 			)
-			realMarks.forEach {
-				val offsetStart by remember(it.value, length, thickness, sliderThickness, markBorderWidth, valueRange) {
-					derivedStateOf {
-						(length - thickness) / valueRange.range * (it.value - valueRange.start) + thickness / 2 - markBorderWidth - sliderThickness / 2
-					}
-				}
-				val borderColor by animateColorAsState(
-					targetValue = if (it.value <= value) colorType.color else MaterialTheme.colorScheme.surfaceVariant.darkenWithColor
-				)
-				Box(
-					modifier = Modifier
-						.offset(
-							x = if (isHorizontal) offsetStart else Dp.Hairline,
-							y = if (!isHorizontal) offsetStart else Dp.Hairline
-						)
-						.size(sliderThickness + markBorderWidth * 2)
-						.border(
-							width = markBorderWidth,
-							color = borderColor,
-							shape = CircleShape
-						)
-						.background(
-							color = contentColor,
-							shape = CircleShape
-						)
-				)
-			}
 		}
 		
 		val thumbCorner by animateDpAsState(
@@ -327,8 +301,7 @@ fun FlexSlider(
 					isThumbFocused = isThumbFocused,
 					thumbOffsetStart = thumbOffsetStart,
 					thickness = thickness,
-					config = config,
-					tooltipPosition = tooltipPosition
+					config = config
 				)
 			}
 		}

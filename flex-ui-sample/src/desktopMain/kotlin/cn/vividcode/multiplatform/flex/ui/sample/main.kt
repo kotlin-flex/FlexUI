@@ -43,5 +43,3 @@ fun main() = application {
 		}
 	}
 }
-
-data class A(val x: Float, val y: Float)
