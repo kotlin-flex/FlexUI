@@ -23,7 +23,8 @@ class FlexButtonConfig internal constructor(
 
 internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 	
-	private const val ICON_SIZE_SCALE = 2f / 3f
+	private const val ICON_SIZE_SCALE = 2 / 3f
+	private const val FONT_SIZE_SCALE = 2 / 5f
 	
 	/**
 	 * 默认超小尺寸按钮配置
@@ -33,7 +34,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			height = 20.dp,
 			horizontalPadding = 6.dp,
 			borderWidth = 1.dp,
-			fontSize = 10.sp,
+			fontSize = 20.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 20.dp * ICON_SIZE_SCALE,
@@ -48,7 +49,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			height = 28.dp,
 			horizontalPadding = 8.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 14.sp,
+			fontSize = 28.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 28.dp * ICON_SIZE_SCALE,
@@ -63,7 +64,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			height = 36.dp,
 			horizontalPadding = 10.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 18.sp,
+			fontSize = 36.sp * FONT_SIZE_SCALE,
 			fontWeight = FontWeight.Medium,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 36.dp * ICON_SIZE_SCALE,
@@ -78,8 +79,8 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			height = 44.dp,
 			horizontalPadding = 12.dp,
 			borderWidth = 1.5.dp,
-			fontSize = 22.sp,
-			fontWeight = FontWeight.SemiBold,
+			fontSize = 44.sp * FONT_SIZE_SCALE,
+			fontWeight = FontWeight.Bold,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 44.dp * ICON_SIZE_SCALE,
 			iconInterval = 8.dp
@@ -93,8 +94,8 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			height = 52.dp,
 			horizontalPadding = 14.dp,
 			borderWidth = 2.dp,
-			fontSize = 26.sp,
-			fontWeight = FontWeight.SemiBold,
+			fontSize = 52.sp * FONT_SIZE_SCALE,
+			fontWeight = FontWeight.Bold,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 52.dp * ICON_SIZE_SCALE,
 			iconInterval = 10.dp

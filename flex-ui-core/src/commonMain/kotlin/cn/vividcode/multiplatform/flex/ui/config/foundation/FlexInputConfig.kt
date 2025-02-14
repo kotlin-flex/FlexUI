@@ -23,8 +23,8 @@ class FlexInputConfig internal constructor(
 
 internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig> {
 	
-	private const val ICON_SIZE_SCALE = 0.52f
-	private const val FONT_SIZE_SCALE = 0.4f
+	private const val ICON_SIZE_SCALE = 1 / 2f
+	private const val FONT_SIZE_SCALE = 2 / 5f
 	
 	/**
 	 * 默认超小尺寸输入框配置

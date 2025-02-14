@@ -21,7 +21,7 @@ class FlexRadioConfig internal constructor(
 
 internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 	
-	private const val FONT_SIZE_SCALE = 4 / 9f
+	private const val FONT_SIZE_SCALE = 2 / 5f
 	
 	/**
 	 * 默认超小尺寸单选框配置

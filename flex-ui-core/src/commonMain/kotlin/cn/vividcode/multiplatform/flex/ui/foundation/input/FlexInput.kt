@@ -230,7 +230,7 @@ private fun FlexInputDecorationBox(
 		targetValue = when {
 			isFocused -> colorType.color
 			inputType == FlexInputType.Default -> colorType.color.copy(alpha = 0f)
-			enabled -> colorType.color.copy(alpha = 0.7f)
+			enabled -> MaterialTheme.colorScheme.outlineVariant
 			else -> colorType.color.disabledWithColor
 		},
 	)

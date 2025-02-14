@@ -58,8 +58,8 @@ fun FlexButton(
 	cornerType: FlexCornerType = FlexButtonDefaults.DefaultCornerType,
 	buttonType: FlexButtonType = FlexButtonDefaults.DefaultButtonType,
 	iconPosition: FlexButtonIconPosition = FlexButtonDefaults.DefaultIconDirection,
-	iconRotation: Float = FlexButtonDefaults.DefaultIconRotation,
-	scaleEffect: Boolean = FlexButtonDefaults.DefaultScaleEffect,
+	iconRotation: Float = 0f,
+	scaleEffect: Boolean = false,
 	enabled: Boolean = true,
 	onClick: () -> Unit = {},
 ) {
@@ -298,7 +298,6 @@ private fun Modifier.backgroundBorderStyle(
 	}
 }
 
-@Suppress("ConstPropertyName")
 object FlexButtonDefaults : FlexDefaults() {
 	
 	override val FlexComposeDefaultConfig.defaultConfig
@@ -308,11 +307,9 @@ object FlexButtonDefaults : FlexDefaults() {
 		@Composable
 		get() = LocalFlexButtonType.current
 	
-	val DefaultIconDirection = FlexButtonIconPosition.End
-	
-	const val DefaultIconRotation = 0f
-	
-	const val DefaultScaleEffect = false
+	val DefaultIconDirection: FlexButtonIconPosition
+		@Composable
+		get() = LocalFlexButtonIconPosition.current
 }
 
 enum class FlexButtonIconPosition {
@@ -362,3 +359,5 @@ enum class FlexButtonType {
 }
 
 internal val LocalFlexButtonType = compositionLocalOf { FlexButtonType.Default }
+
+internal val LocalFlexButtonIconPosition = compositionLocalOf { FlexButtonIconPosition.End }

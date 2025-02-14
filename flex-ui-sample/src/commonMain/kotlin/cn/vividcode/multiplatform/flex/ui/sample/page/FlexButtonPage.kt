@@ -39,7 +39,7 @@ fun ColumnScope.FlexButtonPage() {
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var iconType by remember { mutableStateOf(IconType.None) }
 	var iconPosition by remember { mutableStateOf(FlexButtonIconPosition.End) }
-	var scaleEffect by remember { mutableStateOf(true) }
+	var scaleEffect by remember { mutableStateOf(false) }
 	var enabled by remember { mutableStateOf(true) }
 	Row(
 		modifier = Modifier
