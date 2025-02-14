@@ -24,9 +24,7 @@ sealed interface FlexSliderSteps {
 		 */
 		@Composable
 		fun rememberValuesSteps(vararg values: Float): FlexSliderSteps =
-			values.toSet().let {
-				remember(it) { FlexSliderValuesSteps(it) }
-			}
+			remember(values) { FlexSliderValuesSteps(values.toSet()) }
 		
 		/**
 		 * 根据值分配步幅
@@ -40,9 +38,7 @@ sealed interface FlexSliderSteps {
 		 */
 		@Composable
 		fun rememberPercentSteps(vararg percents: Float): FlexSliderSteps =
-			percents.toSet().let {
-				remember(it) { FlexSliderPercentSteps(it) }
-			}
+			remember(percents) { FlexSliderPercentSteps(percents.toSet()) }
 		
 		/**
 		 * 根据百分比分配步幅
@@ -58,7 +54,6 @@ private data class FlexSliderAverageSteps(
 ) : FlexSliderSteps {
 	
 	override fun calcStepValues(valueRange: FloatRange): List<Float> {
-		valueRange.start
 		val steps = valueRange.range / count
 		return (0 ..< count).map { valueRange.start + steps * it } + valueRange.endInclusive
 	}
@@ -69,7 +64,7 @@ private data class FlexSliderValuesSteps(
 ) : FlexSliderSteps {
 	
 	override fun calcStepValues(valueRange: FloatRange): List<Float> {
-		return (values + valueRange.start + valueRange.endInclusive).asSequence()
+		return (values + valueRange.start + valueRange.endInclusive)
 			.distinct()
 			.filter { it in valueRange }
 			.sorted()
@@ -82,11 +77,10 @@ private data class FlexSliderPercentSteps(
 ) : FlexSliderSteps {
 	
 	override fun calcStepValues(valueRange: FloatRange): List<Float> {
-		return (percents + 0f + 1f).asSequence()
+		return (percents + 0f + 1f)
 			.distinct()
 			.filter { it in 0f .. 1f }
 			.sorted()
 			.map { valueRange.range * it + valueRange.start }
-			.toList()
 	}
 }

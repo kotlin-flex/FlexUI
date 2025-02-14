@@ -41,14 +41,12 @@ internal val Color.lightenWithContent: Color
  * 颜色变深
  */
 internal val Color.darkenWithColor: Color
-	@Composable
 	get() = this.brightness(0.95f)
 
 /**
  * 颜色变浅
  */
 internal val Color.lightenWithColor: Color
-	@Composable
 	get() = this.brightness(1.05f)
 
 /**

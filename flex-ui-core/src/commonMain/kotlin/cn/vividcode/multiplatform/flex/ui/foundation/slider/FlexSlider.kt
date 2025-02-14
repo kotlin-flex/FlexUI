@@ -225,8 +225,7 @@ fun FlexSlider(
 				length = length,
 				thickness = thickness,
 				sliderThickness = sliderThickness,
-				isHorizontal = isHorizontal,
-				contentColor = contentColor
+				isHorizontal = isHorizontal
 			)
 		}
 		

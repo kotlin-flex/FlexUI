@@ -17,6 +17,9 @@ class FlexSliderConfig internal constructor(
 	var toolbarHeight: Dp,
 	var toolbarHorizontalPadding: Dp,
 	var markBorderWidth: Dp,
+	var markFontSize: TextUnit,
+	var markFontWeight: FontWeight,
+	var markInterval: Dp,
 )
 
 internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
@@ -24,6 +27,7 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 	private const val SLIDER_THICKNESS_SCALE = 2f / 7f
 	private const val THUMB_BORDER_WIDTH_SCALE = 1f / 7f
 	private const val MARK_BORDER_WIDTH_SCALE = 1f / 10f
+	private const val MARK_INTERVAL_SCALE = 1f / 3f
 	
 	/**
 	 * 默认超小尺寸按钮配置
@@ -34,11 +38,14 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 12.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 12.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 9.sp,
-			toolbarFontWeight = FontWeight.Medium,
+			toolbarFontWeight = FontWeight.Normal,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 20.dp,
 			toolbarHorizontalPadding = 4.dp,
 			markBorderWidth = 12.dp * MARK_BORDER_WIDTH_SCALE,
+			markFontSize = 9.sp,
+			markFontWeight = FontWeight.Normal,
+			markInterval = 12.dp * MARK_INTERVAL_SCALE
 		)
 	
 	/**
@@ -50,11 +57,14 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 15.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 15.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 12.sp,
-			toolbarFontWeight = FontWeight.Medium,
+			toolbarFontWeight = FontWeight.Normal,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 28.dp,
 			toolbarHorizontalPadding = 6.dp,
 			markBorderWidth = 15.dp * MARK_BORDER_WIDTH_SCALE,
+			markFontSize = 12.sp,
+			markFontWeight = FontWeight.Normal,
+			markInterval = 15.dp * MARK_INTERVAL_SCALE
 		)
 	
 	/**
@@ -66,11 +76,14 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 18.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 18.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 15.sp,
-			toolbarFontWeight = FontWeight.Medium,
+			toolbarFontWeight = FontWeight.Normal,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 36.dp,
 			toolbarHorizontalPadding = 8.dp,
 			markBorderWidth = 18.dp * MARK_BORDER_WIDTH_SCALE,
+			markFontSize = 15.sp,
+			markFontWeight = FontWeight.Normal,
+			markInterval = 18.dp * MARK_INTERVAL_SCALE
 		)
 	
 	/**
@@ -87,6 +100,9 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarHeight = 44.dp,
 			toolbarHorizontalPadding = 10.dp,
 			markBorderWidth = 21.dp * MARK_BORDER_WIDTH_SCALE,
+			markFontSize = 18.sp,
+			markFontWeight = FontWeight.Medium,
+			markInterval = 21.dp * MARK_INTERVAL_SCALE
 		)
 	
 	/**
@@ -103,5 +119,8 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarHeight = 52.dp,
 			toolbarHorizontalPadding = 12.dp,
 			markBorderWidth = 24.dp * MARK_BORDER_WIDTH_SCALE,
+			markFontSize = 21.sp,
+			markFontWeight = FontWeight.Medium,
+			markInterval = 24.dp * MARK_INTERVAL_SCALE
 		)
 }

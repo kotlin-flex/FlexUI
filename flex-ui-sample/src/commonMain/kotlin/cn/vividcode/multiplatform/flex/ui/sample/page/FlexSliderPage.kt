@@ -58,40 +58,30 @@ fun ColumnScope.FlexSliderPage() {
 				valueRange = 0f .. 100f,
 				steps = when (stepsType) {
 					FlexSliderStepsType.None -> null
-					FlexSliderStepsType.AverageStep -> FlexSliderSteps.rememberAverageSteps(100)
+					FlexSliderStepsType.AverageStep -> FlexSliderSteps.rememberAverageSteps(4)
 					FlexSliderStepsType.Values -> FlexSliderSteps.rememberValuesSteps(
-						values = (0 .. 100 step 20).map { it.toFloat() }.toSet()
+						values = (0 .. 100 step 25).map { it.toFloat() }.toSet()
 					)
 					
 					FlexSliderStepsType.Percents -> FlexSliderSteps.rememberPercentSteps(
-						percents = (0 .. 100 step 20).map { it / 100f }.toSet()
+						percents = (0 .. 100 step 25).map { it / 100f }.toSet()
 					)
 				},
 				marks = when (marksType) {
 					FlexSliderMarksType.None -> null
 					FlexSliderMarksType.Text -> FlexSliderMarks.rememberTextMarks(
-						0f to "0%",
-						50f to "50%",
-						100f to "100%",
+						(0 .. 100 step 25).associate { it.toFloat() to "$it%" }
 					)
 					
 					FlexSliderMarksType.Mark -> FlexSliderMarks.rememberMarks(
-						FlexSliderTextMark(
-							value = 0f,
-							text = "0%",
-							color = MaterialTheme.colorScheme.error,
-							weight = FontWeight.Bold
-						),
-						FlexSliderTextMark(
-							value = 50f,
-							text = "50%"
-						),
-						FlexSliderTextMark(
-							value = 100f,
-							text = "100%",
-							color = MaterialTheme.colorScheme.error,
-							weight = FontWeight.Bold
-						)
+						(0 .. 100 step 25).map {
+							FlexSliderMark(
+								value = it.toFloat(),
+								text = "$it%",
+								color = if (it == 0 || it == 100) MaterialTheme.colorScheme.error else null,
+								weight = if (it == 0 || it == 100) FontWeight.Medium else null,
+							)
+						}
 					)
 				},
 				tooltipFormatter = if (showTooltip) {
@@ -104,38 +94,37 @@ fun ColumnScope.FlexSliderPage() {
 			derivedStateOf {
 				val stepsCode = when (stepsType) {
 					FlexSliderStepsType.None -> "null"
-					FlexSliderStepsType.AverageStep -> "FlexSliderSteps.rememberAverageSteps(100)"
-					FlexSliderStepsType.Values -> "FlexSliderSteps.rememberValuesSteps(0f, 20f, 40f, 60f, 80f, 100f)"
-					FlexSliderStepsType.Percents -> "FlexSliderSteps.rememberPercentSteps(0f, 0.2f, 0.4f, 0.6f, 0.8f 1f)"
+					FlexSliderStepsType.AverageStep -> "FlexSliderSteps.rememberAverageSteps(4)"
+					FlexSliderStepsType.Values -> """
+						FlexSliderSteps.rememberValuesSteps(
+							values = (0 .. 100 step 25).map { it.toFloat() }.toSet()
+						)
+					""".trim()
+					
+					FlexSliderStepsType.Percents -> """
+						FlexSliderSteps.rememberPercentSteps(
+							percents = (0 .. 100 step 25).map { it / 100f }.toSet()
+						)
+					""".trim()
 				}
 				val marksCode = when (marksType) {
 					FlexSliderMarksType.None -> "null"
 					FlexSliderMarksType.Text -> """
 						FlexSliderMarks.rememberTextMarks(
-							0f to "0%",
-							50f to "50%",
-							100f to "100%"
+							(0 .. 100 step 25).associate { it.toFloat() to "${'$'}it%" }
 						)
 					""".trim()
 					
 					FlexSliderMarksType.Mark -> """
 						FlexSliderMarks.rememberMarks(
-							FlexSliderMark(
-								value = 0f,
-								text = "0%",
-								color = MaterialTheme.colorScheme.error,
-								weight = FontWeight.Bold
-							),
-							FlexSliderMark(
-								value = 50f,
-								text = "50%"
-							),
-							FlexSliderMark(
-								value = 100f,
-								text = "100%",
-								color = MaterialTheme.colorScheme.error,
-								weight = FontWeight.Bold
-							)
+							(0 .. 100 step 25).map {
+								FlexSliderMark(
+									value = it.toFloat(),
+									text = "${'$'}it%",
+									color = if (it == 0 || it == 100) MaterialTheme.colorScheme.error else null,
+									weight = if (it == 0 || it == 100) FontWeight.Medium else null,
+								)
+							}
 						)
 					""".trim()
 				}
