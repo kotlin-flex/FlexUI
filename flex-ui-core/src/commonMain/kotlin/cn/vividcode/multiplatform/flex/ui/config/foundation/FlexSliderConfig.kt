@@ -16,12 +16,14 @@ class FlexSliderConfig internal constructor(
 	var toolbarFontLetterSpacing: TextUnit,
 	var toolbarHeight: Dp,
 	var toolbarHorizontalPadding: Dp,
+	var markBorderWidth: Dp,
 )
 
 internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 	
-	private const val SLIDER_THICKNESS_SCALE = 1f / 3f
+	private const val SLIDER_THICKNESS_SCALE = 2f / 7f
 	private const val THUMB_BORDER_WIDTH_SCALE = 1f / 7f
+	private const val MARK_BORDER_WIDTH_SCALE = 1f / 10f
 	
 	/**
 	 * 默认超小尺寸按钮配置
@@ -35,7 +37,8 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 20.dp,
-			toolbarHorizontalPadding = 4.dp
+			toolbarHorizontalPadding = 4.dp,
+			markBorderWidth = 12.dp * MARK_BORDER_WIDTH_SCALE,
 		)
 	
 	/**
@@ -50,7 +53,8 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 28.dp,
-			toolbarHorizontalPadding = 6.dp
+			toolbarHorizontalPadding = 6.dp,
+			markBorderWidth = 15.dp * MARK_BORDER_WIDTH_SCALE,
 		)
 	
 	/**
@@ -65,7 +69,8 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 36.dp,
-			toolbarHorizontalPadding = 8.dp
+			toolbarHorizontalPadding = 8.dp,
+			markBorderWidth = 18.dp * MARK_BORDER_WIDTH_SCALE,
 		)
 	
 	/**
@@ -80,7 +85,8 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 44.dp,
-			toolbarHorizontalPadding = 10.dp
+			toolbarHorizontalPadding = 10.dp,
+			markBorderWidth = 21.dp * MARK_BORDER_WIDTH_SCALE,
 		)
 	
 	/**
@@ -95,6 +101,7 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarFontWeight = FontWeight.Medium,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
 			toolbarHeight = 52.dp,
-			toolbarHorizontalPadding = 12.dp
+			toolbarHorizontalPadding = 12.dp,
+			markBorderWidth = 24.dp * MARK_BORDER_WIDTH_SCALE,
 		)
 }

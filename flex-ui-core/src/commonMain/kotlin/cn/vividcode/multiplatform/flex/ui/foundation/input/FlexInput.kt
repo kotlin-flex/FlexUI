@@ -204,7 +204,7 @@ private fun FlexInputDecorationBox(
 		targetValue = if (isFocused) colorType.color else colorType.color.copy(alpha = 0f),
 	)
 	val backgroundColor by animateColorAsState(
-		targetValue = if (isFocused) Color.Gray.copy(alpha = 0f) else Color.Gray.copy(alpha = 0.15f),
+		targetValue = Color.Gray.copy(alpha = if (isFocused) 0f else 0.15f)
 	)
 	val interval by animateDpAsState(config.horizontalPadding / 2)
 	Row(

@@ -5,7 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import cn.vividcode.multiplatform.flex.ui.config.FlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.config.flexConfig
+import cn.vividcode.multiplatform.flex.ui.config.rememberFlexConfig
 
 @Composable
 fun FlexTheme(
@@ -13,7 +13,7 @@ fun FlexTheme(
 	colorSchemes: ColorSchemes = DefaultColorSchemes,
 	shapes: Shapes = MaterialTheme.shapes,
 	typography: Typography = MaterialTheme.typography,
-	flexConfig: FlexConfig = flexConfig(),
+	flexConfig: FlexConfig = rememberFlexConfig(),
 	content: @Composable () -> Unit,
 ) {
 	LaunchedEffect(darkTheme) {

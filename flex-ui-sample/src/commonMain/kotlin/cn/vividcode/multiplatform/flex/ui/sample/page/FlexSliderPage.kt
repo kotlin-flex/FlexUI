@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
@@ -15,10 +17,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
-import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
-import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderDirection
-import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderSteps
-import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderTooltipPosition
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.*
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
@@ -34,6 +33,7 @@ fun ColumnScope.FlexSliderPage() {
 	var cornerType by remember { mutableStateOf(FlexCornerType.Circle) }
 	var direction by remember { mutableStateOf(FlexSliderDirection.Horizontal) }
 	var stepsType by remember { mutableStateOf(FlexSliderStepsType.None) }
+	var marksType by remember { mutableStateOf(FlexSliderMarksType.None) }
 	var showTooltip by remember { mutableStateOf(false) }
 	var tooltipPosition by remember { mutableStateOf(FlexSliderTooltipPosition.TopSide) }
 	Row(
@@ -56,13 +56,44 @@ fun ColumnScope.FlexSliderPage() {
 				colorType = colorType,
 				cornerType = cornerType,
 				direction = direction,
-				minValue = 0f,
-				maxValue = 100f,
+				valueRange = 0f .. 100f,
 				steps = when (stepsType) {
 					FlexSliderStepsType.None -> null
-					FlexSliderStepsType.AverageStep -> FlexSliderSteps.averageSteps(10)
-					FlexSliderStepsType.Values -> FlexSliderSteps.valuesSteps(10f, 20f, 50f, 70f)
-					FlexSliderStepsType.Percents -> FlexSliderSteps.percentSteps(0.1f, 0.2f, 0.5f, 0.7f)
+					FlexSliderStepsType.AverageStep -> FlexSliderSteps.rememberAverageSteps(100)
+					FlexSliderStepsType.Values -> FlexSliderSteps.rememberValuesSteps(
+						values = (0 .. 100 step 20).map { it.toFloat() }.toSet()
+					)
+					
+					FlexSliderStepsType.Percents -> FlexSliderSteps.rememberPercentSteps(
+						percents = (0 .. 100 step 20).map { it / 100f }.toSet()
+					)
+				},
+				marks = when (marksType) {
+					FlexSliderMarksType.None -> null
+					FlexSliderMarksType.Text -> FlexSliderMarks.rememberTextMarks(
+						0f to "0%",
+						50f to "50%",
+						100f to "100%",
+					)
+					
+					FlexSliderMarksType.Mark -> FlexSliderMarks.rememberMarks(
+						FlexSliderMark(
+							value = 0f,
+							text = "0%",
+							color = MaterialTheme.colorScheme.error,
+							weight = FontWeight.Bold
+						),
+						FlexSliderMark(
+							value = 50f,
+							text = "50%"
+						),
+						FlexSliderMark(
+							value = 100f,
+							text = "100%",
+							color = MaterialTheme.colorScheme.error,
+							weight = FontWeight.Bold
+						)
+					)
 				},
 				tooltipPosition = tooltipPosition,
 				tooltipFormatter = if (showTooltip) {
@@ -71,21 +102,69 @@ fun ColumnScope.FlexSliderPage() {
 			)
 		}
 		Spacer(Modifier.width(12.dp))
-		val code = """
-			var value by remember { mutableIntStateOf(0) }
-			FlexSlider(
-				value = value,
-				onValueChange = { value = it },
-				sizeType = FlexSizeType.$sizeType,
-				colorType = FlexColorType.$colorType,
-				cornerType = FlexCornerType.$cornerType,
-				direction = FlexSliderDirection.$direction,
-				minValue = 0f,
-				maxValue = 100f,
-				steps = FlexSliderSteps.averageSteps(20),
-				tooltipPosition = FlexSliderTooltipPosition.$tooltipPosition
-			)
-		""".trimIndent()
+		val code by remember(sizeType, colorType, cornerType, direction, stepsType, tooltipPosition, showTooltip) {
+			derivedStateOf {
+				val stepsCode = when (stepsType) {
+					FlexSliderStepsType.None -> "null"
+					FlexSliderStepsType.AverageStep -> "FlexSliderSteps.rememberAverageSteps(100)"
+					FlexSliderStepsType.Values -> "FlexSliderSteps.rememberValuesSteps(0f, 20f, 40f, 60f, 80f, 100f)"
+					FlexSliderStepsType.Percents -> "FlexSliderSteps.rememberPercentSteps(0f, 0.2f, 0.4f, 0.6f, 0.8f 1f)"
+				}
+				val marksCode = when (marksType) {
+					FlexSliderMarksType.None -> "null"
+					FlexSliderMarksType.Text -> """
+						FlexSliderMarks.rememberTextMarks(
+							0f to "0%",
+							50f to "50%",
+							100f to "100%"
+						)
+					""".trim()
+					
+					FlexSliderMarksType.Mark -> """
+						FlexSliderMarks.rememberMarks(
+							FlexSliderMark(
+								value = 0f,
+								text = "0%",
+								color = MaterialTheme.colorScheme.error,
+								weight = FontWeight.Bold
+							),
+							FlexSliderMark(
+								value = 50f,
+								text = "50%"
+							),
+							FlexSliderMark(
+								value = 100f,
+								text = "100%",
+								color = MaterialTheme.colorScheme.error,
+								weight = FontWeight.Bold
+							)
+						)
+					""".trim()
+				}
+				
+				val tooltipFormatterCode = when (showTooltip) {
+					true -> "{ floor(it * 10) / 10 }"
+					false -> "null"
+				}
+				
+				"""
+					var value by remember { mutableIntStateOf(0) }
+					FlexSlider(
+						value = value,
+						onValueChange = { value = it },
+						sizeType = FlexSizeType.$sizeType,
+						colorType = FlexColorType.$colorType,
+						cornerType = FlexCornerType.$cornerType,
+						direction = FlexSliderDirection.$direction,
+						valueRange = 0f .. 100f,
+						steps = $stepsCode,
+						marks = $marksCode,
+						tooltipPosition = FlexSliderTooltipPosition.$tooltipPosition,
+						tooltipFormatter = $tooltipFormatterCode
+					)
+				""".trimIndent()
+			}
+		}
 		Code(code)
 	}
 	HorizontalDivider()
@@ -165,6 +244,19 @@ fun ColumnScope.FlexSliderPage() {
 		}
 		Spacer(modifier = Modifier.height(12.dp))
 		TitleLayout(
+			title = "Marks Type"
+		) {
+			FlexRadio(
+				selectedKey = marksType,
+				onSelectedKeyChange = { marksType = it },
+				options = FlexSliderMarksType.entries.toRadioOptions(),
+				sizeType = FlexSizeType.Small,
+				radioType = FlexRadioType.Button,
+				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
 			title = "Show Tooltip"
 		) {
 			FlexSwitch(
@@ -198,4 +290,13 @@ private enum class FlexSliderStepsType {
 	Values,
 	
 	Percents
+}
+
+private enum class FlexSliderMarksType {
+	
+	None,
+	
+	Text,
+	
+	Mark
 }

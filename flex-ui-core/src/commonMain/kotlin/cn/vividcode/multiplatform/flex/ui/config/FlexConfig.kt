@@ -1,14 +1,20 @@
 package cn.vividcode.multiplatform.flex.ui.config
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import cn.vividcode.multiplatform.flex.ui.config.foundation.*
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexComposeDefaultConfig
 
 /**
  * Flex 配置
  */
-fun flexConfig(config: (FlexConfig.() -> Unit)? = null) = FlexConfig().also {
-	config?.invoke(it)
-}
+fun flexConfig(config: (FlexConfig.() -> Unit)? = null): FlexConfig =
+	FlexConfig().also { config?.invoke(it) }
+
+@Composable
+fun rememberFlexConfig(config: (FlexConfig.() -> Unit)? = null): FlexConfig =
+	remember(config) { flexConfig(config) }
+
 
 class FlexConfig internal constructor() {
 	
