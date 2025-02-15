@@ -173,14 +173,6 @@ object FlexInputDefaults : FlexDefaults() {
 	val DefaultInputType: FlexInputType
 		@Composable
 		get() = LocalFlexInput.current
-	
-	fun icon(
-		icon: ImageVector,
-		tint: Color = Color.Unspecified,
-		rotate: Float = 0f,
-		size: Dp = Dp.Unspecified,
-		onClick: (() -> Unit)? = null,
-	) = FlexInputIcon(icon, tint, rotate, size, onClick)
 }
 
 enum class FlexInputType {
@@ -370,3 +362,14 @@ class FlexInputIcon internal constructor(
 	val size: Dp,
 	val onClick: (() -> Unit)?,
 )
+
+object FlexInputIcons {
+	
+	fun icon(
+		icon: ImageVector,
+		tint: Color = Color.Unspecified,
+		rotate: Float = 0f,
+		size: Dp = Dp.Unspecified,
+		onClick: (() -> Unit)? = null,
+	) = FlexInputIcon(icon, tint, rotate, size, onClick)
+}

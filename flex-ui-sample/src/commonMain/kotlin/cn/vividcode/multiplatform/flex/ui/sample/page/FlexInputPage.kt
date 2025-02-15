@@ -18,7 +18,7 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
-import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputDefaults
+import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputIcons
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
@@ -89,10 +89,10 @@ fun ColumnScope.FlexInputPage() {
 						enabled = enabled,
 						readOnly = readOnly,
 						placeholder = { Text("Input Password") },
-						leadingIcon = FlexInputDefaults.icon(
+						leadingIcon = FlexInputIcons.icon(
 							icon = Icons.Rounded.Lock
 						),
-						trailingIcon = FlexInputDefaults.icon(
+						trailingIcon = FlexInputIcons.icon(
 							icon = when (visualTransformation == VisualTransformation.None) {
 								true -> Icons.Rounded.Visibility
 								false -> Icons.Rounded.VisibilityOff
@@ -123,10 +123,10 @@ fun ColumnScope.FlexInputPage() {
 						enabled = enabled,
 						readOnly = readOnly,
 						placeholder = { Text("Search Text") },
-						leadingIcon = FlexInputDefaults.icon(
+						leadingIcon = FlexInputIcons.icon(
 							icon = Icons.Rounded.Search
 						),
-						trailingIcon = if (isEmpty) null else FlexInputDefaults.icon(
+						trailingIcon = if (isEmpty) null else FlexInputIcons.icon(
 							icon = Icons.Rounded.Cancel,
 							tint = Color.Gray,
 							onClick = {
@@ -176,10 +176,10 @@ fun ColumnScope.FlexInputPage() {
 								enabled = $enabled,
 								readOnly = $readOnly,
 								placeholder = { Text("Input Password") },
-								leadingIcon = FlexInputs.icon(
+								leadingIcon = FlexInputIcons.icon(
 									icon = Icons.Rounded.Lock
 								),
-								trailingIcon = FlexInputs.icon(
+								trailingIcon = FlexInputIcons.icon(
 									icon = when (visualTransformation == VisualTransformation.None) {
 										true -> Icons.Rounded.Visibility
 										false -> Icons.Rounded.VisibilityOff
@@ -212,10 +212,10 @@ fun ColumnScope.FlexInputPage() {
 								enabled = $enabled,
 								readOnly = $readOnly,
 								placeholder = { Text("Search Text") },
-								leadingIcon = FlexInputs.icon(
+								leadingIcon = FlexInputIcons.icon(
 									icon = Icons.Rounded.Search
 								),
-								trailingIcon = if (isEmpty) null else FlexInputs.icon(
+								trailingIcon = if (isEmpty) null else FlexInputIcons.icon(
 									icon = Icons.Rounded.Cancel,
 									tint = Color.Gray,
 									onClick = { value = "" }

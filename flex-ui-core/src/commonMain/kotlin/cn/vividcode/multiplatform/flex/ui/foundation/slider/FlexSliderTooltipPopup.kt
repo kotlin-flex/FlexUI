@@ -14,8 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -81,6 +82,7 @@ internal fun FlexSliderTooltipPopup(
 		var targetScale by remember { mutableStateOf(1f) }
 		val alpha by animateFloatAsState(
 			targetValue = targetAlpha,
+			animationSpec = config.toolbarAnimationSpec,
 			finishedListener = {
 				if (it == 0f) {
 					targetScale = 0f
@@ -88,7 +90,8 @@ internal fun FlexSliderTooltipPopup(
 			}
 		)
 		val scale by animateFloatAsState(
-			targetValue = targetScale
+			targetValue = targetScale,
+			animationSpec = config.toolbarAnimationSpec
 		)
 		LaunchedEffect(isThumbFocused) {
 			targetAlpha = if (isThumbFocused) 1f else 0f
@@ -98,7 +101,11 @@ internal fun FlexSliderTooltipPopup(
 			Column(
 				modifier = Modifier
 					.alpha(alpha)
-					.scale(scale)
+					.graphicsLayer {
+						scaleX = scale
+						scaleY = scale
+						transformOrigin = TransformOrigin(0.5f, 1f)
+					}
 					.onGloballyPositioned {
 						size = it.size
 					},

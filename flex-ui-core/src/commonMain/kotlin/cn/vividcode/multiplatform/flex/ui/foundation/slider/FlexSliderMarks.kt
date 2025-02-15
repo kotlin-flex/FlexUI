@@ -1,8 +1,6 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.slider
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -10,20 +8,14 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.expends.darkenWithColor
@@ -125,7 +117,6 @@ internal fun FlexSliderMarks(
 	val markBorderWidth by animateDpAsState(
 		targetValue = config.markBorderWidth
 	)
-	val density = LocalDensity.current
 	filterMarks.forEach {
 		val offsetStart by remember(it.value, length, thickness, sliderThickness, markBorderWidth, valueRange) {
 			derivedStateOf {
@@ -157,48 +148,5 @@ internal fun FlexSliderMarks(
 					shape = shape
 				)
 		)
-		if (it.text != null) {
-			var size by remember { mutableStateOf(IntSize.Zero) }
-			val textOffsetStartPx by remember(offsetStart, length, sliderThickness, markBorderWidth, config.thickness) {
-				derivedStateOf {
-					with(density) {
-						if (isHorizontal) {
-							IntOffset(
-								x = (offsetStart + sliderThickness / 2 + markBorderWidth).roundToPx() - size.width / 2,
-								y = (config.thickness + config.markInterval).roundToPx()
-							)
-						} else {
-							IntOffset(
-								x = -size.width - config.markInterval.roundToPx(),
-								y = (offsetStart + sliderThickness / 2 + markBorderWidth).roundToPx() - size.height / 2,
-							)
-						}
-					}
-				}
-			}
-			val color by animateColorAsState(
-				targetValue = it.color ?: colorType.color
-			)
-			val markFontSize by animateFloatAsState(
-				targetValue = config.markFontSize.value
-			)
-			Popup(
-				alignment = Alignment.TopStart,
-				offset = textOffsetStartPx
-			) {
-				Text(
-					text = it.text,
-					modifier = Modifier
-						.onGloballyPositioned {
-							size = it.size
-						}
-						.alpha(if (size == IntSize.Zero) 0f else 1f),
-					color = color,
-					fontWeight = it.weight ?: config.markFontWeight,
-					fontSize = markFontSize.sp,
-					lineHeight = markFontSize.sp
-				)
-			}
-		}
 	}
 }

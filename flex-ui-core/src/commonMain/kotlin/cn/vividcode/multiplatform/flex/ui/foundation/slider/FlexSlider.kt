@@ -14,16 +14,20 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
 import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
@@ -61,254 +65,373 @@ fun FlexSlider(
 	tooltipFormatter: ((Float) -> Any?)? = null,
 ) {
 	val config = LocalFlexConfig.current.slider.getConfig(sizeType)
-	var length by remember { mutableStateOf(Dp.Unspecified) }
-	val thickness by animateDpAsState(config.thickness)
-	val density = LocalDensity.current
 	val isHorizontal by remember(direction) {
 		derivedStateOf { direction == FlexSliderDirection.Horizontal }
 	}
-	val stepValues by remember(steps, valueRange) {
-		derivedStateOf { steps?.calcStepValues(valueRange) }
-	}
-	
-	var offsetX by remember { mutableStateOf(Dp.Unspecified) }
-	LaunchedEffect(offsetX, value, length, valueRange, stepValues, thickness) {
-		if (length == Dp.Unspecified || offsetX == Dp.Unspecified) return@LaunchedEffect
-		var value = (offsetX - thickness / 2) / (length - thickness) * valueRange.range + valueRange.start
-		value = value.coerceIn(valueRange)
-		stepValues?.also { values ->
-			for (i in 1 ..< values.size) {
-				if (value <= values[i]) {
-					val leftDistance = value - values[i - 1]
-					val rightDistance = values[i] - value
-					value += if (leftDistance > rightDistance) rightDistance else -leftDistance
-					break
-				}
-			}
-		}
-		onValueChange(value)
-	}
-	
-	val interactionSource = remember { MutableInteractionSource() }
-	var isDragging by remember { mutableStateOf(false) }
-	var isTap by remember { mutableStateOf(false) }
-	Box(
-		modifier = modifier
-			.then(
-				if (isHorizontal) {
-					Modifier
-						.fillMaxWidth()
-						.height(thickness)
-				} else {
-					Modifier
-						.width(thickness)
-						.fillMaxHeight()
-				}
-			)
-			.onGloballyPositioned {
-				length = with(density) {
-					if (isHorizontal) it.size.width.toDp() else it.size.height.toDp()
-				}
-			}
-			.pointerInput(isHorizontal, enabled) {
-				if (!enabled) return@pointerInput
-				detectDragGestures(
-					onDrag = { change, dragAmount ->
-						change.consume()
-						offsetX += with(density) {
-							if (isHorizontal) dragAmount.x.toDp() else dragAmount.y.toDp()
-						}
-					},
-					onDragEnd = {
-						isDragging = false
-					}
-				)
-			}
-			.pointerInput(isHorizontal, enabled) {
-				if (!enabled) return@pointerInput
-				detectTapGestures(
-					onPress = {
-						isDragging = true
-						offsetX = with(density) {
-							if (isHorizontal) it.x.toDp() else it.y.toDp()
-						}
-					},
-					onTap = {
-						isTap = true
-					}
-				)
-			}
-			.hoverable(
-				interactionSource = interactionSource
-			),
-		contentAlignment = if (isHorizontal) Alignment.CenterStart else Alignment.TopCenter
+	FlexSliderLayout(
+		modifier = modifier,
+		isHorizontal = isHorizontal
 	) {
+		var length by remember { mutableStateOf(Dp.Unspecified) }
 		val thickness by animateDpAsState(config.thickness)
-		val sliderThickness by animateDpAsState(config.sliderThickness)
+		val density = LocalDensity.current
+		val stepValues by remember(steps, valueRange) {
+			derivedStateOf { steps?.calcStepValues(valueRange) }
+		}
 		
-		val percent by animateIntAsState((cornerType.scale * 100).toInt())
-		val shape by remember(percent) {
-			derivedStateOf { RoundedCornerShape(percent) }
-		}
-		val padding by remember(thickness, sliderThickness) {
-			derivedStateOf { thickness / 2 - sliderThickness / 2 }
-		}
-		val sliderColor by animateColorAsState(
-			targetValue = when (enabled) {
-				true -> MaterialTheme.colorScheme.surfaceVariant
-				false -> MaterialTheme.colorScheme.surfaceVariant.disabledWithColor
+		var offsetX by remember { mutableStateOf(Dp.Unspecified) }
+		LaunchedEffect(offsetX, value, length, valueRange, stepValues, thickness) {
+			if (length == Dp.Unspecified || offsetX == Dp.Unspecified) return@LaunchedEffect
+			var value = (offsetX - thickness / 2) / (length - thickness) * valueRange.range + valueRange.start
+			value = value.coerceIn(valueRange)
+			stepValues?.also { values ->
+				for (i in 1 ..< values.size) {
+					if (value <= values[i]) {
+						val leftDistance = value - values[i - 1]
+						val rightDistance = values[i] - value
+						value += if (leftDistance > rightDistance) rightDistance else -leftDistance
+						break
+					}
+				}
 			}
-		)
+			onValueChange(value)
+		}
+		
+		val interactionSource = remember { MutableInteractionSource() }
+		var isDragging by remember { mutableStateOf(false) }
+		var isTap by remember { mutableStateOf(false) }
+		
+		val showVerticalTextMarks by remember(marks, length, isHorizontal) {
+			derivedStateOf { marks != null && length != Dp.Unspecified && !isHorizontal }
+		}
+		if (showVerticalTextMarks) {
+			FlexSliderTextMarks(
+				config = config,
+				isHorizontal = isHorizontal,
+				valueRange = valueRange,
+				marks = marks!!,
+				colorType = colorType,
+				length = length,
+			)
+			Spacer(modifier = Modifier.width(config.markInterval))
+		}
+		
 		Box(
 			modifier = Modifier
 				.then(
 					if (isHorizontal) {
 						Modifier
 							.fillMaxWidth()
-							.height(sliderThickness)
-							.padding(horizontal = padding)
+							.height(thickness)
 					} else {
 						Modifier
-							.width(sliderThickness)
+							.width(thickness)
 							.fillMaxHeight()
-							.padding(vertical = padding)
 					}
 				)
-				.clip(shape)
-				.background(
-					color = sliderColor,
-					shape = shape
-				)
-		)
-		val thumbOffsetStart by remember(value, length, config.thickness, valueRange) {
-			derivedStateOf {
-				if (length == Dp.Unspecified) return@derivedStateOf Dp.Hairline
-				var value = value.coerceIn(valueRange)
-				(length - config.thickness) / valueRange.range * (value - valueRange.start)
+				.onGloballyPositioned {
+					length = with(density) {
+						if (isHorizontal) it.size.width.toDp() else it.size.height.toDp()
+					}
+				}
+				.pointerInput(isHorizontal, enabled) {
+					if (!enabled) return@pointerInput
+					detectDragGestures(
+						onDrag = { change, dragAmount ->
+							change.consume()
+							offsetX += with(density) {
+								if (isHorizontal) dragAmount.x.toDp() else dragAmount.y.toDp()
+							}
+						},
+						onDragEnd = {
+							isDragging = false
+						}
+					)
+				}
+				.pointerInput(isHorizontal, enabled) {
+					if (!enabled) return@pointerInput
+					detectTapGestures(
+						onPress = {
+							isDragging = true
+							offsetX = with(density) {
+								if (isHorizontal) it.x.toDp() else it.y.toDp()
+							}
+						},
+						onTap = {
+							isTap = true
+						}
+					)
+				}
+				.hoverable(
+					interactionSource = interactionSource
+				),
+			contentAlignment = if (isHorizontal) Alignment.CenterStart else Alignment.TopCenter
+		) {
+			val thickness by animateDpAsState(config.thickness)
+			val sliderThickness by animateDpAsState(config.sliderThickness)
+			
+			val percent by animateIntAsState((cornerType.scale * 100).toInt())
+			val shape by remember(percent) {
+				derivedStateOf { RoundedCornerShape(percent) }
 			}
-		}
-		val isHovered by interactionSource.collectIsHoveredAsState()
-		val isFocused by remember(isHovered, isDragging) {
-			derivedStateOf { isHovered || isDragging }
-		}
-		val thumbColor by animateColorAsState(
-			targetValue = run {
-				val color = colorType.color
-				when {
-					!enabled -> color.disabledWithColor
-					isFocused -> color
-					else -> color.copy(alpha = 0.75f)
+			val padding by remember(thickness, sliderThickness) {
+				derivedStateOf { thickness / 2 - sliderThickness / 2 }
+			}
+			val sliderColor by animateColorAsState(
+				targetValue = when (enabled) {
+					true -> MaterialTheme.colorScheme.surfaceVariant
+					false -> MaterialTheme.colorScheme.surfaceVariant.disabledWithColor
+				}
+			)
+			Box(
+				modifier = Modifier
+					.then(
+						if (isHorizontal) {
+							Modifier
+								.fillMaxWidth()
+								.height(sliderThickness)
+								.padding(horizontal = padding)
+						} else {
+							Modifier
+								.width(sliderThickness)
+								.fillMaxHeight()
+								.padding(vertical = padding)
+						}
+					)
+					.clip(shape)
+					.background(
+						color = sliderColor,
+						shape = shape
+					)
+			)
+			val thumbOffsetStart by remember(value, length, config.thickness, valueRange) {
+				derivedStateOf {
+					if (length == Dp.Unspecified) return@derivedStateOf Dp.Hairline
+					var value = value.coerceIn(valueRange)
+					(length - config.thickness) / valueRange.range * (value - valueRange.start)
 				}
 			}
-		)
-		val contentColor by animateColorAsState(
-			targetValue = run {
-				val color = colorType.contentColor
-				if (enabled) color else color.lightenWithContent
+			val isHovered by interactionSource.collectIsHoveredAsState()
+			val isFocused by remember(isHovered, isDragging) {
+				derivedStateOf { isHovered || isDragging }
 			}
-		)
-		Box(
-			modifier = Modifier
-				.size(
-					width = if (isHorizontal) thumbOffsetStart + config.thickness else sliderThickness,
-					height = if (!isHorizontal) thumbOffsetStart + config.thickness else sliderThickness
-				)
-				.padding(
-					horizontal = if (isHorizontal) padding else Dp.Hairline,
-					vertical = if (!isHorizontal) padding else Dp.Hairline
-				)
-				.clip(shape)
-				.background(
-					color = thumbColor,
+			val thumbColor by animateColorAsState(
+				targetValue = run {
+					val color = colorType.color
+					when {
+						!enabled -> color.disabledWithColor
+						isFocused -> color
+						else -> color.copy(alpha = 0.75f)
+					}
+				}
+			)
+			val contentColor by animateColorAsState(
+				targetValue = run {
+					val color = colorType.contentColor
+					if (enabled) color else color.lightenWithContent
+				}
+			)
+			Box(
+				modifier = Modifier
+					.size(
+						width = if (isHorizontal) thumbOffsetStart + config.thickness else sliderThickness,
+						height = if (!isHorizontal) thumbOffsetStart + config.thickness else sliderThickness
+					)
+					.padding(
+						horizontal = if (isHorizontal) padding else Dp.Hairline,
+						vertical = if (!isHorizontal) padding else Dp.Hairline
+					)
+					.clip(shape)
+					.background(
+						color = thumbColor,
+						shape = shape
+					)
+			)
+			
+			if (marks != null && length != Dp.Unspecified) {
+				FlexSliderMarks(
+					value = value,
+					colorType = colorType,
+					marks = marks,
+					valueRange = valueRange,
+					config = config,
+					length = length,
+					thickness = thickness,
+					sliderThickness = sliderThickness,
+					isHorizontal = isHorizontal,
+					isFocused = isFocused,
 					shape = shape
 				)
-		)
+			}
+			
+			val thumbInteractionSource = remember { MutableInteractionSource() }
+			val isThumbHovered by thumbInteractionSource.collectIsHoveredAsState()
+			LaunchedEffect(isTap, isThumbHovered) {
+				if (isTap && isThumbHovered) {
+					isTap = false
+					isDragging = false
+				}
+			}
+			val isThumbFocused by remember(isThumbHovered, isDragging) {
+				derivedStateOf { isThumbHovered || isDragging }
+			}
+			val scale by animateFloatAsState(
+				targetValue = if (isThumbFocused && enabled) 1.2f else 1f
+			)
+			val thumbBorderWidth by animateDpAsState(
+				targetValue = if (isThumbFocused) config.thumbBorderWidth * 1.1f else config.thumbBorderWidth
+			)
+			val borderColor by animateColorAsState(
+				targetValue = run {
+					val color = colorType.color
+					when {
+						!enabled -> color.disabledWithColor
+						isThumbFocused -> color.lightenWithColor
+						isFocused -> color
+						else -> color.copy(alpha = 0.8f)
+					}
+				}
+			)
+			Box(
+				modifier = Modifier
+					.offset(
+						x = if (isHorizontal) thumbOffsetStart else Dp.Hairline,
+						y = if (!isHorizontal) thumbOffsetStart else Dp.Hairline
+					)
+					.scale(scale)
+					.size(thickness)
+					.clip(shape)
+					.border(
+						width = thumbBorderWidth,
+						color = borderColor,
+						shape = shape
+					)
+					.background(
+						color = contentColor,
+						shape = shape
+					)
+					.hoverable(
+						interactionSource = thumbInteractionSource
+					)
+			)
+			
+			if (tooltipFormatter != null && enabled) {
+				val tooltipText by remember(value, tooltipFormatter) {
+					derivedStateOf {
+						tooltipFormatter.invoke(value)?.toString()
+					}
+				}
+				if (tooltipText != null) {
+					FlexSliderTooltipPopup(
+						tooltipText = tooltipText!!,
+						colorType = colorType,
+						cornerType = cornerType,
+						isHorizontal = isHorizontal,
+						isThumbFocused = isThumbFocused,
+						thumbOffsetStart = thumbOffsetStart,
+						thickness = thickness,
+						config = config
+					)
+				}
+			}
+		}
 		
-		if (marks != null && length != Dp.Unspecified) {
-			FlexSliderMarks(
-				value = value,
-				colorType = colorType,
-				marks = marks,
-				valueRange = valueRange,
+		val showHorizontalTextMarks by remember(marks, length, isHorizontal) {
+			derivedStateOf { marks != null && length != Dp.Unspecified && isHorizontal }
+		}
+		if (showHorizontalTextMarks) {
+			Spacer(modifier = Modifier.height(config.markInterval))
+			FlexSliderTextMarks(
 				config = config,
-				length = length,
-				thickness = thickness,
-				sliderThickness = sliderThickness,
 				isHorizontal = isHorizontal,
-				isFocused = isFocused,
-				shape = shape
+				valueRange = valueRange,
+				marks = marks!!,
+				colorType = colorType,
+				length = length
 			)
 		}
-		
-		val thumbInteractionSource = remember { MutableInteractionSource() }
-		val isThumbHovered by thumbInteractionSource.collectIsHoveredAsState()
-		LaunchedEffect(isTap, isThumbHovered) {
-			if (isTap && isThumbHovered) {
-				isTap = false
-				isDragging = false
-			}
-		}
-		val isThumbFocused by remember(isThumbHovered, isDragging) {
-			derivedStateOf { isThumbHovered || isDragging }
-		}
-		val scale by animateFloatAsState(
-			targetValue = if (isThumbFocused && enabled) 1.2f else 1f
-		)
-		val thumbBorderWidth by animateDpAsState(
-			targetValue = if (isThumbFocused) config.thumbBorderWidth * 1.1f else config.thumbBorderWidth
-		)
-		val borderColor by animateColorAsState(
-			targetValue = run {
-				val color = colorType.color
-				when {
-					!enabled -> color.disabledWithColor
-					isThumbFocused -> color.lightenWithColor
-					isFocused -> color
-					else -> color.copy(alpha = 0.8f)
+	}
+}
+
+@Composable
+private fun FlexSliderTextMarks(
+	config: FlexSliderConfig,
+	isHorizontal: Boolean,
+	valueRange: FloatRange,
+	marks: FlexSliderMarks,
+	colorType: FlexColorType,
+	length: Dp,
+) {
+	Box(
+		modifier = when (isHorizontal) {
+			true -> Modifier.fillMaxWidth()
+			false -> Modifier.fillMaxHeight()
+		},
+		contentAlignment = if (isHorizontal) Alignment.TopStart else Alignment.TopEnd
+	) {
+		val filterMarks by remember(marks, valueRange) {
+			derivedStateOf {
+				marks.marks.filter {
+					it.text != null && it.value in valueRange
 				}
 			}
-		)
-		Box(
-			modifier = Modifier
-				.offset(
-					x = if (isHorizontal) thumbOffsetStart else Dp.Hairline,
-					y = if (!isHorizontal) thumbOffsetStart else Dp.Hairline
-				)
-				.scale(scale)
-				.size(thickness)
-				.clip(shape)
-				.border(
-					width = thumbBorderWidth,
-					color = borderColor,
-					shape = shape
-				)
-				.background(
-					color = contentColor,
-					shape = shape
-				)
-				.hoverable(
-					interactionSource = thumbInteractionSource
-				)
-		)
-		
-		if (tooltipFormatter != null && enabled) {
-			val tooltipText by remember(value, tooltipFormatter) {
+		}
+		val density = LocalDensity.current
+		val thickness by animateDpAsState(config.thickness)
+		filterMarks.forEach {
+			var markTextLength by remember { mutableStateOf(Dp.Hairline) }
+			val textOffsetStart by remember(it.value, length, markTextLength, thickness, valueRange) {
 				derivedStateOf {
-					tooltipFormatter.invoke(value)?.toString()
+					(length - thickness) / valueRange.range * (it.value - valueRange.start) + thickness / 2 - markTextLength / 2
 				}
 			}
-			if (tooltipText != null) {
-				FlexSliderTooltipPopup(
-					tooltipText = tooltipText!!,
-					colorType = colorType,
-					cornerType = cornerType,
-					isHorizontal = isHorizontal,
-					isThumbFocused = isThumbFocused,
-					thumbOffsetStart = thumbOffsetStart,
-					thickness = thickness,
-					config = config
-				)
-			}
+			val color by animateColorAsState(
+				targetValue = it.color ?: colorType.color
+			)
+			val markFontSize by animateFloatAsState(
+				targetValue = config.markFontSize.value
+			)
+			Text(
+				text = it.text!!,
+				modifier = Modifier
+					.offset(
+						x = if (isHorizontal) textOffsetStart else Dp.Hairline,
+						y = if (!isHorizontal) textOffsetStart else Dp.Hairline
+					)
+					.onGloballyPositioned {
+						markTextLength = with(density) {
+							if (isHorizontal) it.size.width.toDp() else it.size.height.toDp()
+						}
+					}
+					.alpha(
+						alpha = if (markTextLength == Dp.Hairline) 0f else 1f
+					),
+				color = color,
+				fontWeight = it.weight ?: config.markFontWeight,
+				fontSize = markFontSize.sp,
+				lineHeight = markFontSize.sp
+			)
+		}
+	}
+}
+
+@Composable
+private fun FlexSliderLayout(
+	modifier: Modifier,
+	isHorizontal: Boolean,
+	content: @Composable () -> Unit,
+) {
+	if (isHorizontal) {
+		Column(
+			modifier = modifier
+		) {
+			content()
+		}
+	} else {
+		Row(
+			modifier = modifier
+		) {
+			content()
 		}
 	}
 }

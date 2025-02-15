@@ -33,18 +33,16 @@
 
 - 所有控件均可以单独设置：尺寸类型、圆角类型、颜色类型
 
-## FlexButton 按钮
+## 预览
 
-![FlexButtonPage.png](image/FlexButtonPage.png)
+<img src="image/preview.png" width="600">
+
+## FlexButton 按钮
 
 ## FlexRadio 单选框
 
-![FlexRadioPage.png](image/FlexRadioPage.png)
-
 ## FlexInput 输入框
-
-![FlexInputPage.png](image/FlexInputPage.png)
 
 ## FlexSwitch 开关
 
-![FlexSwitch.png](image/FlexSwitchPage.png)
+## FlexSlider 滑动条

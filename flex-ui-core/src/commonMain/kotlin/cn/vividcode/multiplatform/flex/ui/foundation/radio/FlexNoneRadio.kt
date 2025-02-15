@@ -63,13 +63,14 @@ internal fun <Key> FlexNoneRadio(
 	}
 	val horizontalPadding by animateDpAsState(config.horizontalPadding)
 	val borderWidth by animateDpAsState(config.borderWidth)
+	val borderColor by animateColorAsState(MaterialTheme.colorScheme.outlineVariant)
 	Row(
 		modifier = Modifier
 			.height(height)
 			.clip(cornerShape)
 			.bottomBorder(
 				width = borderWidth,
-				color = MaterialTheme.colorScheme.outlineVariant,
+				color = borderColor,
 				corner = corner
 			)
 	) {

@@ -19,7 +19,7 @@ class FlexSwitchConfig internal constructor(
 internal object FlexSwitchSizeDefaults : FlexSizeDefaults<FlexSwitchConfig> {
 	
 	private const val PADDING_SCALE = 1f / 12f
-	private const val TEXT_LABEL_SIZE_SCALE = 1f / 2f
+	private const val TEXT_LABEL_SIZE_SCALE = 4f / 9f
 	private const val ICON_LABEL_SIZE_SCALE = 3f / 4f
 	
 	/**

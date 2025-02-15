@@ -57,12 +57,13 @@ internal fun <Key> FlexSwipeRadio(
 	val horizontalPadding by animateDpAsState(config.horizontalPadding)
 	val height by animateDpAsState(config.height)
 	val borderWidth by animateDpAsState(config.borderWidth)
+	val borderColor by animateColorAsState(MaterialTheme.colorScheme.outlineVariant)
 	Box(
 		modifier = Modifier
 			.height(height)
 			.bottomBorder(
 				width = borderWidth,
-				color = MaterialTheme.colorScheme.outlineVariant,
+				color = borderColor,
 				corner = corner
 			)
 	) {

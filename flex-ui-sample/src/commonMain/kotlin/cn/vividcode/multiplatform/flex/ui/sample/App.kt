@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
-import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.LightMode
-import androidx.compose.material.icons.outlined.PlaylistRemove
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.Circle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,6 +23,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
@@ -48,6 +46,7 @@ private val versionType = VersionType.EXP
 fun App() {
 	var showToolbar by remember { mutableStateOf(false) }
 	var screenHeight by remember { mutableStateOf(0) }
+	var toolbarSize by remember { mutableStateOf(IntSize.Zero) }
 	Box(
 		modifier = Modifier
 			.fillMaxSize()
@@ -57,8 +56,9 @@ fun App() {
 					screenHeight = it.size.height
 				}.pointerInput(Unit) {
 					awaitPointerEventScope {
-						val thresholdX = 104.dp.toPx()
-						val thresholdY = 152.dp.toPx()
+						if (toolbarSize == IntSize.Zero) return@awaitPointerEventScope
+						val thresholdX = toolbarSize.width * 2 + 16.dp.toPx()
+						val thresholdY = toolbarSize.height + 36.dp.toPx() + 16.dp.toPx()
 						while (true) {
 							val event = awaitPointerEvent()
 							val position = event.changes.first().position
@@ -70,6 +70,7 @@ fun App() {
 	) {
 		var showSidebar by remember { mutableStateOf(true) }
 		var showSettings by remember { mutableStateOf(false) }
+		var showPreviews by remember { mutableStateOf(false) }
 		Box(
 			modifier = Modifier.fillMaxSize()
 		) {
@@ -186,10 +187,7 @@ fun App() {
 					}
 				}
 			}
-			val settingsOffsetX by animateDpAsState(
-				targetValue = if (showSettings) Dp.Hairline else 380.dp
-			)
-			if (showSettings) {
+			if (showSettings || showPreviews) {
 				Box(
 					modifier = Modifier
 						.fillMaxSize()
@@ -198,14 +196,18 @@ fun App() {
 							indication = null,
 							onClick = {
 								showSettings = false
+								showPreviews = false
 							}
 						)
 				)
 			}
+			val settingsOffsetX by animateDpAsState(
+				targetValue = if (showSettings) Dp.Hairline else 400.dp
+			)
 			Scaffold(
 				modifier = Modifier
 					.offset(x = settingsOffsetX)
-					.width(380.dp)
+					.width(400.dp)
 					.fillMaxHeight()
 					.shadow(elevation = 12.dp)
 					.align(Alignment.CenterEnd),
@@ -221,6 +223,29 @@ fun App() {
 			) {
 				SettingsPage(it)
 			}
+			
+			val previewsOffsetX by animateDpAsState(
+				targetValue = if (showPreviews) Dp.Hairline else 700.dp
+			)
+			Scaffold(
+				modifier = Modifier
+					.offset(x = previewsOffsetX)
+					.width(700.dp)
+					.fillMaxHeight()
+					.shadow(elevation = 12.dp)
+					.align(Alignment.CenterEnd),
+				topBar = {
+					TopAppBar(
+						title = { Text("Previews") },
+						colors = TopAppBarDefaults.topAppBarColors(
+							containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+						)
+					)
+				},
+				containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+			) {
+				PreviewsPage(it)
+			}
 		}
 		if (!FlexPlatform.isMobile) {
 			val toolbarOffsetX by animateDpAsState(
@@ -233,6 +258,11 @@ fun App() {
 						start = 8.dp,
 						bottom = 8.dp
 					)
+					.multiplatform(FlexPlatform.Web, FlexPlatform.Desktop) {
+						this.onGloballyPositioned {
+							toolbarSize = it.size
+						}
+					}
 					.offset(x = toolbarOffsetX)
 			) {
 				val themeIconRotation by animateFloatAsState(
@@ -248,12 +278,23 @@ fun App() {
 				}
 				Spacer(modifier = Modifier.height(8.dp))
 				FlexButton(
+					icon = Icons.Outlined.Preview,
+					buttonType = FlexButtonType.Primary,
+					colorType = if (showPreviews) FlexColorType.Primary else FlexColorType.InverseSurface,
+					scaleEffect = true
+				) {
+					showPreviews = !showPreviews
+					showSettings = false
+				}
+				Spacer(modifier = Modifier.height(8.dp))
+				FlexButton(
 					icon = Icons.Outlined.Settings,
 					buttonType = FlexButtonType.Primary,
 					colorType = if (showSettings) FlexColorType.Primary else FlexColorType.InverseSurface,
 					scaleEffect = true
 				) {
 					showSettings = !showSettings
+					showPreviews = false
 				}
 				Spacer(modifier = Modifier.height(8.dp))
 				FlexButton(
