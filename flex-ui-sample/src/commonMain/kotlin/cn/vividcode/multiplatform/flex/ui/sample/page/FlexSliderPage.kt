@@ -31,10 +31,11 @@ fun ColumnScope.FlexSliderPage() {
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
 	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Circle) }
+	var enabled by remember { mutableStateOf(true) }
+	var showTooltip by remember { mutableStateOf(true) }
 	var direction by remember { mutableStateOf(FlexSliderDirection.Horizontal) }
 	var stepsType by remember { mutableStateOf(FlexSliderStepsType.None) }
 	var marksType by remember { mutableStateOf(FlexSliderMarksType.None) }
-	var showTooltip by remember { mutableStateOf(false) }
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -47,7 +48,7 @@ fun ColumnScope.FlexSliderPage() {
 				.fillMaxHeight(),
 			contentAlignment = Alignment.Center
 		) {
-			var value by remember { mutableFloatStateOf(20f) }
+			var value by remember { mutableFloatStateOf(25f) }
 			FlexSlider(
 				value = value,
 				onValueChange = { value = it },
@@ -55,6 +56,7 @@ fun ColumnScope.FlexSliderPage() {
 				colorType = colorType,
 				cornerType = cornerType,
 				direction = direction,
+				enabled = enabled,
 				valueRange = 0f .. 100f,
 				steps = when (stepsType) {
 					FlexSliderStepsType.None -> null
@@ -200,6 +202,16 @@ fun ColumnScope.FlexSliderPage() {
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
+			)
+		}
+		Spacer(modifier = Modifier.height(12.dp))
+		TitleLayout(
+			title = "Enabled"
+		) {
+			FlexSwitch(
+				checked = enabled,
+				onCheckedChange = { enabled = it },
+				sizeType = FlexSizeType.Small,
 			)
 		}
 		Spacer(modifier = Modifier.height(12.dp))

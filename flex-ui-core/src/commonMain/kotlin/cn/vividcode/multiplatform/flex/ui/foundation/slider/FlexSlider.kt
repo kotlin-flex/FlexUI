@@ -3,6 +3,7 @@ package cn.vividcode.multiplatform.flex.ui.foundation.slider
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -36,10 +37,10 @@ import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
  * @param colorType 滑块的颜色类型，默认为 [FlexSliderDefaults.DefaultColorType]
  * @param cornerType 滑块的圆角类型，默认为 [FlexSliderDefaults.DefaultCornerType]
  * @param direction 滑块的滑动方向，默认为 [FlexSliderDefaults.DefaultSliderDirection]
+ * @param enabled 是否启用，默认为 `true`
  * @param valueRange 滑块的取值范围，默认为 [FlexSliderDefaults.DefaultValueRange]
  * @param steps 可选参数，定义滑块的分步设置，如果为 `null`，则为连续滑动
  * @param marks 可选参数，定义滑块上的标记点，如果为 `null`，则不显示
- * @param tooltipPosition 滑块提示框的位置，默认为 [FlexSliderDefaults.DefaultTooltipPosition]
  * @param tooltipFormatter 可选参数，自定义提示框格式化函数，如果为 `null` 则不显示滑块提示框
  */
 @Composable
@@ -51,6 +52,7 @@ fun FlexSlider(
 	colorType: FlexColorType = FlexSliderDefaults.DefaultColorType,
 	cornerType: FlexCornerType = FlexSliderDefaults.DefaultCornerType,
 	direction: FlexSliderDirection = FlexSliderDefaults.DefaultSliderDirection,
+	enabled: Boolean = true,
 	valueRange: FloatRange = FlexSliderDefaults.DefaultValueRange,
 	steps: FlexSliderSteps? = null,
 	marks: FlexSliderMarks? = null,
@@ -63,33 +65,26 @@ fun FlexSlider(
 	val isHorizontal by remember(direction) {
 		derivedStateOf { direction == FlexSliderDirection.Horizontal }
 	}
-	
-	val stepValues by remember(steps, marks, valueRange) {
-		derivedStateOf {
-			if (steps == null) return@derivedStateOf null
-			steps.calcStepValues(valueRange)
-		}
+	val stepValues by remember(steps, valueRange) {
+		derivedStateOf { steps?.calcStepValues(valueRange) }
 	}
 	
 	var offsetX by remember { mutableStateOf(Dp.Unspecified) }
-	LaunchedEffect(offsetX, length, valueRange, stepValues) {
-		if (length == Dp.Hairline || offsetX == Dp.Unspecified) return@LaunchedEffect
-		var value = offsetX / length * valueRange.range + valueRange.start
+	LaunchedEffect(offsetX, value, length, valueRange, stepValues, thickness) {
+		if (length == Dp.Unspecified || offsetX == Dp.Unspecified) return@LaunchedEffect
+		var value = (offsetX - thickness / 2) / (length - thickness) * valueRange.range + valueRange.start
+		value = value.coerceIn(valueRange)
 		stepValues?.also { values ->
 			for (i in 1 ..< values.size) {
 				if (value <= values[i]) {
 					val leftDistance = value - values[i - 1]
 					val rightDistance = values[i] - value
-					if (leftDistance > rightDistance) {
-						value += rightDistance
-					} else {
-						value -= leftDistance
-					}
+					value += if (leftDistance > rightDistance) rightDistance else -leftDistance
 					break
 				}
 			}
 		}
-		onValueChange(value.coerceIn(valueRange))
+		onValueChange(value)
 	}
 	
 	val interactionSource = remember { MutableInteractionSource() }
@@ -113,28 +108,32 @@ fun FlexSlider(
 					if (isHorizontal) it.size.width.toDp() else it.size.height.toDp()
 				}
 			}
-			.pointerInput(isHorizontal) {
+			.pointerInput(isHorizontal, enabled) {
 				detectDragGestures(
 					onDrag = { change, dragAmount ->
+						if (!enabled) return@detectDragGestures
 						change.consume()
 						offsetX += with(density) {
 							if (isHorizontal) dragAmount.x.toDp() else dragAmount.y.toDp()
 						}
 					},
 					onDragEnd = {
+						if (!enabled) return@detectDragGestures
 						isDragging = false
 					}
 				)
 			}
-			.pointerInput(isHorizontal) {
+			.pointerInput(isHorizontal, enabled) {
 				detectTapGestures(
 					onPress = {
+						if (!enabled) return@detectTapGestures
 						isDragging = true
 						offsetX = with(density) {
 							(if (isHorizontal) it.x else it.y).toDp()
 						}
 					},
 					onTap = {
+						if (!enabled) return@detectTapGestures
 						isTap = true
 					}
 				)
@@ -146,9 +145,10 @@ fun FlexSlider(
 	) {
 		val thickness by animateDpAsState(config.thickness)
 		val sliderThickness by animateDpAsState(config.sliderThickness)
-		val sliderCorner by animateDpAsState(sliderThickness * cornerType.scale)
-		val sliderCornerShape by remember(sliderCorner) {
-			derivedStateOf { RoundedCornerShape(sliderCorner) }
+		
+		val percent by animateIntAsState((cornerType.scale * 100).toInt())
+		val shape by remember(percent) {
+			derivedStateOf { RoundedCornerShape(percent) }
 		}
 		val padding by remember(thickness, sliderThickness) {
 			derivedStateOf { thickness / 2 - sliderThickness / 2 }
@@ -171,24 +171,24 @@ fun FlexSlider(
 							.padding(vertical = padding)
 					}
 				)
-				.clip(sliderCornerShape)
+				.clip(shape)
 				.background(
 					color = sliderColor,
-					shape = sliderCornerShape
+					shape = shape
 				)
 		)
-		val thumbOffsetStart by remember(value, density, length, thickness, valueRange) {
+		val thumbOffsetStart by remember(value, length, config.thickness, valueRange) {
 			derivedStateOf {
 				if (length == Dp.Unspecified) return@derivedStateOf Dp.Hairline
 				var value = value.coerceIn(valueRange)
-				(length - thickness) / valueRange.range * (value - valueRange.start)
+				(length - config.thickness) / valueRange.range * (value - valueRange.start)
 			}
 		}
 		val isHovered by interactionSource.collectIsHoveredAsState()
 		val isFocused by remember(isHovered, isDragging) {
 			derivedStateOf { isHovered || isDragging }
 		}
-		val color by animateColorAsState(
+		val thumbColor by animateColorAsState(
 			targetValue = run {
 				val color = colorType.color
 				when {
@@ -208,10 +208,10 @@ fun FlexSlider(
 					horizontal = if (isHorizontal) padding else Dp.Hairline,
 					vertical = if (!isHorizontal) padding else Dp.Hairline
 				)
-				.clip(sliderCornerShape)
+				.clip(shape)
 				.background(
-					color = color,
-					shape = sliderCornerShape
+					color = thumbColor,
+					shape = shape
 				)
 		)
 		
@@ -225,16 +225,12 @@ fun FlexSlider(
 				length = length,
 				thickness = thickness,
 				sliderThickness = sliderThickness,
-				isHorizontal = isHorizontal
+				isHorizontal = isHorizontal,
+				isFocused = isFocused,
+				shape = shape
 			)
 		}
 		
-		val thumbCorner by animateDpAsState(
-			targetValue = config.thickness * cornerType.scale
-		)
-		val thumbCornerShape by remember(thumbCorner) {
-			derivedStateOf { RoundedCornerShape(thumbCorner) }
-		}
 		val thumbInteractionSource = remember { MutableInteractionSource() }
 		val isThumbHovered by thumbInteractionSource.collectIsHoveredAsState()
 		LaunchedEffect(isTap, isThumbHovered) {
@@ -270,15 +266,15 @@ fun FlexSlider(
 				)
 				.scale(scale)
 				.size(thickness)
-				.clip(thumbCornerShape)
+				.clip(shape)
 				.border(
 					width = thumbBorderWidth,
 					color = borderColor,
-					shape = thumbCornerShape
+					shape = shape
 				)
 				.background(
 					color = contentColor,
-					shape = thumbCornerShape
+					shape = shape
 				)
 				.hoverable(
 					interactionSource = thumbInteractionSource
@@ -316,8 +312,6 @@ object FlexSliderDefaults : FlexDefaults(
 	val DefaultSliderDirection = FlexSliderDirection.Horizontal
 	
 	val DefaultValueRange = 0f .. 100f
-	
-	val DefaultTooltipPosition = FlexSliderTooltipPosition.TopSide
 }
 
 enum class FlexSliderDirection {
@@ -325,13 +319,6 @@ enum class FlexSliderDirection {
 	Horizontal,
 	
 	Vertical
-}
-
-enum class FlexSliderTooltipPosition {
-	
-	TopSide,
-	
-	BottomSide
 }
 
 internal typealias FloatRange = ClosedFloatingPointRange<Float>

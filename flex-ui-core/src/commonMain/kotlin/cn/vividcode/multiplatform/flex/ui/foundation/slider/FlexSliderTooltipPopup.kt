@@ -3,6 +3,7 @@ package cn.vividcode.multiplatform.flex.ui.foundation.slider
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +26,6 @@ import androidx.compose.ui.window.Popup
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
-import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -67,17 +67,14 @@ internal fun FlexSliderTooltipPopup(
 		val arrowSize by remember {
 			derivedStateOf { tooltipHeight / 2 * sqrt(2.0).toFloat() / 2 }
 		}
-		val tooltipCorner by animateDpAsState(config.toolbarHeight * min(cornerType.scale, 1 / 8f))
-		val tooltipCornerShape by remember(tooltipCorner) {
-			derivedStateOf { RoundedCornerShape(tooltipCorner) }
+		val tooltipCornerPercent by animateIntAsState((cornerType.scale * 50).toInt())
+		val tooltipCornerShape by remember(tooltipCornerPercent) {
+			derivedStateOf { RoundedCornerShape(tooltipCornerPercent) }
 		}
-		val arrowCorner by animateDpAsState(config.toolbarHeight * min(cornerType.scale / 2, 1 / 8f))
-		val arrowCornerShape by remember(arrowCorner) {
-			derivedStateOf {
-				RoundedCornerShape(
-					bottomEnd = arrowCorner,
-				)
-			}
+		val arrowCornerPercent by animateIntAsState((cornerType.scale * 50).toInt())
+		val arrowCornerShape by remember(arrowCornerPercent) {
+			println(arrowCornerPercent)
+			derivedStateOf { RoundedCornerShape(bottomEndPercent = arrowCornerPercent) }
 		}
 		val color by animateColorAsState(colorType.color)
 		val contentColor by animateColorAsState(colorType.contentColor)

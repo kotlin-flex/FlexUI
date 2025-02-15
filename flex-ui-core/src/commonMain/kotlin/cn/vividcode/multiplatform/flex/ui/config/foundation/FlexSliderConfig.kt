@@ -40,7 +40,7 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarFontSize = 9.sp,
 			toolbarFontWeight = FontWeight.Normal,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
-			toolbarHeight = 20.dp,
+			toolbarHeight = 24.dp,
 			toolbarHorizontalPadding = 4.dp,
 			markBorderWidth = 12.dp * MARK_BORDER_WIDTH_SCALE,
 			markFontSize = 9.sp,
@@ -59,7 +59,7 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			toolbarFontSize = 12.sp,
 			toolbarFontWeight = FontWeight.Normal,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
-			toolbarHeight = 28.dp,
+			toolbarHeight = 30.dp,
 			toolbarHorizontalPadding = 6.dp,
 			markBorderWidth = 15.dp * MARK_BORDER_WIDTH_SCALE,
 			markFontSize = 12.sp,
@@ -95,13 +95,13 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 21.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 21.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 18.sp,
-			toolbarFontWeight = FontWeight.Medium,
+			toolbarFontWeight = FontWeight.Normal,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
-			toolbarHeight = 44.dp,
+			toolbarHeight = 42.dp,
 			toolbarHorizontalPadding = 10.dp,
 			markBorderWidth = 21.dp * MARK_BORDER_WIDTH_SCALE,
 			markFontSize = 18.sp,
-			markFontWeight = FontWeight.Medium,
+			markFontWeight = FontWeight.Normal,
 			markInterval = 21.dp * MARK_INTERVAL_SCALE
 		)
 	
@@ -114,13 +114,13 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig> {
 			sliderThickness = 24.dp * SLIDER_THICKNESS_SCALE,
 			thumbBorderWidth = 24.dp * THUMB_BORDER_WIDTH_SCALE,
 			toolbarFontSize = 21.sp,
-			toolbarFontWeight = FontWeight.Medium,
+			toolbarFontWeight = FontWeight.Normal,
 			toolbarFontLetterSpacing = TextUnit.Unspecified,
-			toolbarHeight = 52.dp,
+			toolbarHeight = 48.dp,
 			toolbarHorizontalPadding = 12.dp,
 			markBorderWidth = 24.dp * MARK_BORDER_WIDTH_SCALE,
 			markFontSize = 21.sp,
-			markFontWeight = FontWeight.Medium,
+			markFontWeight = FontWeight.Normal,
 			markInterval = 24.dp * MARK_INTERVAL_SCALE
 		)
 }

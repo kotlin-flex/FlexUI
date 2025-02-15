@@ -35,7 +35,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			horizontalPadding = 6.dp,
 			borderWidth = 1.dp,
 			fontSize = 20.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.Medium,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 20.dp * ICON_SIZE_SCALE,
 			iconInterval = 2.dp
@@ -50,7 +50,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			horizontalPadding = 8.dp,
 			borderWidth = 1.5.dp,
 			fontSize = 28.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.Medium,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 28.dp * ICON_SIZE_SCALE,
 			iconInterval = 4.dp
@@ -65,7 +65,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			horizontalPadding = 10.dp,
 			borderWidth = 1.5.dp,
 			fontSize = 36.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.Medium,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 36.dp * ICON_SIZE_SCALE,
 			iconInterval = 6.dp
@@ -80,7 +80,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			horizontalPadding = 12.dp,
 			borderWidth = 1.5.dp,
 			fontSize = 44.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.Bold,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 44.dp * ICON_SIZE_SCALE,
 			iconInterval = 8.dp
@@ -95,7 +95,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig> {
 			horizontalPadding = 14.dp,
 			borderWidth = 2.dp,
 			fontSize = 52.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.Bold,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 52.dp * ICON_SIZE_SCALE,
 			iconInterval = 10.dp

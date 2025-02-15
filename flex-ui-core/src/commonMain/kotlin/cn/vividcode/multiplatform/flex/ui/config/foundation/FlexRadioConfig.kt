@@ -32,7 +32,7 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 			horizontalPadding = 6.dp,
 			borderWidth = 1.dp,
 			fontSize = 20.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.Medium,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified
 		)
 	
@@ -45,7 +45,7 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 			horizontalPadding = 8.dp,
 			borderWidth = 1.5.dp,
 			fontSize = 28.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.Medium,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified
 		)
 	
@@ -58,7 +58,7 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 			horizontalPadding = 10.dp,
 			borderWidth = 1.5.dp,
 			fontSize = 36.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.Medium,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified
 		)
 	
@@ -71,7 +71,7 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 			horizontalPadding = 12.dp,
 			borderWidth = 1.5.dp,
 			fontSize = 44.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.SemiBold,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified
 		)
 	
@@ -84,7 +84,7 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig> {
 			horizontalPadding = 14.dp,
 			borderWidth = 2.dp,
 			fontSize = 52.sp * FONT_SIZE_SCALE,
-			fontWeight = FontWeight.SemiBold,
+			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified
 		)
 }

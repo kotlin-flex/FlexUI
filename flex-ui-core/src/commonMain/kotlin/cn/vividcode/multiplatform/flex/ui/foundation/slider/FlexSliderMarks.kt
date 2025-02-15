@@ -8,7 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -114,6 +114,8 @@ internal fun FlexSliderMarks(
 	thickness: Dp,
 	sliderThickness: Dp,
 	isHorizontal: Boolean,
+	isFocused: Boolean,
+	shape: RoundedCornerShape,
 ) {
 	val filterMarks by remember(marks, valueRange) {
 		derivedStateOf {
@@ -132,9 +134,10 @@ internal fun FlexSliderMarks(
 		}
 		val color = colorType.color
 		val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
-		val borderColor by remember(it.value, value, color, surfaceVariant) {
+		val borderColor by remember(it.value, value, color, surfaceVariant, isFocused) {
 			derivedStateOf {
-				if (it.value <= value) color else surfaceVariant.darkenWithColor
+				val color = if (it.value <= value) color else surfaceVariant.darkenWithColor
+				if (isFocused) color else color.copy(alpha = 0.75f)
 			}
 		}
 		Box(
@@ -147,11 +150,11 @@ internal fun FlexSliderMarks(
 				.border(
 					width = markBorderWidth,
 					color = borderColor,
-					shape = CircleShape
+					shape = shape
 				)
 				.background(
 					color = MaterialTheme.colorScheme.surface,
-					shape = CircleShape
+					shape = shape
 				)
 		)
 		if (it.text != null) {
@@ -191,7 +194,7 @@ internal fun FlexSliderMarks(
 						}
 						.alpha(if (size == IntSize.Zero) 0f else 1f),
 					color = color,
-					fontWeight = it.weight,
+					fontWeight = it.weight ?: config.markFontWeight,
 					fontSize = markFontSize.sp,
 					lineHeight = markFontSize.sp
 				)
