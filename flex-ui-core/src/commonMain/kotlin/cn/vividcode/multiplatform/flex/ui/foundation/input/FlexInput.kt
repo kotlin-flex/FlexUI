@@ -376,11 +376,14 @@ class FlexInputIcon internal constructor(
 
 object FlexInputIcons {
 	
+	@Composable
 	fun icon(
 		icon: ImageVector,
 		tint: Color = Color.Unspecified,
 		rotate: Float = 0f,
 		size: Dp = Dp.Unspecified,
 		onClick: (() -> Unit)? = null,
-	) = FlexInputIcon(icon, tint, rotate, size, onClick)
+	) = remember(icon, tint, rotate, size, onClick) {
+		FlexInputIcon(icon, tint, rotate, size, onClick)
+	}
 }

@@ -50,7 +50,7 @@ import kotlin.jvm.JvmName
 fun <Key> FlexRadio(
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
-	options: List<RadioOption<Key>>,
+	options: FlexRadioOptions.() -> List<RadioOption<Key>>,
 	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
 	colorType: FlexColorType = FlexRadioDefaults.DefaultColorType,
 	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
@@ -58,6 +58,11 @@ fun <Key> FlexRadio(
 	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,
 	scaleEffect: Boolean = FlexRadioDefaults.DefaultScaleEffect,
 ) {
+	val options by remember(options) {
+		derivedStateOf {
+			FlexRadioOptionsImpl.options()
+		}
+	}
 	val targetSelectedKey by remember(options, selectedKey) {
 		derivedStateOf {
 			val option = options.find { it.key == selectedKey }
@@ -141,20 +146,31 @@ class RadioOption<Key>(
 	val enabled: Boolean = true,
 )
 
-fun <T> List<T>.toRadioOptions(
-	valueTransform: (T) -> String = { it.toString() },
-	enabledTransform: (T) -> Boolean = { true },
-): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
+sealed interface FlexRadioOptions {
+	
+	fun <T> Array<T>.options(
+		valueTransform: (T) -> String = { it.toString() },
+		enabledTransform: (T) -> Boolean = { true },
+	): List<RadioOption<T>>
+	
+	fun <T> Iterable<T>.options(
+		valueTransform: (T) -> String = { it.toString() },
+		enabledTransform: (T) -> Boolean = { true },
+	): List<RadioOption<T>>
+}
 
-fun <T> Array<T>.toRadioOptions(
-	valueTransform: (T) -> String = { it.toString() },
-	enabledTransform: (T) -> Boolean = { true },
-): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
-
-fun <T> Iterable<T>.toRadioOptions(
-	valueTransform: (T) -> String = { it.toString() },
-	enabledTransform: (T) -> Boolean = { true },
-): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
+private object FlexRadioOptionsImpl : FlexRadioOptions {
+	
+	override fun <T> Array<T>.options(
+		valueTransform: (T) -> String,
+		enabledTransform: (T) -> Boolean,
+	): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
+	
+	override fun <T> Iterable<T>.options(
+		valueTransform: (T) -> String,
+		enabledTransform: (T) -> Boolean,
+	): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
+}
 
 internal val DisabledBackgroundColor: Color
 	@Composable

@@ -14,7 +14,6 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitchLabels
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
@@ -65,18 +64,22 @@ fun ColumnScope.FlexSwitchPage() {
 			FlexSwitchLabelType.OpenClose -> "FlexSwitchLabels.textLabel(\"开\", \"关\")"
 			FlexSwitchLabelType.Icon -> "FlexSwitchLabels.DefaultIconLabel"
 		}
-		val code = """
-			var checked by remember { mutableStateOf(false) }
-			FlexSwitch(
-				checked = checked,
-				onCheckedChange = { checked = it },
-				sizeType = FlexSizeType.$sizeType,
-				colorType = FlexColorType.$colorType,
-				cornerType = FlexCornerType.$cornerType,
-				label = $label,
-				enabled = $enabled
-			)
-		""".trimIndent()
+		val code by remember(sizeType, colorType, cornerType, label, enabled) {
+			derivedStateOf {
+				"""
+					var checked by remember { mutableStateOf(false) }
+					FlexSwitch(
+						checked = checked,
+						onCheckedChange = { checked = it },
+						sizeType = FlexSizeType.$sizeType,
+						colorType = FlexColorType.$colorType,
+						cornerType = FlexCornerType.$cornerType,
+						label = $label,
+						enabled = $enabled
+					)
+				""".trimIndent()
+			}
+		}
 		Code(code)
 	}
 	HorizontalDivider()
@@ -94,7 +97,7 @@ fun ColumnScope.FlexSwitchPage() {
 			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
-				options = FlexSizeType.entries.toRadioOptions(),
+				options = { FlexSizeType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -107,7 +110,7 @@ fun ColumnScope.FlexSwitchPage() {
 			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
-				options = FlexColorType.entries.toRadioOptions(),
+				options = { FlexColorType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				colorType = colorType,
 				radioType = FlexRadioType.Button,
@@ -121,7 +124,7 @@ fun ColumnScope.FlexSwitchPage() {
 			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
-				options = FlexCornerType.entries.toRadioOptions(),
+				options = { FlexCornerType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
@@ -135,7 +138,7 @@ fun ColumnScope.FlexSwitchPage() {
 			FlexRadio(
 				selectedKey = labelType,
 				onSelectedKeyChange = { labelType = it },
-				options = FlexSwitchLabelType.entries.toRadioOptions(),
+				options = { FlexSwitchLabelType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe

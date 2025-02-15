@@ -3,6 +3,7 @@ package cn.vividcode.multiplatform.flex.ui.sample
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -16,6 +17,7 @@ import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import java.awt.Color
 import java.awt.Dimension
 
+@OptIn(ExperimentalComposeUiApi::class)
 fun main() = application {
 	Window(
 		onCloseRequest = ::exitApplication,

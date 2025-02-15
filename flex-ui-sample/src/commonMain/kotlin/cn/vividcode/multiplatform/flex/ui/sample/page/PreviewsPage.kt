@@ -17,7 +17,6 @@ import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputIcons
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderMarks
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
@@ -66,21 +65,23 @@ fun PreviewsPage(
 			FlexRadio(
 				selectedKey = selectedKey1,
 				onSelectedKeyChange = { selectedKey1 = it },
-				options = listOf("Option1", "Option2", "Option3").toRadioOptions()
+				options = { listOf("Option1", "Option2", "Option3").options() }
 			)
 			Spacer(modifier = Modifier.width(8.dp))
 			FlexRadio(
 				selectedKey = selectedKey2,
 				onSelectedKeyChange = { selectedKey2 = it },
-				options = listOf("Option1", "Disabled").toRadioOptions(
-					enabledTransform = { it == "Option1" }
-				)
+				options = {
+					listOf("Option1", "Disabled").options(
+						enabledTransform = { it == "Option1" }
+					)
+				}
 			)
 			Spacer(modifier = Modifier.width(8.dp))
 			FlexRadio(
 				selectedKey = selectedKey3,
 				onSelectedKeyChange = { selectedKey3 = it },
-				options = listOf("Option1", "Option2", "Option3").toRadioOptions(),
+				options = { listOf("Option1", "Option2", "Option3").options() },
 				radioType = FlexRadioType.Button
 			)
 		}

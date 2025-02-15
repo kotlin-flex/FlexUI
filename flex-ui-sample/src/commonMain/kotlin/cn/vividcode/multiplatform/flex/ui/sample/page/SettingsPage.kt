@@ -13,7 +13,6 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.theme.HighContrastColorSchemes
 import cn.vividcode.multiplatform.flex.ui.sample.theme.MediumContrastColorSchemes
@@ -46,7 +45,7 @@ fun SettingsPage(
 						contrastType = it
 						currentColorSchemes = it.colorSchemes
 					},
-					options = ContrastType.entries.toRadioOptions(),
+					options = { ContrastType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe

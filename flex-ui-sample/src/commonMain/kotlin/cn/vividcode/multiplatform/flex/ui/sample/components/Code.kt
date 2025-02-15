@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +32,7 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
+import cn.vividcode.multiplatform.flex.ui.sample.util.setText
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -87,30 +88,30 @@ fun RowScope.Code(
 			modifier = Modifier
 				.fillMaxWidth()
 				.height(36.dp)
-				.padding(horizontal = 6.dp),
+				.padding(horizontal = 4.dp),
 			verticalAlignment = Alignment.CenterVertically,
 		) {
 			FlexButton(
 				text = "Kotlin v${KotlinVersion.CURRENT}",
-				sizeType = FlexSizeType.ExtraSmall,
+				sizeType = FlexSizeType.Small,
 				buttonType = FlexButtonType.Link,
 				scaleEffect = false
 			)
 			Spacer(modifier = Modifier.weight(1f))
-			val clipboardManager = LocalClipboardManager.current
+			val clipboard = LocalClipboard.current
 			var copied by remember { mutableStateOf(false) }
 			val coroutineScope = rememberCoroutineScope()
 			FlexButton(
 				text = if (copied) "Copied!" else "Copy",
 				icon = if (copied) Icons.Rounded.DoneAll else Icons.Rounded.ContentCopy,
-				sizeType = FlexSizeType.ExtraSmall,
+				sizeType = FlexSizeType.Small,
 				buttonType = FlexButtonType.Text,
 				iconPosition = FlexButtonIconPosition.Start,
 				enabled = !copied
 			) {
 				copied = true
-				clipboardManager.setText(codeString)
 				coroutineScope.launch {
+					clipboard.setText(codeString.text)
 					delay(5000)
 					copied = false
 				}

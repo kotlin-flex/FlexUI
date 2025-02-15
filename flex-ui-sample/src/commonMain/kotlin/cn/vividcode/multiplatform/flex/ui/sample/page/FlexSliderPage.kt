@@ -16,7 +16,6 @@ import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.*
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
@@ -170,7 +169,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
-				options = FlexSizeType.entries.toRadioOptions(),
+				options = { FlexSizeType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -183,7 +182,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
-				options = FlexColorType.entries.toRadioOptions(),
+				options = { FlexColorType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				colorType = colorType,
 				radioType = FlexRadioType.Button,
@@ -197,7 +196,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
-				options = FlexCornerType.entries.toRadioOptions(),
+				options = { FlexCornerType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
@@ -221,7 +220,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = direction,
 				onSelectedKeyChange = { direction = it },
-				options = FlexSliderDirection.entries.toRadioOptions(),
+				options = { FlexSliderDirection.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -234,7 +233,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = stepsType,
 				onSelectedKeyChange = { stepsType = it },
-				options = FlexSliderStepsType.entries.toRadioOptions(),
+				options = { FlexSliderStepsType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -247,7 +246,7 @@ fun ColumnScope.FlexSliderPage() {
 			FlexRadio(
 				selectedKey = marksType,
 				onSelectedKeyChange = { marksType = it },
-				options = FlexSliderMarksType.entries.toRadioOptions(),
+				options = { FlexSliderMarksType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe

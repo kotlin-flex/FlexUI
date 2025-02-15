@@ -22,7 +22,9 @@ import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.*
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
@@ -67,20 +69,24 @@ fun ColumnScope.FlexButtonPage() {
 			)
 		}
 		Spacer(Modifier.width(12.dp))
-		val code = """
-			FlexButton(
-				text = "$buttonText",
-				icon = ${iconType.code},
-				sizeType = FlexSizeType.$sizeType,
-				colorType = FlexColorType.$colorType,
-				cornerType = FlexCornerType.$cornerType,
-				buttonType = FlexButtonType.$buttonType,
-				iconPosition = FlexButtonIconPosition.$iconPosition,
-				iconRotation = 0f,
-				scaleEffect = $scaleEffect,
-				enabled = $enabled
-			)
-		""".trimIndent()
+		val code by remember(buttonText, iconType, sizeType, colorType, cornerType, buttonType, iconPosition, scaleEffect, enabled) {
+			derivedStateOf {
+				"""
+					FlexButton(
+						text = "$buttonText",
+						icon = ${iconType.code},
+						sizeType = FlexSizeType.$sizeType,
+						colorType = FlexColorType.$colorType,
+						cornerType = FlexCornerType.$cornerType,
+						buttonType = FlexButtonType.$buttonType,
+						iconPosition = FlexButtonIconPosition.$iconPosition,
+						iconRotation = 0f,
+						scaleEffect = $scaleEffect,
+						enabled = $enabled
+					)
+				""".trimIndent()
+			}
+		}
 		Code(code)
 	}
 	HorizontalDivider()
@@ -111,7 +117,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = buttonType,
 				onSelectedKeyChange = { buttonType = it },
-				options = FlexButtonType.entries.toRadioOptions(),
+				options = { FlexButtonType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -124,7 +130,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
-				options = FlexSizeType.entries.toRadioOptions(),
+				options = { FlexSizeType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -137,7 +143,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
-				options = FlexColorType.entries.toRadioOptions(),
+				options = { FlexColorType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				colorType = colorType,
 				radioType = FlexRadioType.Button,
@@ -151,7 +157,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
-				options = FlexCornerType.entries.toRadioOptions(),
+				options = { FlexCornerType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
@@ -165,7 +171,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = iconType,
 				onSelectedKeyChange = { iconType = it },
-				options = IconType.entries.toRadioOptions(),
+				options = { IconType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -179,7 +185,7 @@ fun ColumnScope.FlexButtonPage() {
 			FlexRadio(
 				selectedKey = iconPosition,
 				onSelectedKeyChange = { iconPosition = it },
-				options = FlexButtonIconPosition.entries.toRadioOptions(),
+				options = { FlexButtonIconPosition.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe

@@ -23,7 +23,6 @@ import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.toRadioOptions
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
@@ -242,7 +241,7 @@ fun ColumnScope.FlexInputPage() {
 			FlexRadio(
 				selectedKey = exampleType,
 				onSelectedKeyChange = { exampleType = it },
-				options = ExampleType.entries.toRadioOptions(),
+				options = { ExampleType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -255,7 +254,7 @@ fun ColumnScope.FlexInputPage() {
 			FlexRadio(
 				selectedKey = sizeType,
 				onSelectedKeyChange = { sizeType = it },
-				options = FlexSizeType.entries.toRadioOptions(),
+				options = { FlexSizeType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -268,7 +267,7 @@ fun ColumnScope.FlexInputPage() {
 			FlexRadio(
 				selectedKey = colorType,
 				onSelectedKeyChange = { colorType = it },
-				options = FlexColorType.entries.toRadioOptions(),
+				options = { FlexColorType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				colorType = colorType,
 				radioType = FlexRadioType.Button,
@@ -282,7 +281,7 @@ fun ColumnScope.FlexInputPage() {
 			FlexRadio(
 				selectedKey = cornerType,
 				onSelectedKeyChange = { cornerType = it },
-				options = FlexCornerType.entries.toRadioOptions(),
+				options = { FlexCornerType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				cornerType = cornerType,
 				radioType = FlexRadioType.Button,
@@ -296,7 +295,7 @@ fun ColumnScope.FlexInputPage() {
 			FlexRadio(
 				selectedKey = inputType,
 				onSelectedKeyChange = { inputType = it },
-				options = FlexInputType.entries.toRadioOptions(),
+				options = { FlexInputType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
@@ -309,7 +308,7 @@ fun ColumnScope.FlexInputPage() {
 			FlexRadio(
 				selectedKey = prefixSuffixType,
 				onSelectedKeyChange = { prefixSuffixType = it },
-				options = PrefixSuffixType.entries.toRadioOptions(),
+				options = { PrefixSuffixType.entries.options() },
 				sizeType = FlexSizeType.Small,
 				radioType = FlexRadioType.Button,
 				switchType = FlexRadioSwitchType.Swipe
