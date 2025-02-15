@@ -6,8 +6,10 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -103,6 +105,13 @@ fun FlexInput(
 			derivedStateOf { textFieldIsFocused || leadingIconIsFocused || trailingIconIsFocused }
 		}
 		
+		val textFieldIsHovered by interactionSource.collectIsHoveredAsState()
+		val leadingIconIsHovered by leadingIconInteractionSource.collectIsHoveredAsState()
+		val trailingIconIsHovered by trailingIconInteractionSource.collectIsHoveredAsState()
+		val isHovered by remember(textFieldIsHovered, leadingIconIsHovered, trailingIconIsHovered) {
+			derivedStateOf { textFieldIsHovered || leadingIconIsHovered || trailingIconIsHovered }
+		}
+		
 		val fontSize by animateFloatAsState(config.fontSize.value)
 		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 		val contentColor by animateColorAsState(
@@ -129,6 +138,7 @@ fun FlexInput(
 				}
 			},
 			modifier = Modifier
+				.hoverable(interactionSource)
 				.focusRequester(focusRequester),
 			enabled = enabled,
 			readOnly = readOnly,
@@ -151,6 +161,7 @@ fun FlexInput(
 					config = config,
 					textStyle = textStyle,
 					isFocused = isFocused,
+					isHovered = isHovered,
 					placeholder = placeholder,
 					leadingIcon = leadingIcon,
 					trailingIcon = trailingIcon,
@@ -202,6 +213,7 @@ private fun FlexInputDecorationBox(
 	config: FlexInputConfig,
 	textStyle: TextStyle,
 	isFocused: Boolean,
+	isHovered: Boolean,
 	placeholder: @Composable (() -> Unit)?,
 	leadingIcon: FlexInputIcon?,
 	trailingIcon: FlexInputIcon?,
@@ -221,6 +233,7 @@ private fun FlexInputDecorationBox(
 	val borderColor by animateColorAsState(
 		targetValue = when {
 			isFocused -> colorType.color
+			isHovered -> colorType.color.copy(alpha = 0.75f)
 			inputType == FlexInputType.Default -> colorType.color.copy(alpha = 0f)
 			enabled -> MaterialTheme.colorScheme.outlineVariant
 			else -> colorType.color.disabledWithColor
@@ -228,10 +241,7 @@ private fun FlexInputDecorationBox(
 	)
 	val backgroundColor by animateColorAsState(
 		targetValue = MaterialTheme.colorScheme.surfaceVariant.copy(
-			alpha = when {
-				isFocused || inputType == FlexInputType.Outlined -> 0f
-				else -> 0.7f
-			}
+			alpha = if (isFocused || isHovered || inputType == FlexInputType.Outlined) 0f else 0.7f
 		)
 	)
 	val interval by animateDpAsState(config.horizontalPadding / 2)
@@ -341,6 +351,7 @@ private fun FlexInputIcon(
 			.size(size)
 			.rotate(rotateDegrees)
 			.pointerHoverIcon(PointerIcon.Default)
+			.hoverable(interactionSource)
 			.then(
 				if (onClick == null) Modifier else Modifier.clickable(
 					interactionSource = interactionSource,

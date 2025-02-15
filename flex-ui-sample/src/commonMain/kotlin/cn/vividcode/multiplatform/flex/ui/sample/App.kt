@@ -37,7 +37,7 @@ import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.math.sqrt
 
-private const val VERSION_NAME = "v1.0.0-exp-06"
+private const val VERSION_NAME = "v1.0.0-exp-07"
 
 private val versionType = VersionType.EXP
 
