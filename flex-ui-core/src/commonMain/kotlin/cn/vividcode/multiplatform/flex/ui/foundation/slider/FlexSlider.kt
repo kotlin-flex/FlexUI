@@ -25,7 +25,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
+import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
 import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
+import cn.vividcode.multiplatform.flex.ui.expends.lightenWithContent
 
 /**
  * FlexSlider 滑动条
@@ -109,31 +111,29 @@ fun FlexSlider(
 				}
 			}
 			.pointerInput(isHorizontal, enabled) {
+				if (!enabled) return@pointerInput
 				detectDragGestures(
 					onDrag = { change, dragAmount ->
-						if (!enabled) return@detectDragGestures
 						change.consume()
 						offsetX += with(density) {
 							if (isHorizontal) dragAmount.x.toDp() else dragAmount.y.toDp()
 						}
 					},
 					onDragEnd = {
-						if (!enabled) return@detectDragGestures
 						isDragging = false
 					}
 				)
 			}
 			.pointerInput(isHorizontal, enabled) {
+				if (!enabled) return@pointerInput
 				detectTapGestures(
 					onPress = {
-						if (!enabled) return@detectTapGestures
 						isDragging = true
 						offsetX = with(density) {
-							(if (isHorizontal) it.x else it.y).toDp()
+							if (isHorizontal) it.x.toDp() else it.y.toDp()
 						}
 					},
 					onTap = {
-						if (!enabled) return@detectTapGestures
 						isTap = true
 					}
 				)
@@ -154,7 +154,10 @@ fun FlexSlider(
 			derivedStateOf { thickness / 2 - sliderThickness / 2 }
 		}
 		val sliderColor by animateColorAsState(
-			targetValue = MaterialTheme.colorScheme.surfaceVariant
+			targetValue = when (enabled) {
+				true -> MaterialTheme.colorScheme.surfaceVariant
+				false -> MaterialTheme.colorScheme.surfaceVariant.disabledWithColor
+			}
 		)
 		Box(
 			modifier = Modifier
@@ -192,12 +195,18 @@ fun FlexSlider(
 			targetValue = run {
 				val color = colorType.color
 				when {
+					!enabled -> color.disabledWithColor
 					isFocused -> color
 					else -> color.copy(alpha = 0.75f)
 				}
 			}
 		)
-		val contentColor by animateColorAsState(colorType.contentColor)
+		val contentColor by animateColorAsState(
+			targetValue = run {
+				val color = colorType.contentColor
+				if (enabled) color else color.lightenWithContent
+			}
+		)
 		Box(
 			modifier = Modifier
 				.size(
@@ -243,7 +252,7 @@ fun FlexSlider(
 			derivedStateOf { isThumbHovered || isDragging }
 		}
 		val scale by animateFloatAsState(
-			targetValue = if (isThumbFocused) 1.2f else 1f
+			targetValue = if (isThumbFocused && enabled) 1.2f else 1f
 		)
 		val thumbBorderWidth by animateDpAsState(
 			targetValue = if (isThumbFocused) config.thumbBorderWidth * 1.1f else config.thumbBorderWidth
@@ -252,6 +261,7 @@ fun FlexSlider(
 			targetValue = run {
 				val color = colorType.color
 				when {
+					!enabled -> color.disabledWithColor
 					isThumbFocused -> color.lightenWithColor
 					isFocused -> color
 					else -> color.copy(alpha = 0.8f)
@@ -281,7 +291,7 @@ fun FlexSlider(
 				)
 		)
 		
-		if (tooltipFormatter != null) {
+		if (tooltipFormatter != null && enabled) {
 			val tooltipText by remember(value, tooltipFormatter) {
 				derivedStateOf {
 					tooltipFormatter.invoke(value)?.toString()
