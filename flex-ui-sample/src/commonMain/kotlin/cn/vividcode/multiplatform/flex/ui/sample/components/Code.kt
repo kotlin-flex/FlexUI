@@ -41,13 +41,10 @@ import kotlinx.coroutines.launch
  * 代码框展示组件
  */
 @Composable
-fun RowScope.Code(
-	code: String,
-) {
+fun Code(code: String) {
 	Column(
 		modifier = Modifier
-			.weight(0.8f)
-			.fillMaxHeight()
+			.fillMaxSize()
 			.border(
 				width = 1.dp,
 				color = MaterialTheme.colorScheme.outlineVariant,

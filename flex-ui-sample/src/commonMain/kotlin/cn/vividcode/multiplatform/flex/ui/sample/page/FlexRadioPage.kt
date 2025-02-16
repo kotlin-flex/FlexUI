@@ -1,13 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.sample.page
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
@@ -16,8 +10,8 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
+import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
-import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 
 /**
  * 单选框展示页
@@ -31,18 +25,34 @@ fun ColumnScope.FlexRadioPage() {
 	var switchType by remember { mutableStateOf(FlexRadioSwitchType.None) }
 	var scaleEffect by remember { mutableStateOf(true) }
 	var disabledOption by remember { mutableStateOf(4) }
-	Row(
-		modifier = Modifier
-			.fillMaxWidth()
-			.weight(1f)
-			.padding(12.dp),
-	) {
-		Box(
-			modifier = Modifier
-				.weight(1f)
-				.fillMaxHeight(),
-			contentAlignment = Alignment.Center
-		) {
+	
+	AdaptiveLayout(
+		code = {
+			val code by remember(sizeType, colorType, cornerType, radioType, switchType, scaleEffect, disabledOption) {
+				derivedStateOf {
+					"""
+						var selectedKey by remember { mutableStateOf("option1") }
+						FlexRadio(
+							selectedKey = selectedKey,
+							onSelectedKeyChange = { selectedKey = it },
+							options = {
+								(1 .. 3).map {
+									RadioOption("option${'$'}it", "Option ${'$'}it", it != $disabledOption)
+								}
+							}
+							sizeType = FlexSizeType.$sizeType,
+							colorType = FlexColorType.$colorType,
+							cornerType = FlexCornerType.$cornerType,
+							radioType = FlexRadioType.$radioType,
+							switchType = FlexRadioSwitchType.$switchType,
+							scaleEffect = $scaleEffect
+						)
+					""".trimIndent()
+				}
+			}
+			Code(code)
+		},
+		preview = {
 			var selectedKey by remember { mutableStateOf("option1") }
 			FlexRadio(
 				selectedKey = selectedKey,
@@ -59,133 +69,81 @@ fun ColumnScope.FlexRadioPage() {
 				switchType = switchType,
 				scaleEffect = scaleEffect,
 			)
-		}
-		Spacer(modifier = Modifier.width(12.dp))
-		val code by remember(sizeType, colorType, cornerType, radioType, switchType, scaleEffect, disabledOption) {
-			derivedStateOf {
-				"""
-					var selectedKey by remember { mutableStateOf("option1") }
-					FlexRadio(
-						selectedKey = selectedKey,
-						onSelectedKeyChange = { selectedKey = it },
-						options = {
-							(1 .. 3).map {
-								RadioOption("option${'$'}it", "Option ${'$'}it", it != $disabledOption)
-							}
-						}
-						sizeType = FlexSizeType.$sizeType,
-						colorType = FlexColorType.$colorType,
-						cornerType = FlexCornerType.$cornerType,
-						radioType = FlexRadioType.$radioType,
-						switchType = FlexRadioSwitchType.$switchType,
-						scaleEffect = $scaleEffect
-					)
-				""".trimIndent()
+		},
+		options = {
+			item("Radio Type") {
+				FlexRadio(
+					selectedKey = radioType,
+					onSelectedKeyChange = { radioType = it },
+					options = { FlexRadioType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Size Type") {
+				FlexRadio(
+					selectedKey = sizeType,
+					onSelectedKeyChange = { sizeType = it },
+					options = { FlexSizeType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Color Type") {
+				FlexRadio(
+					selectedKey = colorType,
+					onSelectedKeyChange = { colorType = it },
+					options = { FlexColorType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					colorType = colorType,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Corner Type") {
+				FlexRadio(
+					selectedKey = cornerType,
+					onSelectedKeyChange = { cornerType = it },
+					options = { FlexCornerType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					cornerType = cornerType,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Switch Type") {
+				FlexRadio(
+					selectedKey = switchType,
+					onSelectedKeyChange = { switchType = it },
+					options = { FlexRadioSwitchType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Scale Effect") {
+				FlexSwitch(
+					checked = scaleEffect,
+					onCheckedChange = { scaleEffect = it },
+					sizeType = FlexSizeType.Small,
+				)
+			}
+			item("Option Disabled") {
+				FlexRadio(
+					selectedKey = disabledOption,
+					onSelectedKeyChange = { disabledOption = it },
+					options = {
+						(1 .. 4).options(
+							valueTransform = { if (it < 4) "Option $it" else "None" }
+						)
+					},
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
 			}
 		}
-		Code(code)
-	}
-	HorizontalDivider()
-	val verticalScrollState = rememberScrollState()
-	Column(
-		modifier = Modifier
-			.height(252.dp)
-			.padding(4.dp)
-			.verticalScroll(verticalScrollState)
-			.padding(8.dp)
-	) {
-		TitleLayout(
-			title = "Radio Type"
-		) {
-			FlexRadio(
-				selectedKey = radioType,
-				onSelectedKeyChange = { radioType = it },
-				options = { FlexRadioType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Size Type"
-		) {
-			FlexRadio(
-				selectedKey = sizeType,
-				onSelectedKeyChange = { sizeType = it },
-				options = { FlexSizeType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Color Type"
-		) {
-			FlexRadio(
-				selectedKey = colorType,
-				onSelectedKeyChange = { colorType = it },
-				options = { FlexColorType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				colorType = colorType,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Corner Type"
-		) {
-			FlexRadio(
-				selectedKey = cornerType,
-				onSelectedKeyChange = { cornerType = it },
-				options = { FlexCornerType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				cornerType = cornerType,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Switch Type"
-		) {
-			FlexRadio(
-				selectedKey = switchType,
-				onSelectedKeyChange = { switchType = it },
-				options = { FlexRadioSwitchType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Scale Effect"
-		) {
-			FlexSwitch(
-				checked = scaleEffect,
-				onCheckedChange = { scaleEffect = it },
-				sizeType = FlexSizeType.Small,
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Option Disabled"
-		) {
-			FlexRadio(
-				selectedKey = disabledOption,
-				onSelectedKeyChange = { disabledOption = it },
-				options = {
-					(1 .. 4).options(
-						valueTransform = { if (it < 4) "Option $it" else "None" }
-					)
-				},
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-	}
+	)
 }

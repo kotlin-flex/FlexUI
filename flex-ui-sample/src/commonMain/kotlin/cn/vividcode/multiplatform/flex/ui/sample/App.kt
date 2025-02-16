@@ -20,7 +20,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.Clipboard
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -28,7 +27,6 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
@@ -134,23 +132,22 @@ fun App() {
 					TopAppBar(
 						title = { Text(text = currentPageRoute.name) },
 						actions = {
-							var refreshRate by remember { mutableLongStateOf(0L) }
-							frameNanosListener {
-								refreshRate = it
+							var frameRate by remember { mutableLongStateOf(0L) }
+							frameRateListener {
+								frameRate = it
 							}
-							val frameText by remember(refreshRate) {
-								derivedStateOf { "$refreshRate FPS" }
+							val frameText by remember(frameRate) {
+								derivedStateOf { "$frameRate FPS" }
 							}
 							FlexButton(
 								text = frameText,
 								modifier = Modifier
 									.width(90.dp),
 								colorType = when {
-									refreshRate >= 60 -> FlexColorType.Primary
-									refreshRate >= 30 -> FlexColorType.Secondary
+									frameRate >= 60 -> FlexColorType.Primary
+									frameRate >= 30 -> FlexColorType.Secondary
 									else -> FlexColorType.Error
-								},
-								sizeType = FlexSizeType.Small
+								}
 							)
 							Spacer(modifier = Modifier.width(if (FlexPlatform.isMobile) 8.dp else 70.dp))
 							if (FlexPlatform.isMobile) {
@@ -178,6 +175,7 @@ fun App() {
 					modifier = Modifier
 						.fillMaxSize()
 						.padding(it)
+						.padding(horizontal = 12.dp)
 				) {
 					when (currentPageRoute) {
 						PageRoute.FlexButton -> FlexButtonPage()
@@ -408,7 +406,7 @@ private fun BoxScope.VersionType() {
 }
 
 @Composable
-private fun frameNanosListener(callback: (frame: Long) -> Unit) {
+private fun frameRateListener(callback: (frame: Long) -> Unit) {
 	LaunchedEffect(Unit) {
 		var lastFrameTime = 0L
 		var lastUpdateTime = 0L

@@ -1,19 +1,15 @@
 package cn.vividcode.multiplatform.flex.ui.sample.page
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
@@ -26,8 +22,8 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
+import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
-import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 
 /**
  * 按钮展示页
@@ -43,18 +39,30 @@ fun ColumnScope.FlexButtonPage() {
 	var iconPosition by remember { mutableStateOf(FlexButtonIconPosition.End) }
 	var scaleEffect by remember { mutableStateOf(false) }
 	var enabled by remember { mutableStateOf(true) }
-	Row(
-		modifier = Modifier
-			.fillMaxWidth()
-			.weight(1f)
-			.padding(12.dp),
-	) {
-		Box(
-			modifier = Modifier
-				.weight(1f)
-				.fillMaxHeight(),
-			contentAlignment = Alignment.Center
-		) {
+	
+	AdaptiveLayout(
+		code = {
+			val code by remember(buttonText, iconType, sizeType, colorType, cornerType, buttonType, iconPosition, scaleEffect, enabled) {
+				derivedStateOf {
+					"""
+						FlexButton(
+							text = "$buttonText",
+							icon = ${iconType.code},
+							sizeType = FlexSizeType.$sizeType,
+							colorType = FlexColorType.$colorType,
+							cornerType = FlexCornerType.$cornerType,
+							buttonType = FlexButtonType.$buttonType,
+							iconPosition = FlexButtonIconPosition.$iconPosition,
+							iconRotation = 0f,
+							scaleEffect = $scaleEffect,
+							enabled = $enabled
+						)
+					""".trimIndent()
+				}
+			}
+			Code(code)
+		},
+		preview = {
 			FlexButton(
 				text = buttonText,
 				icon = iconType.icon,
@@ -67,153 +75,98 @@ fun ColumnScope.FlexButtonPage() {
 				scaleEffect = scaleEffect,
 				enabled = enabled
 			)
-		}
-		Spacer(Modifier.width(12.dp))
-		val code by remember(buttonText, iconType, sizeType, colorType, cornerType, buttonType, iconPosition, scaleEffect, enabled) {
-			derivedStateOf {
-				"""
-					FlexButton(
-						text = "$buttonText",
-						icon = ${iconType.code},
-						sizeType = FlexSizeType.$sizeType,
-						colorType = FlexColorType.$colorType,
-						cornerType = FlexCornerType.$cornerType,
-						buttonType = FlexButtonType.$buttonType,
-						iconPosition = FlexButtonIconPosition.$iconPosition,
-						iconRotation = 0f,
-						scaleEffect = $scaleEffect,
-						enabled = $enabled
-					)
-				""".trimIndent()
+		},
+		options = {
+			item("Button Text") {
+				FlexInput(
+					value = buttonText,
+					onValueChange = { buttonText = it },
+					modifier = Modifier.width(220.dp),
+					sizeType = FlexSizeType.Small,
+					colorType = colorType,
+					placeholder = { Text("Button Text") }
+				)
+			}
+			item("Button Type") {
+				FlexRadio(
+					selectedKey = buttonType,
+					onSelectedKeyChange = { buttonType = it },
+					options = { FlexButtonType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Size Type") {
+				FlexRadio(
+					selectedKey = sizeType,
+					onSelectedKeyChange = { sizeType = it },
+					options = { FlexSizeType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Color Type") {
+				FlexRadio(
+					selectedKey = colorType,
+					onSelectedKeyChange = { colorType = it },
+					options = { FlexColorType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					colorType = colorType,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Corner Type") {
+				FlexRadio(
+					selectedKey = cornerType,
+					onSelectedKeyChange = { cornerType = it },
+					options = { FlexCornerType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					cornerType = cornerType,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Icon") {
+				FlexRadio(
+					selectedKey = iconType,
+					onSelectedKeyChange = { iconType = it },
+					options = { IconType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Icon Position") {
+				FlexRadio(
+					selectedKey = iconPosition,
+					onSelectedKeyChange = { iconPosition = it },
+					options = { FlexButtonIconPosition.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Scale Effect") {
+				FlexSwitch(
+					checked = scaleEffect,
+					onCheckedChange = { scaleEffect = it },
+					sizeType = FlexSizeType.Small,
+					colorType = FlexColorType.Primary
+				)
+			}
+			item("Enabled") {
+				FlexSwitch(
+					checked = enabled,
+					onCheckedChange = { enabled = it },
+					sizeType = FlexSizeType.Small,
+					colorType = FlexColorType.Primary
+				)
 			}
 		}
-		Code(code)
-	}
-	HorizontalDivider()
-	val verticalScrollState = rememberScrollState()
-	Column(
-		modifier = Modifier
-			.height(252.dp)
-			.padding(4.dp)
-			.verticalScroll(verticalScrollState)
-			.padding(8.dp)
-	) {
-		TitleLayout(
-			title = "Button Text"
-		) {
-			FlexInput(
-				value = buttonText,
-				onValueChange = { buttonText = it },
-				modifier = Modifier.width(220.dp),
-				sizeType = FlexSizeType.Small,
-				colorType = colorType,
-				placeholder = { Text("Button Text") }
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Button Type"
-		) {
-			FlexRadio(
-				selectedKey = buttonType,
-				onSelectedKeyChange = { buttonType = it },
-				options = { FlexButtonType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Size Type"
-		) {
-			FlexRadio(
-				selectedKey = sizeType,
-				onSelectedKeyChange = { sizeType = it },
-				options = { FlexSizeType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Color Type"
-		) {
-			FlexRadio(
-				selectedKey = colorType,
-				onSelectedKeyChange = { colorType = it },
-				options = { FlexColorType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				colorType = colorType,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Corner Type"
-		) {
-			FlexRadio(
-				selectedKey = cornerType,
-				onSelectedKeyChange = { cornerType = it },
-				options = { FlexCornerType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				cornerType = cornerType,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Icon"
-		) {
-			FlexRadio(
-				selectedKey = iconType,
-				onSelectedKeyChange = { iconType = it },
-				options = { IconType.entries.options() },
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-			FontWeight
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Icon Position"
-		) {
-			FlexRadio(
-				selectedKey = iconPosition,
-				onSelectedKeyChange = { iconPosition = it },
-				options = { FlexButtonIconPosition.entries.options() },
-				sizeType = FlexSizeType.Small,
-				radioType = FlexRadioType.Button,
-				switchType = FlexRadioSwitchType.Swipe
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Scale Effect"
-		) {
-			FlexSwitch(
-				checked = scaleEffect,
-				onCheckedChange = { scaleEffect = it },
-				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary
-			)
-		}
-		Spacer(modifier = Modifier.height(12.dp))
-		TitleLayout(
-			title = "Enabled"
-		) {
-			FlexSwitch(
-				checked = enabled,
-				onCheckedChange = { enabled = it },
-				sizeType = FlexSizeType.Small,
-				colorType = FlexColorType.Primary
-			)
-		}
-	}
+	)
 }
 
 private enum class IconType(

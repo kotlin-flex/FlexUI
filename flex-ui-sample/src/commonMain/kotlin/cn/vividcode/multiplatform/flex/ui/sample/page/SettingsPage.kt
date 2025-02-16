@@ -7,13 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.sample.components.TitleLayout
 import cn.vividcode.multiplatform.flex.ui.sample.theme.HighContrastColorSchemes
 import cn.vividcode.multiplatform.flex.ui.sample.theme.MediumContrastColorSchemes
 import cn.vividcode.multiplatform.flex.ui.sample.theme.StandardContrastColorSchemes
@@ -36,9 +36,7 @@ fun SettingsPage(
 		GroupLayout(
 			title = "Theme"
 		) {
-			TitleLayout(
-				title = "Contrast"
-			) {
+			item("Contrast") {
 				FlexRadio(
 					selectedKey = contrastType,
 					onSelectedKeyChange = {
@@ -71,7 +69,7 @@ private enum class ContrastType(
 @Composable
 fun GroupLayout(
 	title: String,
-	content: @Composable ColumnScope.() -> Unit,
+	content: @Composable GroupLayoutScope.() -> Unit,
 ) {
 	Column(
 		modifier = Modifier.fillMaxWidth()
@@ -81,6 +79,41 @@ fun GroupLayout(
 			style = MaterialTheme.typography.titleMedium,
 		)
 		Spacer(Modifier.height(16.dp))
-		content()
+		with(GroupLayoutScopeImpl) {
+			content()
+		}
+	}
+}
+
+interface GroupLayoutScope {
+	
+	@Composable
+	fun item(
+		title: String,
+		content: @Composable RowScope.() -> Unit,
+	)
+}
+
+private object GroupLayoutScopeImpl : GroupLayoutScope {
+	
+	@Composable
+	override fun item(
+		title: String,
+		content: @Composable RowScope.() -> Unit,
+	) {
+		Row(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(vertical = 6.dp),
+			verticalAlignment = Alignment.CenterVertically,
+		) {
+			Text(
+				text = title,
+				style = MaterialTheme.typography.labelMedium,
+			)
+			Spacer(modifier = Modifier.width(12.dp))
+			Spacer(modifier = Modifier.weight(1f))
+			content()
+		}
 	}
 }
