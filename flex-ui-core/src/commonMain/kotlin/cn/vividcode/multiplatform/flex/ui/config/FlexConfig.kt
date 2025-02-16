@@ -30,6 +30,8 @@ class FlexConfig internal constructor() {
 	
 	internal val slider = FlexSizeConfig(FlexSliderSizeDefaults)
 	
+	internal val select = FlexSizeConfig(FlexSelectSizeDefaults)
+	
 	/**
 	 * 默认类型配置
 	 */
@@ -70,5 +72,12 @@ class FlexConfig internal constructor() {
 	 */
 	fun slider(config: FlexSizeConfig<FlexSliderConfig>.() -> Unit) {
 		this.slider.apply(config)
+	}
+	
+	/**
+	 * 选择器配置
+	 */
+	fun select(config: FlexSizeConfig<FlexSelectConfig>.() -> Unit) {
+		this.select.apply(config)
 	}
 }
