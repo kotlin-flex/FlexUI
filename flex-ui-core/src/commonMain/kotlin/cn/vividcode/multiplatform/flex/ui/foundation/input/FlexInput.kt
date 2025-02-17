@@ -233,9 +233,9 @@ private fun FlexInputDecorationBox(
 	val borderColor by animateColorAsState(
 		targetValue = when {
 			isFocused -> colorType.color
-			isHovered -> colorType.color.copy(alpha = 0.75f)
+			isHovered -> colorType.color.copy(alpha = 0.8f)
 			inputType == FlexInputType.Default -> colorType.color.copy(alpha = 0f)
-			enabled -> MaterialTheme.colorScheme.outlineVariant
+			enabled -> MaterialTheme.colorScheme.outline.copy(alpha = 0.8f)
 			else -> colorType.color.disabledWithColor
 		},
 	)

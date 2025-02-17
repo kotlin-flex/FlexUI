@@ -104,15 +104,6 @@ fun FlexButton(
 						}
 					}
 					
-					FlexButtonType.Default -> {
-						when {
-							!enabled -> color.copy(alpha = 0f)
-							isPressed -> color.copy(alpha = 0.1f)
-							isHovered -> color.copy(alpha = 0.08f)
-							else -> color.copy(alpha = 0f)
-						}
-					}
-					
 					FlexButtonType.Filled -> {
 						when {
 							!enabled -> color.copy(alpha = 0.08f)

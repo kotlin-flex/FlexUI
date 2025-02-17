@@ -124,10 +124,10 @@ internal fun FlexSliderMarks(
 			}
 		}
 		val color = colorType.color
-		val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
-		val borderColor by remember(it.value, value, color, surfaceVariant, isFocused) {
+		val darkenSurfaceVariant = MaterialTheme.colorScheme.surfaceVariant.darkenWithColor
+		val borderColor by remember(it.value, value, color, darkenSurfaceVariant, isFocused) {
 			derivedStateOf {
-				val color = if (it.value <= value) color else surfaceVariant.darkenWithColor
+				val color = if (it.value <= value) color else darkenSurfaceVariant
 				if (isFocused) color else color.copy(alpha = 0.75f)
 			}
 		}
