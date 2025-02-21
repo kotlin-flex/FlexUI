@@ -1,4 +1,4 @@
-package cn.vividcode.multiplatform.flex.ui.expends
+package cn.vividcode.multiplatform.flex.ui.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -11,6 +11,7 @@ import kotlin.math.min
  * 颜色变亮
  * @param factor 因子, < 1: 变暗, > 1: 变亮
  */
+@Deprecated("")
 private fun Color.brightness(factor: Float): Color {
 	val hsl = this.rgbToHsl()
 	val h = hsl[0]
@@ -19,6 +20,7 @@ private fun Color.brightness(factor: Float): Color {
 	return hslToRgb(h, s, l)
 }
 
+@Deprecated("")
 /**
  * 内容颜色变深
  */
@@ -31,6 +33,7 @@ internal val Color.darkenWithContent: Color
 /**
  * 内容颜色变浅
  */
+@Deprecated("")
 internal val Color.lightenWithContent: Color
 	@Composable
 	get() = this.brightness(
@@ -40,6 +43,7 @@ internal val Color.lightenWithContent: Color
 /**
  * 颜色变深
  */
+@Deprecated("")
 internal val Color.darkenWithColor: Color
 	@Composable
 	get() = this.brightness(
@@ -49,6 +53,7 @@ internal val Color.darkenWithColor: Color
 /**
  * 颜色变浅
  */
+@Deprecated("")
 internal val Color.lightenWithColor: Color
 	@Composable
 	get() = this.brightness(
@@ -58,18 +63,21 @@ internal val Color.lightenWithColor: Color
 /**
  * 内容颜色 (禁用)
  */
+@Deprecated("")
 internal val Color.disabledWithContent: Color
 	get() = this.copy(alpha = 0.8f)
 
 /**
  * 颜色 (禁用)
  */
+@Deprecated("")
 internal val Color.disabledWithColor: Color
 	get() = this.copy(alpha = 0.6f)
 
 /**
  * RGB 转 HSL
  */
+@Deprecated("")
 private fun Color.rgbToHsl(): FloatArray {
 	val max = maxOf(red, green, blue)
 	val min = minOf(red, green, blue)
@@ -87,6 +95,7 @@ private fun Color.rgbToHsl(): FloatArray {
 /**
  * HSL 转 RGB
  */
+@Deprecated("")
 private fun hslToRgb(h: Float, s: Float, l: Float): Color {
 	val c = (1 - abs(2 * l - 1)) * s
 	val x = c * (1 - abs((h * 6) % 2 - 1))

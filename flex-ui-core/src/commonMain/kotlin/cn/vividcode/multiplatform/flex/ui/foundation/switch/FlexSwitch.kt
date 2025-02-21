@@ -27,10 +27,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithColor
-import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
-import cn.vividcode.multiplatform.flex.ui.expends.disabledWithContent
-import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithContent
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithColor
 
 @Composable
 fun FlexSwitch(
@@ -109,7 +109,7 @@ fun FlexSwitch(
 		)
 		val contentColor by animateColorAsState(
 			targetValue = run {
-				val color = if (checked) colorType.contentColor else Color.White
+				val color = if (checked) colorType.onColor else Color.White
 				if (enabled) color else color.disabledWithContent
 			}
 		)

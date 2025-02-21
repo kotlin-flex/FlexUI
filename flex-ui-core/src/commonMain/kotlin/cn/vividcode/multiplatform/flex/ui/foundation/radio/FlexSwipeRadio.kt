@@ -19,12 +19,15 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.util.fastAll
+import androidx.compose.ui.util.fastForEachIndexed
+import androidx.compose.ui.util.fastMap
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.expends.*
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
+import cn.vividcode.multiplatform.flex.ui.utils.*
 
 /**
  * FlexRadio 单选框，类型：滑块
@@ -39,7 +42,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
  * @param scaleEffect 开启缩放效果
  */
 @Composable
-internal fun <Key> FlexSwipeRadio(
+internal fun <Key : Any> FlexSwipeRadio(
 	options: List<RadioOption<Key>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
@@ -67,11 +70,14 @@ internal fun <Key> FlexSwipeRadio(
 				corner = corner
 			)
 	) {
-		val buttonWidths = remember { mutableStateListOf(*options.map { Dp.Hairline }.toTypedArray()) }
+		val buttonWidths = remember { mutableStateListOf(*options.fastMap { Dp.Hairline }.toTypedArray()) }
 		val currentIndex = options.indexOfFirst { it.key == selectedKey }
 		var isButtonPressed by remember { mutableStateOf(false) }
 		var isButtonHovered by remember { mutableStateOf(false) }
-		if (currentIndex != -1 && buttonWidths.all { it != Dp.Hairline }) {
+		val show by remember(currentIndex, buttonWidths) {
+			derivedStateOf { currentIndex != -1 && buttonWidths.fastAll { it != Dp.Hairline } }
+		}
+		if (show) {
 			val targetWidth by animateDpAsState(buttonWidths[currentIndex])
 			val targetOffsetX by remember(buttonWidths, currentIndex, config.borderWidth) {
 				derivedStateOf { buttonWidths.take(currentIndex).sum() + config.borderWidth * currentIndex }
@@ -147,7 +153,7 @@ internal fun <Key> FlexSwipeRadio(
 				.clip(cornerShape)
 		) {
 			val density = LocalDensity.current
-			options.forEachIndexed { index, option ->
+			options.fastForEachIndexed { index, option ->
 				val interactionSource = remember { MutableInteractionSource() }
 				val isPressed by interactionSource.collectIsPressedAsState()
 				val isHovered by interactionSource.collectIsHoveredAsState()

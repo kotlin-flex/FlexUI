@@ -1,28 +1,35 @@
-package cn.vividcode.multiplatform.flex.ui.expends
+package cn.vividcode.multiplatform.flex.ui.utils
 
+import androidx.compose.foundation.border
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.theme.CurrentPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 
 /**
  * 绘制虚线
  */
+@Stable
 internal fun Modifier.dashedBorder(
 	width: Dp,
-	color: Color,
-	dashLength: Dp = 4.dp,
-	gapLength: Dp = 3.dp,
+	brush: FlexBrush,
 	shape: Shape = RectangleShape,
+	dash: Dp = 4.dp,
+	gap: Dp = 3.dp,
 ): Modifier = this.drawBehind {
 	val strokeWidthPx = width.toPx()
-	val dashPx = dashLength.toPx()
-	val gapPx = gapLength.toPx()
+	val dashPx = dash.toPx()
+	val gapPx = gap.toPx()
 	
 	val pathEffect = PathEffect.dashPathEffect(
 		intervals = floatArrayOf(dashPx, gapPx),
@@ -43,10 +50,18 @@ internal fun Modifier.dashedBorder(
 		drawOutline(
 			outline = shape.createOutline(insetSize, layoutDirection, this),
 			style = Stroke(width = strokeWidthPx, pathEffect = pathEffect),
-			color = color
+			brush = brush.brush
 		)
 	}
 }
+
+@Stable
+internal fun Modifier.border(width: Dp, brush: FlexBrush, shape: Shape) =
+	this.border(
+		width = width,
+		brush = brush.brush,
+		shape = shape
+	)
 
 fun Modifier.multiplatform(
 	vararg platforms: FlexPlatform,

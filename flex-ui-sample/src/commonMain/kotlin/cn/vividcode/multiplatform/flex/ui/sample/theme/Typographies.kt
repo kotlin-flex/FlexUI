@@ -14,16 +14,12 @@ import org.jetbrains.compose.resources.Font
 @Composable
 fun getTypography() = with(MaterialTheme.typography) {
 	val fontFamily = FontFamily(
-		fonts = listOf(
-			FontWeight.W100, FontWeight.W200, FontWeight.W300,
-			FontWeight.W400, FontWeight.W500, FontWeight.W600,
-			FontWeight.W700, FontWeight.W800, FontWeight.W900,
-		).map {
+		fonts = (100 .. 900 step 100).map { weight ->
 			Font(
 				resource = Res.font.MiSans_VF,
-				weight = it,
+				weight = FontWeight(weight),
 				variationSettings = FontVariation.Settings(
-					FontVariation.weight(it.weight)
+					FontVariation.weight(weight)
 				)
 			)
 		}

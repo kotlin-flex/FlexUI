@@ -17,6 +17,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputIcons
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
+import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderMarks
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
@@ -72,9 +73,9 @@ fun PreviewsPage(
 				selectedKey = selectedKey2,
 				onSelectedKeyChange = { selectedKey2 = it },
 				options = {
-					listOf("Option1", "Disabled").options(
-						enabledTransform = { it == "Option1" }
-					)
+					listOf("Option1", "Disabled").options {
+						RadioOption(it, it.toString(), enabled = it == "Option1")
+					}
 				}
 			)
 			Spacer(modifier = Modifier.width(8.dp))

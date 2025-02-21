@@ -77,7 +77,7 @@ internal fun FlexSliderTooltipPopup(
 			derivedStateOf { RoundedCornerShape(bottomEndPercent = arrowCornerPercent) }
 		}
 		val color by animateColorAsState(colorType.color)
-		val contentColor by animateColorAsState(colorType.contentColor)
+		val contentColor by animateColorAsState(colorType.onColor)
 		var targetAlpha by remember { mutableStateOf(0f) }
 		var targetScale by remember { mutableStateOf(1f) }
 		val alpha by animateFloatAsState(

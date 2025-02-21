@@ -2,6 +2,8 @@ package cn.vividcode.multiplatform.flex.ui.foundation.slider
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.util.fastFilter
+import androidx.compose.ui.util.fastMap
 
 /**
  * 滑动条步骤
@@ -66,7 +68,7 @@ private data class FlexSliderValuesSteps(
 	override fun calcStepValues(valueRange: FloatRange): List<Float> {
 		return (values + valueRange.start + valueRange.endInclusive)
 			.distinct()
-			.filter { it in valueRange }
+			.fastFilter { it in valueRange }
 			.sorted()
 			.toList()
 	}
@@ -79,8 +81,8 @@ private data class FlexSliderPercentSteps(
 	override fun calcStepValues(valueRange: FloatRange): List<Float> {
 		return (percents + 0f + 1f)
 			.distinct()
-			.filter { it in 0f .. 1f }
+			.fastFilter { it in 0f .. 1f }
 			.sorted()
-			.map { valueRange.range * it + valueRange.start }
+			.fastMap { valueRange.range * it + valueRange.start }
 	}
 }

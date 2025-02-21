@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexInputConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
 
 /**
  * FlexInput 输入框

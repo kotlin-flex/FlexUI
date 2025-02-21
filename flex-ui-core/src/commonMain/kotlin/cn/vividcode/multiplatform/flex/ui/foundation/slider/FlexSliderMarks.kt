@@ -16,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.util.fastForEach
+import androidx.compose.ui.util.fastMap
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
 
 /**
  * 滑动条的标记点
@@ -51,7 +53,7 @@ data class FlexSliderMarks private constructor(
 			remember(values) {
 				val filterMarks = values.distinct()
 					.sorted()
-					.map { FlexSliderMark(it) }
+					.fastMap { FlexSliderMark(it) }
 				FlexSliderMarks(filterMarks)
 			}
 		
@@ -60,7 +62,7 @@ data class FlexSliderMarks private constructor(
 			remember(values) {
 				val filterMarks = values.distinct()
 					.sorted()
-					.map { FlexSliderMark(it) }
+					.fastMap { FlexSliderMark(it) }
 				FlexSliderMarks(filterMarks)
 			}
 		
@@ -70,7 +72,7 @@ data class FlexSliderMarks private constructor(
 				val filterMarks = marks
 					.distinctBy { it.first }
 					.sortedBy { it.first }
-					.map { FlexSliderMark(it.first, it.second) }
+					.fastMap { FlexSliderMark(it.first, it.second) }
 				FlexSliderMarks(filterMarks)
 			}
 		
@@ -79,7 +81,7 @@ data class FlexSliderMarks private constructor(
 			remember(marks) {
 				val filterMarks = marks.entries
 					.sortedBy { it.key }
-					.map { FlexSliderMark(it.key, it.value) }
+					.fastMap { FlexSliderMark(it.key, it.value) }
 				FlexSliderMarks(filterMarks)
 			}
 	}
@@ -117,7 +119,7 @@ internal fun FlexSliderMarks(
 	val markBorderWidth by animateDpAsState(
 		targetValue = config.markBorderWidth
 	)
-	filterMarks.forEach {
+	filterMarks.fastForEach {
 		val offsetStart by remember(it.value, length, thickness, sliderThickness, markBorderWidth, valueRange) {
 			derivedStateOf {
 				(length - thickness) / valueRange.range * (it.value - valueRange.start) + thickness / 2 - markBorderWidth - sliderThickness / 2

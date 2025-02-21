@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -19,8 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,7 +27,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.*
+import cn.vividcode.multiplatform.flex.ui.utils.*
 
 /**
  * FlexButton 按钮
@@ -74,58 +71,52 @@ fun FlexButton(
 		val interactionSource = remember { MutableInteractionSource() }
 		val isHovered by interactionSource.collectIsHoveredAsState()
 		val isPressed by interactionSource.collectIsPressedAsState()
-		val borderColor by animateColorAsState(
-			targetValue = run {
-				val color = colorType.color
-				when (buttonType) {
-					FlexButtonType.Default, FlexButtonType.Dashed -> {
-						when {
-							!enabled -> color.disabledWithContent
-							isPressed -> color.darkenWithContent
-							isHovered -> color.lightenWithContent
-							else -> color
-						}
-					}
-					
-					else -> colorType.color.copy(alpha = 0f)
+		val borderBrush by animateFlexBrushAsState(
+			targetValue = when (buttonType) {
+				FlexButtonType.Default, FlexButtonType.Dashed -> when {
+					!enabled -> colorType.disabledBrush(alpha = 0.8f)
+					isPressed -> colorType.darkenBrush()
+					isHovered -> colorType.lightenBrush()
+					else -> colorType.brush
 				}
+				
+				else -> colorType.transparentBrush
 			}
 		)
-		val backgroundColor by animateColorAsState(
-			targetValue = run {
-				val color = colorType.color
-				when (buttonType) {
-					FlexButtonType.Primary -> {
-						when {
-							!enabled -> color.disabledWithColor
-							isPressed -> color.darkenWithColor
-							isHovered -> color.lightenWithColor
-							else -> color
-						}
+		val backgroundBrush by animateFlexBrushAsState(
+			targetValue = when (buttonType) {
+				FlexButtonType.Primary -> {
+					when {
+						!enabled -> colorType.disabledBrush()
+						isPressed -> colorType.darkenBrush()
+						isHovered -> colorType.lightenBrush()
+						else -> colorType.brush
 					}
-					
-					FlexButtonType.Filled -> {
-						when {
-							!enabled -> color.copy(alpha = 0.08f)
-							isPressed -> color.copy(alpha = 0.2f)
-							isHovered -> color.copy(alpha = 0.15f)
-							else -> color.copy(alpha = 0.1f)
-						}
-					}
-					
-					FlexButtonType.Text -> {
-						when {
-							!enabled -> color.copy(alpha = 0f)
-							isPressed -> color.copy(alpha = 0.2f)
-							isHovered -> color.copy(alpha = 0.1f)
-							else -> color.copy(alpha = 0f)
-						}
-					}
-					
-					else -> color.copy(alpha = 0f)
 				}
-			}
+				
+				FlexButtonType.Filled -> {
+					when {
+						!enabled -> colorType.brush.copy(alpha = 0.08f)
+						isPressed -> colorType.brush.copy(alpha = 0.2f)
+						isHovered -> colorType.brush.copy(alpha = 0.15f)
+						else -> colorType.brush.copy(alpha = 0.1f)
+					}
+				}
+				
+				FlexButtonType.Text -> {
+					when {
+						!enabled -> colorType.transparentBrush
+						isPressed -> colorType.brush.copy(alpha = 0.2f)
+						isHovered -> colorType.brush.copy(alpha = 0.1f)
+						else -> colorType.transparentBrush
+					}
+				}
+				
+				else -> colorType.transparentBrush
+			},
+			label = text
 		)
+		
 		val horizontalPadding by animateDpAsState(
 			targetValue = if (text.isNotEmpty()) config.horizontalPadding else Dp.Hairline
 		)
@@ -160,7 +151,31 @@ fun FlexButton(
 				.then(if (isTextEmpty) Modifier.width(height) else Modifier)
 				.height(height)
 				.clip(cornerShape)
-				.backgroundBorderStyle(buttonType, borderWidth, cornerShape, backgroundColor, borderColor)
+				.background(
+					brush = backgroundBrush.brush,
+					shape = cornerShape
+				)
+				.then(
+					when (buttonType) {
+						FlexButtonType.Default -> {
+							Modifier.border(
+								width = borderWidth,
+								brush = borderBrush,
+								shape = cornerShape
+							)
+						}
+						
+						FlexButtonType.Dashed -> {
+							Modifier.dashedBorder(
+								width = borderWidth,
+								brush = borderBrush,
+								shape = cornerShape
+							)
+						}
+						
+						else -> Modifier
+					}
+				)
 				.clickable(
 					interactionSource = interactionSource,
 					indication = null,
@@ -175,9 +190,9 @@ fun FlexButton(
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.Center
 		) {
-			val contentColor by animateColorAsState(
+			val onColor by animateColorAsState(
 				targetValue = when (buttonType) {
-					FlexButtonType.Primary -> colorType.contentColor
+					FlexButtonType.Primary -> colorType.onColor
 					
 					FlexButtonType.Filled, FlexButtonType.Text -> {
 						val color = colorType.color
@@ -213,7 +228,7 @@ fun FlexButton(
 					val rotation by animateFloatAsState(iconRotation)
 					Icon(
 						imageVector = icon,
-						tint = contentColor,
+						tint = onColor,
 						contentDescription = null,
 						modifier = Modifier
 							.rotate(rotation)
@@ -234,7 +249,7 @@ fun FlexButton(
 				val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 				Text(
 					text = targetText,
-					color = contentColor,
+					color = onColor,
 					fontSize = fontSize.sp,
 					fontWeight = config.fontWeight,
 					letterSpacing = when (config.letterSpacing) {
@@ -247,54 +262,6 @@ fun FlexButton(
 				)
 			}
 		}
-	}
-}
-
-/**
- * 设置按钮样式
- */
-@Composable
-private fun Modifier.backgroundBorderStyle(
-	buttonType: FlexButtonType,
-	borderWidth: Dp,
-	cornerShape: Shape,
-	backgroundColor: Color,
-	borderColor: Color,
-): Modifier {
-	return when (buttonType) {
-		FlexButtonType.Default -> this
-			.background(
-				color = backgroundColor,
-				shape = cornerShape,
-			)
-			.border(
-				width = borderWidth,
-				color = borderColor,
-				shape = cornerShape
-			)
-		
-		FlexButtonType.Dashed -> this
-			.background(
-				color = backgroundColor,
-				shape = cornerShape,
-			)
-			.dashedBorder(
-				width = borderWidth,
-				color = borderColor,
-				shape = cornerShape
-			)
-		
-		FlexButtonType.Link -> this
-			.background(
-				color = backgroundColor,
-				shape = cornerShape,
-			)
-		
-		else -> this
-			.background(
-				color = backgroundColor,
-				shape = cornerShape
-			)
 	}
 }
 

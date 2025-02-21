@@ -23,13 +23,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastMap
+import androidx.compose.ui.util.fastMapIndexed
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithContent
-import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
-import cn.vividcode.multiplatform.flex.ui.expends.lightenWithContent
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithContent
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
 import kotlin.jvm.JvmName
 
 /**
@@ -47,7 +49,7 @@ import kotlin.jvm.JvmName
  */
 @JvmName("FlexRadio")
 @Composable
-fun <Key> FlexRadio(
+fun <Key : Any> FlexRadio(
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
 	options: FlexRadioOptions.() -> List<RadioOption<Key>>,
@@ -140,7 +142,7 @@ enum class FlexRadioSwitchType {
 /**
  * 选项
  */
-class RadioOption<Key>(
+class RadioOption<Key : Any>(
 	val key: Key,
 	val value: String = key.toString(),
 	val enabled: Boolean = true,
@@ -148,28 +150,56 @@ class RadioOption<Key>(
 
 sealed interface FlexRadioOptions {
 	
-	fun <T> Array<T>.options(
-		valueTransform: (T) -> String = { it.toString() },
-		enabledTransform: (T) -> Boolean = { true },
+	fun <T : Any> Array<T>.options(
+		transform: (T) -> RadioOption<T> = { RadioOption(it, it.toString()) },
 	): List<RadioOption<T>>
 	
-	fun <T> Iterable<T>.options(
-		valueTransform: (T) -> String = { it.toString() },
-		enabledTransform: (T) -> Boolean = { true },
+	fun <T : Any> Array<T>.optionsIndexed(
+		transform: (index: Int, T) -> RadioOption<T> = { _, it -> RadioOption(it, it.toString()) },
+	): List<RadioOption<T>>
+	
+	fun <T : Any> Iterable<T>.options(
+		transform: (T) -> RadioOption<T> = { RadioOption(it, it.toString()) },
+	): List<RadioOption<T>>
+	
+	fun <T : Any> Iterable<T>.optionsIndexed(
+		transform: (index: Int, T) -> RadioOption<T> = { _, it -> RadioOption(it, it.toString()) },
+	): List<RadioOption<T>>
+	
+	fun <T : Any> List<T>.options(
+		transform: (T) -> RadioOption<T> = { RadioOption(it, it.toString()) },
+	): List<RadioOption<T>>
+	
+	fun <T : Any> List<T>.optionsIndexed(
+		transform: (index: Int, T) -> RadioOption<T> = { _, it -> RadioOption(it, it.toString()) },
 	): List<RadioOption<T>>
 }
 
 private object FlexRadioOptionsImpl : FlexRadioOptions {
 	
-	override fun <T> Array<T>.options(
-		valueTransform: (T) -> String,
-		enabledTransform: (T) -> Boolean,
-	): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
+	override fun <T : Any> Array<T>.options(
+		transform: (T) -> RadioOption<T>,
+	): List<RadioOption<T>> = this.map(transform)
 	
-	override fun <T> Iterable<T>.options(
-		valueTransform: (T) -> String,
-		enabledTransform: (T) -> Boolean,
-	): List<RadioOption<T>> = this.map { RadioOption(it, valueTransform(it), enabledTransform(it)) }
+	override fun <T : Any> Array<T>.optionsIndexed(
+		transform: (Int, T) -> RadioOption<T>,
+	): List<RadioOption<T>> = this.mapIndexed(transform)
+	
+	override fun <T : Any> Iterable<T>.options(
+		transform: (T) -> RadioOption<T>,
+	): List<RadioOption<T>> = this.map(transform)
+	
+	override fun <T : Any> Iterable<T>.optionsIndexed(
+		transform: (Int, T) -> RadioOption<T>,
+	): List<RadioOption<T>> = this.mapIndexed(transform)
+	
+	override fun <T : Any> List<T>.options(
+		transform: (T) -> RadioOption<T>,
+	): List<RadioOption<T>> = this.fastMap(transform)
+	
+	override fun <T : Any> List<T>.optionsIndexed(
+		transform: (Int, T) -> RadioOption<T>,
+	): List<RadioOption<T>> = this.fastMapIndexed(transform)
 }
 
 internal val DisabledBackgroundColor: Color
@@ -208,7 +238,7 @@ internal fun FlexRadioText(
 				else -> MaterialTheme.colorScheme.outline
 			}
 			
-			radioType == Button -> colorType.contentColor
+			radioType == Button -> colorType.onColor
 			else -> {
 				val color = colorType.color
 				when {
@@ -234,7 +264,7 @@ internal fun FlexRadioText(
  * 单选框竖线
  */
 @Composable
-internal fun <Key> FlexRadioLine(
+internal fun <Key : Any> FlexRadioLine(
 	index: Int,
 	options: List<RadioOption<Key>>,
 	selectedKey: Key,

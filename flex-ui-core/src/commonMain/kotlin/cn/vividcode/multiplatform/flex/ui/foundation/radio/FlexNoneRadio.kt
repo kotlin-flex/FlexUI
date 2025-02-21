@@ -22,15 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.util.fastForEachIndexed
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithColor
-import cn.vividcode.multiplatform.flex.ui.expends.darkenWithContent
-import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
-import cn.vividcode.multiplatform.flex.ui.expends.lightenWithContent
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithContent
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
 
 /**
  * FlexRadio 单选框，类型：无效果
@@ -45,7 +46,7 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
  * @param scaleEffect 开启缩放效果
  */
 @Composable
-internal fun <Key> FlexNoneRadio(
+internal fun <Key : Any> FlexNoneRadio(
 	options: List<RadioOption<Key>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
@@ -74,7 +75,7 @@ internal fun <Key> FlexNoneRadio(
 				corner = corner
 			)
 	) {
-		options.forEachIndexed { index, option ->
+		options.fastForEachIndexed { index, option ->
 			val buttonCornerShape by remember(corner, options.lastIndex) {
 				derivedStateOf {
 					when {

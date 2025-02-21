@@ -26,14 +26,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEachIndexed
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
-import cn.vividcode.multiplatform.flex.ui.expends.multiplatform
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.sample.page.*
 import cn.vividcode.multiplatform.flex.ui.theme.FlexPlatform
 import cn.vividcode.multiplatform.flex.ui.theme.FlexThemeState
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import cn.vividcode.multiplatform.flex.ui.utils.multiplatform
 import kotlin.math.sqrt
 
 private const val VERSION_NAME = "v1.0.0-exp-07"
@@ -112,7 +113,7 @@ fun App() {
 						.weight(1f)
 						.padding(bottom = 4.dp)
 				) {
-					PageRoute.entries.forEachIndexed { index, it ->
+					PageRoute.entries.fastForEachIndexed { index, it ->
 						if (index != 0) {
 							Spacer(modifier = Modifier.height(4.dp))
 						}

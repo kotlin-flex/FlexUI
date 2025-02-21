@@ -26,12 +26,13 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.expends.disabledWithColor
-import cn.vividcode.multiplatform.flex.ui.expends.lightenWithColor
-import cn.vividcode.multiplatform.flex.ui.expends.lightenWithContent
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
 
 /**
  * FlexSlider 滑动条
@@ -227,7 +228,7 @@ fun FlexSlider(
 			)
 			val contentColor by animateColorAsState(
 				targetValue = run {
-					val color = colorType.contentColor
+					val color = colorType.onColor
 					if (enabled) color else color.lightenWithContent
 				}
 			)
@@ -378,7 +379,7 @@ private fun FlexSliderTextMarks(
 		}
 		val density = LocalDensity.current
 		val thickness by animateDpAsState(config.thickness)
-		filterMarks.forEach {
+		filterMarks.fastForEach {
 			var markTextLength by remember { mutableStateOf(Dp.Hairline) }
 			val textOffsetStart by remember(it.value, length, markTextLength, thickness, valueRange) {
 				derivedStateOf {

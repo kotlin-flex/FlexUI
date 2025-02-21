@@ -135,9 +135,9 @@ fun ColumnScope.FlexRadioPage() {
 					selectedKey = disabledOption,
 					onSelectedKeyChange = { disabledOption = it },
 					options = {
-						(1 .. 4).options(
-							valueTransform = { if (it < 4) "Option $it" else "None" }
-						)
+						(1 .. 4).options {
+							RadioOption(it, if (it < 4) "Option $it" else "None")
+						}
 					},
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,

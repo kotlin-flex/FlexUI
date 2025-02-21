@@ -1,4 +1,4 @@
-package cn.vividcode.multiplatform.flex.ui.expends
+package cn.vividcode.multiplatform.flex.ui.utils
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
