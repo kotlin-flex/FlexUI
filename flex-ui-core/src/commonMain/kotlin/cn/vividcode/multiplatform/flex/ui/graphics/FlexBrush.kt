@@ -22,25 +22,25 @@ sealed class FlexBrush {
 		private const val SWEEP_GRADIENT = 5
 		private const val SWEEP_GRADIENT_STOPS = 6
 		
-		private val cache = Array<MutableMap<String, FlexBrush>?>(7) { null }
+		private val cache by lazy { arrayOfNulls<MutableMap<String, FlexBrush>>(7) }
 		
 		private fun createOrCache(
 			type: Int,
-			vararg keys: Any,
+			key: String,
 			create: () -> FlexBrush,
 		): FlexBrush {
 			val cacheMap = cache[type] ?: mutableMapOf<String, FlexBrush>()
 				.also { cache[type] = it }
-			val key = keys.joinToString("_") {
-				it.hashCode().toString()
-			}
 			return cacheMap.getOrPut(key, create)
 		}
 		
 		@Stable
 		fun solidColor(
 			color: Color,
-		): FlexBrush = createOrCache(SOLID_COLOR, color) {
+		): FlexBrush = createOrCache(
+			type = SOLID_COLOR,
+			key = "${color.hashCode()}"
+		) {
 			FlexSolidColor(
 				color = color,
 			)
@@ -52,7 +52,10 @@ sealed class FlexBrush {
 			start: Offset = Offset.Zero,
 			end: Offset = Offset.Infinite,
 			tileMode: TileMode = TileMode.Clamp,
-		): FlexBrush = createOrCache(LINEAR_GRADIENT, colors, start, end, tileMode) {
+		): FlexBrush = createOrCache(
+			type = LINEAR_GRADIENT,
+			key = "${colors.hashCode()}_${start.hashCode()}_${end.hashCode()}_${tileMode.hashCode()}",
+		) {
 			FlexLinearGradient(
 				colors = colors,
 				start = start,
@@ -67,7 +70,10 @@ sealed class FlexBrush {
 			start: Offset = Offset.Zero,
 			end: Offset = Offset.Infinite,
 			tileMode: TileMode = TileMode.Clamp,
-		): FlexBrush = createOrCache(LINEAR_GRADIENT_STOPS, colorStops, start, end, tileMode) {
+		): FlexBrush = createOrCache(
+			type = LINEAR_GRADIENT_STOPS,
+			key = "${colorStops.hashCode()}_${start.hashCode()}_${end.hashCode()}_${tileMode.hashCode()}",
+		) {
 			FlexStopsLinearGradient(
 				colorStops = colorStops,
 				start = start,
@@ -82,11 +88,11 @@ sealed class FlexBrush {
 			startX: Float = 0f,
 			endX: Float = Float.POSITIVE_INFINITY,
 			tileMode: TileMode = TileMode.Clamp,
-		): FlexBrush = linearGradient(
+		): FlexBrush = FlexLinearGradient(
 			colors = colors,
 			start = Offset(startX, 0f),
 			end = Offset(endX, 0f),
-			tileMode = tileMode,
+			tileMode = tileMode
 		)
 		
 		@Stable
@@ -99,7 +105,7 @@ sealed class FlexBrush {
 			colorStops = colorStops,
 			start = Offset(startX, 0f),
 			end = Offset(endX, 0f),
-			tileMode = tileMode,
+			tileMode = tileMode
 		)
 		
 		@Stable
@@ -112,7 +118,7 @@ sealed class FlexBrush {
 			colors = colors,
 			start = Offset(0f, startY),
 			end = Offset(0f, endY),
-			tileMode = tileMode,
+			tileMode = tileMode
 		)
 		
 		@Stable
@@ -125,7 +131,7 @@ sealed class FlexBrush {
 			colorStops = colorStops,
 			start = Offset(0f, startY),
 			end = Offset(0f, endY),
-			tileMode = tileMode,
+			tileMode = tileMode
 		)
 		
 		@Stable
@@ -134,7 +140,10 @@ sealed class FlexBrush {
 			center: Offset = Offset.Unspecified,
 			radius: Float = Float.POSITIVE_INFINITY,
 			tileMode: TileMode = TileMode.Clamp,
-		): FlexBrush = createOrCache(RADIAL_GRADIENT, colors, center, radius, tileMode) {
+		): FlexBrush = createOrCache(
+			type = RADIAL_GRADIENT,
+			key = "${colors.hashCode()}_${center.hashCode()}_${radius.hashCode()}_${tileMode.hashCode()}"
+		) {
 			FlexRadialGradient(
 				colors = colors,
 				center = center,
@@ -149,7 +158,10 @@ sealed class FlexBrush {
 			center: Offset = Offset.Unspecified,
 			radius: Float = Float.POSITIVE_INFINITY,
 			tileMode: TileMode = TileMode.Clamp,
-		): FlexBrush = createOrCache(RADIAL_GRADIENT_STOPS, colorStops, center, radius, tileMode) {
+		): FlexBrush = createOrCache(
+			type = RADIAL_GRADIENT_STOPS,
+			key = "${colorStops.hashCode()}_${center.hashCode()}_${radius.hashCode()}_${tileMode.hashCode()}",
+		) {
 			FlexStopsRadialGradient(
 				colorStops = colorStops,
 				center = center,
@@ -162,7 +174,10 @@ sealed class FlexBrush {
 		fun sweepGradient(
 			colors: List<Color>,
 			center: Offset = Offset.Unspecified,
-		): FlexBrush = createOrCache(SWEEP_GRADIENT, colors, center) {
+		): FlexBrush = createOrCache(
+			type = SWEEP_GRADIENT,
+			key = "${colors.hashCode()}_${center.hashCode()}",
+		) {
 			FlexSweepGradient(
 				colors = colors,
 				center = center,
@@ -173,7 +188,10 @@ sealed class FlexBrush {
 		fun sweepGradient(
 			vararg colorStops: Pair<Float, Color>,
 			center: Offset = Offset.Unspecified,
-		): FlexBrush = createOrCache(SWEEP_GRADIENT_STOPS, colorStops, center) {
+		): FlexBrush = createOrCache(
+			type = SWEEP_GRADIENT_STOPS,
+			key = "${colorStops.hashCode()}_${center.hashCode()}",
+		) {
 			FlexStopsSweepGradient(
 				colorStops = colorStops,
 				center = center,
@@ -216,7 +234,9 @@ internal class FlexSolidColor(
 	}
 	
 	override fun replace(colors: List<Color>): FlexBrush {
-		return solidColor(colors.first())
+		return FlexSolidColor(
+			color = colors.first(),
+		)
 	}
 }
 
@@ -250,7 +270,7 @@ internal class FlexLinearGradient(
 			colors = colors,
 			start = start,
 			end = end,
-			tileMode = tileMode,
+			tileMode = tileMode
 		)
 	}
 }
