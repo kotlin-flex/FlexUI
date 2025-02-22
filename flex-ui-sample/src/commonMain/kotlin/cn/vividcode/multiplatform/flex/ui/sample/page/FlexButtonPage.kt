@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
@@ -33,7 +33,7 @@ fun ColumnScope.FlexButtonPage() {
 	var buttonText by remember { mutableStateOf("FlexButton") }
 	var buttonType by remember { mutableStateOf(FlexButtonType.Default) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
-	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
+	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var iconType by remember { mutableStateOf(IconType.None) }
 	var iconPosition by remember { mutableStateOf(FlexButtonIconPosition.End) }
@@ -42,14 +42,14 @@ fun ColumnScope.FlexButtonPage() {
 	
 	AdaptiveLayout(
 		code = {
-			val code by remember(buttonText, iconType, sizeType, colorType, cornerType, buttonType, iconPosition, scaleEffect, enabled) {
+			val code by remember(buttonText, iconType, sizeType, brushType, cornerType, buttonType, iconPosition, scaleEffect, enabled) {
 				derivedStateOf {
 					"""
 						FlexButton(
 							text = "$buttonText",
 							icon = ${iconType.code},
 							sizeType = FlexSizeType.$sizeType,
-							colorType = FlexColorType.$colorType,
+							brushType = FlexbrushType.$brushType,
 							cornerType = FlexCornerType.$cornerType,
 							buttonType = FlexButtonType.$buttonType,
 							iconPosition = FlexButtonIconPosition.$iconPosition,
@@ -67,7 +67,7 @@ fun ColumnScope.FlexButtonPage() {
 				text = buttonText,
 				icon = iconType.icon,
 				sizeType = sizeType,
-				colorType = colorType,
+				brushType = brushType,
 				cornerType = cornerType,
 				buttonType = buttonType,
 				iconPosition = iconPosition,
@@ -83,7 +83,7 @@ fun ColumnScope.FlexButtonPage() {
 					onValueChange = { buttonText = it },
 					modifier = Modifier.width(220.dp),
 					sizeType = FlexSizeType.Small,
-					colorType = colorType,
+					brushType = brushType,
 					placeholder = { Text("Button Text") }
 				)
 			}
@@ -109,11 +109,11 @@ fun ColumnScope.FlexButtonPage() {
 			}
 			item("Color Type") {
 				FlexRadio(
-					selectedKey = colorType,
-					onSelectedKeyChange = { colorType = it },
-					options = { FlexColorType.entries.options() },
+					selectedKey = brushType,
+					onSelectedKeyChange = { brushType = it },
+					options = { FlexBrushType.entries.options() },
 					sizeType = FlexSizeType.Small,
-					colorType = colorType,
+					brushType = brushType,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
 				)
@@ -154,7 +154,7 @@ fun ColumnScope.FlexButtonPage() {
 					checked = scaleEffect,
 					onCheckedChange = { scaleEffect = it },
 					sizeType = FlexSizeType.Small,
-					colorType = FlexColorType.Primary
+					brushType = FlexBrushType.Primary
 				)
 			}
 			item("Enabled") {
@@ -162,7 +162,7 @@ fun ColumnScope.FlexButtonPage() {
 					checked = enabled,
 					onCheckedChange = { enabled = it },
 					sizeType = FlexSizeType.Small,
-					colorType = FlexColorType.Primary
+					brushType = FlexBrushType.Primary
 				)
 			}
 		}

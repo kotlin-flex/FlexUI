@@ -1,5 +1,6 @@
 package cn.vividcode.multiplatform.flex.ui.utils
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
@@ -50,7 +51,7 @@ internal fun Modifier.dashedBorder(
 		drawOutline(
 			outline = shape.createOutline(insetSize, layoutDirection, this),
 			style = Stroke(width = strokeWidthPx, pathEffect = pathEffect),
-			brush = brush.brush
+			brush = brush.original
 		)
 	}
 }
@@ -59,9 +60,20 @@ internal fun Modifier.dashedBorder(
 internal fun Modifier.border(width: Dp, brush: FlexBrush, shape: Shape) =
 	this.border(
 		width = width,
-		brush = brush.brush,
+		brush = brush.original,
 		shape = shape
 	)
+
+@Stable
+internal fun Modifier.background(
+	brush: FlexBrush,
+	shape: Shape = RectangleShape,
+	alpha: Float = 1f,
+) = this.background(
+	brush = brush.original,
+	shape = shape,
+	alpha = alpha
+)
 
 fun Modifier.multiplatform(
 	vararg platforms: FlexPlatform,

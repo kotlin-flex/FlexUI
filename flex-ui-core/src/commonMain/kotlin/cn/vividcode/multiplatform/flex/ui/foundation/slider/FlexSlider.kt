@@ -41,7 +41,7 @@ import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
  * @param onValueChange 当滑块值更改时调用的回调函数
  * @param modifier 组件的修饰符，用于控制布局和样式
  * @param sizeType 滑块的尺寸类型，默认为 [FlexSliderDefaults.DefaultSizeType]
- * @param colorType 滑块的颜色类型，默认为 [FlexSliderDefaults.DefaultColorType]
+ * @param brushType 滑块的颜色类型，默认为 [FlexSliderDefaults.DefaultbrushType]
  * @param cornerType 滑块的圆角类型，默认为 [FlexSliderDefaults.DefaultCornerType]
  * @param direction 滑块的滑动方向，默认为 [FlexSliderDefaults.DefaultSliderDirection]
  * @param enabled 是否启用，默认为 `true`
@@ -56,7 +56,7 @@ fun FlexSlider(
 	onValueChange: (Float) -> Unit,
 	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexSliderDefaults.DefaultSizeType,
-	colorType: FlexColorType = FlexSliderDefaults.DefaultColorType,
+	brushType: FlexBrushType = FlexSliderDefaults.DefaultbrushType,
 	cornerType: FlexCornerType = FlexSliderDefaults.DefaultCornerType,
 	direction: FlexSliderDirection = FlexSliderDefaults.DefaultSliderDirection,
 	enabled: Boolean = true,
@@ -111,7 +111,7 @@ fun FlexSlider(
 				isHorizontal = isHorizontal,
 				valueRange = valueRange,
 				marks = marks!!,
-				colorType = colorType,
+				brushType = brushType,
 				length = length,
 			)
 			Spacer(modifier = Modifier.width(config.markInterval))
@@ -218,7 +218,7 @@ fun FlexSlider(
 			}
 			val thumbColor by animateColorAsState(
 				targetValue = run {
-					val color = colorType.color
+					val color = brushType.color
 					when {
 						!enabled -> color.disabledWithColor
 						isFocused -> color
@@ -228,7 +228,7 @@ fun FlexSlider(
 			)
 			val contentColor by animateColorAsState(
 				targetValue = run {
-					val color = colorType.onColor
+					val color = brushType.onColor
 					if (enabled) color else color.lightenWithContent
 				}
 			)
@@ -252,7 +252,7 @@ fun FlexSlider(
 			if (marks != null && length != Dp.Unspecified) {
 				FlexSliderMarks(
 					value = value,
-					colorType = colorType,
+					brushType = brushType,
 					marks = marks,
 					valueRange = valueRange,
 					config = config,
@@ -284,7 +284,7 @@ fun FlexSlider(
 			)
 			val borderColor by animateColorAsState(
 				targetValue = run {
-					val color = colorType.color
+					val color = brushType.color
 					when {
 						!enabled -> color.disabledWithColor
 						isThumbFocused -> color.lightenWithColor
@@ -325,7 +325,7 @@ fun FlexSlider(
 				if (tooltipText != null) {
 					FlexSliderTooltipPopup(
 						tooltipText = tooltipText!!,
-						colorType = colorType,
+						brushType = brushType,
 						cornerType = cornerType,
 						isHorizontal = isHorizontal,
 						isThumbFocused = isThumbFocused,
@@ -347,7 +347,7 @@ fun FlexSlider(
 				isHorizontal = isHorizontal,
 				valueRange = valueRange,
 				marks = marks!!,
-				colorType = colorType,
+				brushType = brushType,
 				length = length
 			)
 		}
@@ -360,7 +360,7 @@ private fun FlexSliderTextMarks(
 	isHorizontal: Boolean,
 	valueRange: FloatRange,
 	marks: FlexSliderMarks,
-	colorType: FlexColorType,
+	brushType: FlexBrushType,
 	length: Dp,
 ) {
 	Box(
@@ -387,7 +387,7 @@ private fun FlexSliderTextMarks(
 				}
 			}
 			val color by animateColorAsState(
-				targetValue = it.color ?: colorType.color
+				targetValue = it.color ?: brushType.color
 			)
 			val markFontSize by animateFloatAsState(
 				targetValue = config.markFontSize.value

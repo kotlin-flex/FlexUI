@@ -2,7 +2,7 @@ package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.*
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
@@ -20,7 +20,7 @@ import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 fun ColumnScope.FlexRadioPage() {
 	var radioType by remember { mutableStateOf(FlexRadioType.Default) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
-	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
+	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var switchType by remember { mutableStateOf(FlexRadioSwitchType.None) }
 	var scaleEffect by remember { mutableStateOf(true) }
@@ -28,7 +28,7 @@ fun ColumnScope.FlexRadioPage() {
 	
 	AdaptiveLayout(
 		code = {
-			val code by remember(sizeType, colorType, cornerType, radioType, switchType, scaleEffect, disabledOption) {
+			val code by remember(sizeType, brushType, cornerType, radioType, switchType, scaleEffect, disabledOption) {
 				derivedStateOf {
 					"""
 						var selectedKey by remember { mutableStateOf("option1") }
@@ -41,7 +41,7 @@ fun ColumnScope.FlexRadioPage() {
 								}
 							}
 							sizeType = FlexSizeType.$sizeType,
-							colorType = FlexColorType.$colorType,
+							brushType = FlexbrushType.$brushType,
 							cornerType = FlexCornerType.$cornerType,
 							radioType = FlexRadioType.$radioType,
 							switchType = FlexRadioSwitchType.$switchType,
@@ -63,7 +63,7 @@ fun ColumnScope.FlexRadioPage() {
 					}
 				},
 				sizeType = sizeType,
-				colorType = colorType,
+				brushType = brushType,
 				cornerType = cornerType,
 				radioType = radioType,
 				switchType = switchType,
@@ -93,11 +93,11 @@ fun ColumnScope.FlexRadioPage() {
 			}
 			item("Color Type") {
 				FlexRadio(
-					selectedKey = colorType,
-					onSelectedKeyChange = { colorType = it },
-					options = { FlexColorType.entries.options() },
+					selectedKey = brushType,
+					onSelectedKeyChange = { brushType = it },
+					options = { FlexBrushType.entries.options() },
 					sizeType = FlexSizeType.Small,
-					colorType = colorType,
+					brushType = brushType,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
 				)

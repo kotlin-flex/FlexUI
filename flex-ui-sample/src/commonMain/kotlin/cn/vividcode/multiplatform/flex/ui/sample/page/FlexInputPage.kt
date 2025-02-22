@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
@@ -29,7 +29,7 @@ fun ColumnScope.FlexInputPage() {
 	var exampleType by remember { mutableStateOf(ExampleType.Default) }
 	var prefixSuffixType by remember { mutableStateOf(PrefixSuffixType.None) }
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
-	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
+	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var inputType by remember { mutableStateOf(FlexInputType.Default) }
 	var enabled by remember { mutableStateOf(true) }
@@ -37,7 +37,7 @@ fun ColumnScope.FlexInputPage() {
 	
 	AdaptiveLayout(
 		code = {
-			val code by remember(exampleType, sizeType, colorType, cornerType, enabled, readOnly, prefixSuffixType) {
+			val code by remember(exampleType, sizeType, brushType, cornerType, enabled, readOnly, prefixSuffixType) {
 				derivedStateOf {
 					when (exampleType) {
 						ExampleType.Default -> {
@@ -47,7 +47,7 @@ fun ColumnScope.FlexInputPage() {
 									value = value,
 									onValueChange = { value = it },
 									sizeType = FlexSizeType.$sizeType,
-									colorType = FlexColorType.$colorType,
+									brushType = FlexbrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
 									inputType = FlexInputType.$inputType,
 									enabled = $enabled,
@@ -69,7 +69,7 @@ fun ColumnScope.FlexInputPage() {
 									value = value,
 									onValueChange = { value = it },
 									sizeType = FlexSizeType.$sizeType,
-									colorType = FlexColorType.$colorType,
+									brushType = FlexbrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
 									inputType = FlexInputType.$inputType,
 									enabled = $enabled,
@@ -105,7 +105,7 @@ fun ColumnScope.FlexInputPage() {
 									value = value,
 									onValueChange = { value = it },
 									sizeType = FlexSizeType.$sizeType,
-									colorType = FlexColorType.$colorType,
+									brushType = FlexbrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
 									inputType = FlexInputType.$inputType,
 									enabled = $enabled,
@@ -134,7 +134,7 @@ fun ColumnScope.FlexInputPage() {
 						value = value,
 						onValueChange = { value = it },
 						sizeType = sizeType,
-						colorType = colorType,
+						brushType = brushType,
 						cornerType = cornerType,
 						inputType = inputType,
 						enabled = enabled,
@@ -157,7 +157,7 @@ fun ColumnScope.FlexInputPage() {
 						value = value,
 						onValueChange = { value = it },
 						sizeType = sizeType,
-						colorType = colorType,
+						brushType = brushType,
 						cornerType = cornerType,
 						inputType = inputType,
 						enabled = enabled,
@@ -191,7 +191,7 @@ fun ColumnScope.FlexInputPage() {
 						value = value,
 						onValueChange = { value = it },
 						sizeType = sizeType,
-						colorType = colorType,
+						brushType = brushType,
 						cornerType = cornerType,
 						inputType = inputType,
 						enabled = enabled,
@@ -234,11 +234,11 @@ fun ColumnScope.FlexInputPage() {
 			}
 			item("Color Type") {
 				FlexRadio(
-					selectedKey = colorType,
-					onSelectedKeyChange = { colorType = it },
-					options = { FlexColorType.entries.options() },
+					selectedKey = brushType,
+					onSelectedKeyChange = { brushType = it },
+					options = { FlexBrushType.entries.options() },
 					sizeType = FlexSizeType.Small,
-					colorType = colorType,
+					brushType = brushType,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
 				)
@@ -279,7 +279,7 @@ fun ColumnScope.FlexInputPage() {
 					checked = enabled,
 					onCheckedChange = { enabled = it },
 					sizeType = FlexSizeType.Small,
-					colorType = FlexColorType.Primary
+					brushType = FlexBrushType.Primary
 				)
 			}
 			item("Read Only") {
@@ -287,7 +287,7 @@ fun ColumnScope.FlexInputPage() {
 					checked = readOnly,
 					onCheckedChange = { readOnly = it },
 					sizeType = FlexSizeType.Small,
-					colorType = FlexColorType.Primary
+					brushType = FlexBrushType.Primary
 				)
 			}
 		}

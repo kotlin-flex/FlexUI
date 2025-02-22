@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import kotlin.math.sqrt
 
@@ -35,7 +35,7 @@ import kotlin.math.sqrt
 @Composable
 internal fun FlexSliderTooltipPopup(
 	tooltipText: String,
-	colorType: FlexColorType,
+	brushType: FlexBrushType,
 	cornerType: FlexCornerType,
 	isHorizontal: Boolean,
 	isThumbFocused: Boolean,
@@ -76,8 +76,8 @@ internal fun FlexSliderTooltipPopup(
 		val arrowCornerShape by remember(arrowCornerPercent) {
 			derivedStateOf { RoundedCornerShape(bottomEndPercent = arrowCornerPercent) }
 		}
-		val color by animateColorAsState(colorType.color)
-		val contentColor by animateColorAsState(colorType.onColor)
+		val color by animateColorAsState(brushType.color)
+		val contentColor by animateColorAsState(brushType.onColor)
 		var targetAlpha by remember { mutableStateOf(0f) }
 		var targetScale by remember { mutableStateOf(1f) }
 		val alpha by animateFloatAsState(

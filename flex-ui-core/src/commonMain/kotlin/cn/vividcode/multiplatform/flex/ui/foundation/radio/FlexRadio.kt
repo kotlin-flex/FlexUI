@@ -41,7 +41,7 @@ import kotlin.jvm.JvmName
  * @param onSelectedKeyChange 当选中改变事件
  * @param options 选项 [RadioOption] 类型
  * @param sizeType 尺寸类型
- * @param colorType 颜色类型
+ * @param brushType 颜色类型
  * @param cornerType 圆角类型
  * @param radioType 单选框组类型
  * @param switchType 切换类型
@@ -54,7 +54,7 @@ fun <Key : Any> FlexRadio(
 	onSelectedKeyChange: (Key) -> Unit,
 	options: FlexRadioOptions.() -> List<RadioOption<Key>>,
 	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
-	colorType: FlexColorType = FlexRadioDefaults.DefaultColorType,
+	brushType: FlexBrushType = FlexRadioDefaults.DefaultbrushType,
 	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
 	radioType: FlexRadioType = FlexRadioDefaults.DefaultRadioType,
 	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,
@@ -81,7 +81,7 @@ fun <Key : Any> FlexRadio(
 			selectedKey = targetSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
 			sizeType = sizeType,
-			colorType = colorType,
+			brushType = brushType,
 			cornerType = cornerType,
 			radioType = radioType,
 			scaleEffect = scaleEffect
@@ -92,7 +92,7 @@ fun <Key : Any> FlexRadio(
 			selectedKey = targetSelectedKey,
 			onSelectedKeyChange = onSelectedKeyChange,
 			sizeType = sizeType,
-			colorType = colorType,
+			brushType = brushType,
 			cornerType = cornerType,
 			radioType = radioType,
 			scaleEffect = scaleEffect
@@ -213,7 +213,7 @@ internal val DisabledBackgroundColor: Color
 internal fun FlexRadioText(
 	value: String,
 	enabled: Boolean,
-	colorType: FlexColorType,
+	brushType: FlexBrushType,
 	radioType: FlexRadioType,
 	config: FlexRadioConfig,
 	selected: Boolean,
@@ -234,13 +234,13 @@ internal fun FlexRadioText(
 		targetValue = when {
 			!enabled -> MaterialTheme.colorScheme.outline
 			!selected -> when {
-				isPressed || isHovered -> colorType.color
+				isPressed || isHovered -> brushType.color
 				else -> MaterialTheme.colorScheme.outline
 			}
 			
-			radioType == Button -> colorType.onColor
+			radioType == Button -> brushType.onColor
 			else -> {
-				val color = colorType.color
+				val color = brushType.color
 				when {
 					isPressed -> color.darkenWithContent
 					isHovered -> color.lightenWithContent

@@ -38,7 +38,7 @@ fun FlexSwitch(
 	onCheckedChange: (Boolean) -> Unit,
 	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexSwitchDefaults.DefaultSizeType,
-	colorType: FlexColorType = FlexSwitchDefaults.DefaultColorType,
+	brushType: FlexBrushType = FlexSwitchDefaults.DefaultbrushType,
 	cornerType: FlexCornerType = FlexSwitchDefaults.DefaultCornerType,
 	label: FlexSwitchLabel? = null,
 	enabled: Boolean = true,
@@ -56,7 +56,7 @@ fun FlexSwitch(
 	val backgroundColor by animateColorAsState(
 		targetValue = run {
 			val color = when {
-				checked -> colorType.color
+				checked -> brushType.color
 				else -> Color.Gray
 			}
 			when {
@@ -109,7 +109,7 @@ fun FlexSwitch(
 		)
 		val contentColor by animateColorAsState(
 			targetValue = run {
-				val color = if (checked) colorType.onColor else Color.White
+				val color = if (checked) brushType.onColor else Color.White
 				if (enabled) color else color.disabledWithContent
 			}
 		)

@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
@@ -26,7 +26,7 @@ import kotlin.math.floor
 @Composable
 fun ColumnScope.FlexSliderPage() {
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
-	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
+	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Circle) }
 	var enabled by remember { mutableStateOf(true) }
 	var showTooltip by remember { mutableStateOf(true) }
@@ -36,7 +36,7 @@ fun ColumnScope.FlexSliderPage() {
 	
 	AdaptiveLayout(
 		code = {
-			val code by remember(sizeType, colorType, cornerType, direction, stepsType, showTooltip) {
+			val code by remember(sizeType, brushType, cornerType, direction, stepsType, showTooltip) {
 				derivedStateOf {
 					val stepsCode = when (stepsType) {
 						FlexSliderStepsType.None -> "null"
@@ -86,7 +86,7 @@ fun ColumnScope.FlexSliderPage() {
 							value = value,
 							onValueChange = { value = it },
 							sizeType = FlexSizeType.$sizeType,
-							colorType = FlexColorType.$colorType,
+							brushType = FlexbrushType.$brushType,
 							cornerType = FlexCornerType.$cornerType,
 							direction = FlexSliderDirection.$direction,
 							valueRange = 0f .. 100f,
@@ -105,7 +105,7 @@ fun ColumnScope.FlexSliderPage() {
 				value = value,
 				onValueChange = { value = it },
 				sizeType = sizeType,
-				colorType = colorType,
+				brushType = brushType,
 				cornerType = cornerType,
 				direction = direction,
 				enabled = enabled,
@@ -156,11 +156,11 @@ fun ColumnScope.FlexSliderPage() {
 			}
 			item("Color Type") {
 				FlexRadio(
-					selectedKey = colorType,
-					onSelectedKeyChange = { colorType = it },
-					options = { FlexColorType.entries.options() },
+					selectedKey = brushType,
+					onSelectedKeyChange = { brushType = it },
+					options = { FlexBrushType.entries.options() },
 					sizeType = FlexSizeType.Small,
-					colorType = colorType,
+					brushType = brushType,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
 				)

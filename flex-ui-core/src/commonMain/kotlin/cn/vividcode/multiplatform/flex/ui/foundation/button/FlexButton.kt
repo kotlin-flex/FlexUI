@@ -1,16 +1,14 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.button
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,7 +25,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
-import cn.vividcode.multiplatform.flex.ui.utils.*
+import cn.vividcode.multiplatform.flex.ui.foundation.icon.FlexIcon
+import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.background
+import cn.vividcode.multiplatform.flex.ui.utils.border
+import cn.vividcode.multiplatform.flex.ui.utils.dashedBorder
 
 /**
  * FlexButton 按钮
@@ -36,7 +38,7 @@ import cn.vividcode.multiplatform.flex.ui.utils.*
  * @param icon 图标
  * @param modifier [Modifier]
  * @param sizeType 尺寸类型
- * @param colorType 颜色类型
+ * @param brushType 颜色类型
  * @param cornerType 圆角类型
  * @param buttonType 按钮类型
  * @param iconPosition 图标位置
@@ -51,7 +53,7 @@ fun FlexButton(
 	icon: ImageVector? = null,
 	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexButtonDefaults.DefaultSizeType,
-	colorType: FlexColorType = FlexButtonDefaults.DefaultColorType,
+	brushType: FlexBrushType = FlexButtonDefaults.DefaultbrushType,
 	cornerType: FlexCornerType = FlexButtonDefaults.DefaultCornerType,
 	buttonType: FlexButtonType = FlexButtonDefaults.DefaultButtonType,
 	iconPosition: FlexButtonIconPosition = FlexButtonDefaults.DefaultIconDirection,
@@ -74,45 +76,45 @@ fun FlexButton(
 		val borderBrush by animateFlexBrushAsState(
 			targetValue = when (buttonType) {
 				FlexButtonType.Default, FlexButtonType.Dashed -> when {
-					!enabled -> colorType.disabledBrush(alpha = 0.8f)
-					isPressed -> colorType.darkenBrush()
-					isHovered -> colorType.lightenBrush()
-					else -> colorType.brush
+					!enabled -> brushType.disabledBrush(alpha = 0.8f)
+					isPressed -> brushType.darkenBrush()
+					isHovered -> brushType.lightenBrush()
+					else -> brushType.brush
 				}
 				
-				else -> colorType.transparentBrush
+				else -> brushType.TransparentBrush
 			}
 		)
 		val backgroundBrush by animateFlexBrushAsState(
 			targetValue = when (buttonType) {
 				FlexButtonType.Primary -> {
 					when {
-						!enabled -> colorType.disabledBrush()
-						isPressed -> colorType.darkenBrush()
-						isHovered -> colorType.lightenBrush()
-						else -> colorType.brush
+						!enabled -> brushType.disabledBrush()
+						isPressed -> brushType.darkenBrush()
+						isHovered -> brushType.lightenBrush()
+						else -> brushType.brush
 					}
 				}
 				
 				FlexButtonType.Filled -> {
 					when {
-						!enabled -> colorType.brush.copy(alpha = 0.08f)
-						isPressed -> colorType.brush.copy(alpha = 0.2f)
-						isHovered -> colorType.brush.copy(alpha = 0.15f)
-						else -> colorType.brush.copy(alpha = 0.1f)
+						!enabled -> brushType.brush.copy(alpha = 0.08f)
+						isPressed -> brushType.brush.copy(alpha = 0.2f)
+						isHovered -> brushType.brush.copy(alpha = 0.15f)
+						else -> brushType.brush.copy(alpha = 0.1f)
 					}
 				}
 				
 				FlexButtonType.Text -> {
 					when {
-						!enabled -> colorType.transparentBrush
-						isPressed -> colorType.brush.copy(alpha = 0.2f)
-						isHovered -> colorType.brush.copy(alpha = 0.1f)
-						else -> colorType.transparentBrush
+						!enabled -> brushType.TransparentBrush
+						isPressed -> brushType.brush.copy(alpha = 0.2f)
+						isHovered -> brushType.brush.copy(alpha = 0.1f)
+						else -> brushType.TransparentBrush
 					}
 				}
 				
-				else -> colorType.transparentBrush
+				else -> brushType.TransparentBrush
 			},
 			label = text
 		)
@@ -152,7 +154,7 @@ fun FlexButton(
 				.height(height)
 				.clip(cornerShape)
 				.background(
-					brush = backgroundBrush.brush,
+					brush = backgroundBrush,
 					shape = cornerShape
 				)
 				.then(
@@ -190,32 +192,28 @@ fun FlexButton(
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.Center
 		) {
-			val onColor by animateColorAsState(
+			val onBrush by animateFlexBrushAsState(
 				targetValue = when (buttonType) {
-					FlexButtonType.Primary -> colorType.onColor
-					
+					FlexButtonType.Primary -> brushType.onBrush
 					FlexButtonType.Filled, FlexButtonType.Text -> {
-						val color = colorType.color
-						if (enabled) color else color.disabledWithContent
+						if (enabled) brushType.brush else brushType.disabledBrush()
 					}
 					
 					FlexButtonType.Link -> {
-						val color = colorType.color
 						when {
-							!enabled -> color.disabledWithContent
-							isPressed -> color.darkenWithContent
-							isHovered -> color.lightenWithContent
-							else -> color
+							!enabled -> brushType.disabledBrush()
+							isPressed -> brushType.darkenBrush()
+							isHovered -> brushType.lightenBrush()
+							else -> brushType.brush
 						}
 					}
 					
 					FlexButtonType.Default, FlexButtonType.Dashed -> {
-						val color = colorType.color
 						when {
-							!enabled -> color.disabledWithContent
-							isPressed -> color.darkenWithContent
-							isHovered -> color.lightenWithContent
-							else -> color
+							!enabled -> brushType.disabledBrush()
+							isPressed -> brushType.darkenBrush()
+							isHovered -> brushType.lightenBrush()
+							else -> brushType.brush
 						}
 					}
 				}
@@ -226,13 +224,12 @@ fun FlexButton(
 				) {
 					val iconSize by animateDpAsState(config.iconSize)
 					val rotation by animateFloatAsState(iconRotation)
-					Icon(
+					FlexIcon(
 						imageVector = icon,
-						tint = onColor,
-						contentDescription = null,
 						modifier = Modifier
 							.rotate(rotation)
-							.size(iconSize)
+							.size(iconSize),
+						tint = onBrush
 					)
 					val internal by remember(text) {
 						derivedStateOf {
@@ -249,7 +246,6 @@ fun FlexButton(
 				val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 				Text(
 					text = targetText,
-					color = onColor,
 					fontSize = fontSize.sp,
 					fontWeight = config.fontWeight,
 					letterSpacing = when (config.letterSpacing) {
@@ -258,7 +254,10 @@ fun FlexButton(
 					},
 					lineHeight = fontSize.sp,
 					overflow = TextOverflow.Ellipsis,
-					maxLines = 1
+					maxLines = 1,
+					style = LocalTextStyle.current.copy(
+						brush = onBrush.original
+					)
 				)
 			}
 		}

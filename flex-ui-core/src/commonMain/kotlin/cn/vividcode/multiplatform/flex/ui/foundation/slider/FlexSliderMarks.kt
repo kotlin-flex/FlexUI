@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMap
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
 
 /**
@@ -100,7 +100,7 @@ data class FlexSliderMark(
 @Composable
 internal fun FlexSliderMarks(
 	value: Float,
-	colorType: FlexColorType,
+	brushType: FlexBrushType,
 	marks: FlexSliderMarks,
 	valueRange: FloatRange,
 	config: FlexSliderConfig,
@@ -125,7 +125,7 @@ internal fun FlexSliderMarks(
 				(length - thickness) / valueRange.range * (it.value - valueRange.start) + thickness / 2 - markBorderWidth - sliderThickness / 2
 			}
 		}
-		val color = colorType.color
+		val color = brushType.color
 		val darkenSurfaceVariant = MaterialTheme.colorScheme.surfaceVariant.darkenWithColor
 		val borderColor by remember(it.value, value, color, darkenSurfaceVariant, isFocused) {
 			derivedStateOf {

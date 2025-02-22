@@ -49,7 +49,7 @@ class FlexComposeDefaultConfig internal constructor() {
 }
 
 class FlexDefaultConfig internal constructor(
-	var colorType: FlexColorType? = null,
+	var brushType: FlexBrushType? = null,
 	var cornerType: FlexCornerType? = null,
 	var sizeType: FlexSizeType? = null,
 )
@@ -57,7 +57,7 @@ class FlexDefaultConfig internal constructor(
 @Suppress("PropertyName")
 abstract class FlexDefaults(
 	private val defaultSizeType: FlexSizeType = FlexSizeType.Medium,
-	private val defaultColorType: FlexColorType = FlexColorType.Primary,
+	private val defaultbrushType: FlexBrushType = FlexBrushType.Primary,
 	private val defaultCornerType: FlexCornerType = FlexCornerType.Medium,
 ) {
 	
@@ -70,11 +70,11 @@ abstract class FlexDefaults(
 			composeDefaultSizeType = { defaultConfig?.sizeType }
 		)
 	
-	val DefaultColorType: FlexColorType
+	val DefaultbrushType: FlexBrushType
 		@Composable
-		get() = getDefaultColorType(
-			defaultColorType = defaultColorType,
-			composeDefaultColorType = { defaultConfig?.colorType }
+		get() = getDefaultbrushType(
+			defaultbrushType = defaultbrushType,
+			composeDefaultbrushType = { defaultConfig?.brushType }
 		)
 	
 	val DefaultCornerType: FlexCornerType

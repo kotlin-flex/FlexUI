@@ -23,7 +23,7 @@ import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.compose.ui.util.fastMap
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
@@ -36,7 +36,7 @@ import cn.vividcode.multiplatform.flex.ui.utils.*
  * @param selectedKey 选中的 key
  * @param onSelectedKeyChange 当选中改变事件
  * @param sizeType 尺寸类型
- * @param colorType 颜色类型
+ * @param brushType 颜色类型
  * @param cornerType 圆角类型
  * @param radioType 单选框组类型
  * @param scaleEffect 开启缩放效果
@@ -47,7 +47,7 @@ internal fun <Key : Any> FlexSwipeRadio(
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
 	sizeType: FlexSizeType,
-	colorType: FlexColorType,
+	brushType: FlexBrushType,
 	cornerType: FlexCornerType,
 	radioType: FlexRadioType,
 	scaleEffect: Boolean,
@@ -102,7 +102,7 @@ internal fun <Key : Any> FlexSwipeRadio(
 			val option = options[currentIndex]
 			val borderColor by animateColorAsState(
 				targetValue = run {
-					val color = colorType.color
+					val color = brushType.color
 					when {
 						!option.enabled -> color.copy(alpha = 0f)
 						selectedKey != option.key -> color.copy(alpha = 0f)
@@ -119,7 +119,7 @@ internal fun <Key : Any> FlexSwipeRadio(
 			)
 			val backgroundColor by animateColorAsState(
 				targetValue = run {
-					val color = colorType.color
+					val color = brushType.color
 					when {
 						!option.enabled -> DisabledBackgroundColor
 						selectedKey != option.key || radioType == FlexRadioType.Default -> color.copy(alpha = 0f)
@@ -203,7 +203,7 @@ internal fun <Key : Any> FlexSwipeRadio(
 					FlexRadioText(
 						value = option.value,
 						enabled = option.enabled,
-						colorType = colorType,
+						brushType = brushType,
 						radioType = radioType,
 						config = config,
 						selected = selectedKey == option.key,

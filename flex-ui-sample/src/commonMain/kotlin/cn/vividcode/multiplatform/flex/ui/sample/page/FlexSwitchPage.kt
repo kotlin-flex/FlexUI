@@ -2,7 +2,7 @@ package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.*
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
@@ -19,7 +19,7 @@ import cn.vividcode.multiplatform.flex.ui.sample.components.Code
 @Composable
 fun ColumnScope.FlexSwitchPage() {
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
-	var colorType by remember { mutableStateOf<FlexColorType>(FlexColorType.Primary) }
+	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Circle) }
 	var labelType by remember { mutableStateOf(FlexSwitchLabelType.None) }
 	var enabled by remember { mutableStateOf(true) }
@@ -32,7 +32,7 @@ fun ColumnScope.FlexSwitchPage() {
 				FlexSwitchLabelType.OpenClose -> "FlexSwitchLabels.textLabel(\"开\", \"关\")"
 				FlexSwitchLabelType.Icon -> "FlexSwitchLabels.DefaultIconLabel"
 			}
-			val code by remember(sizeType, colorType, cornerType, label, enabled) {
+			val code by remember(sizeType, brushType, cornerType, label, enabled) {
 				derivedStateOf {
 					"""
 						var checked by remember { mutableStateOf(false) }
@@ -40,7 +40,7 @@ fun ColumnScope.FlexSwitchPage() {
 							checked = checked,
 							onCheckedChange = { checked = it },
 							sizeType = FlexSizeType.$sizeType,
-							colorType = FlexColorType.$colorType,
+							brushType = FlexbrushType.$brushType,
 							cornerType = FlexCornerType.$cornerType,
 							label = $label,
 							enabled = $enabled
@@ -56,7 +56,7 @@ fun ColumnScope.FlexSwitchPage() {
 				checked = checked,
 				onCheckedChange = { checked = it },
 				sizeType = sizeType,
-				colorType = colorType,
+				brushType = brushType,
 				cornerType = cornerType,
 				label = when (labelType) {
 					FlexSwitchLabelType.None -> null
@@ -80,11 +80,11 @@ fun ColumnScope.FlexSwitchPage() {
 			}
 			item("Color Type") {
 				FlexRadio(
-					selectedKey = colorType,
-					onSelectedKeyChange = { colorType = it },
-					options = { FlexColorType.entries.options() },
+					selectedKey = brushType,
+					onSelectedKeyChange = { brushType = it },
+					options = { FlexBrushType.entries.options() },
 					sizeType = FlexSizeType.Small,
-					colorType = colorType,
+					brushType = brushType,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
 				)

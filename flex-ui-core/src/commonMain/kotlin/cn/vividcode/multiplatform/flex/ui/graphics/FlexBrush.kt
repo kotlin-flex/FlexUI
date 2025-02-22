@@ -199,7 +199,7 @@ sealed class FlexBrush {
 		}
 	}
 	
-	internal abstract val brush: Brush
+	internal abstract val original: Brush
 	
 	internal abstract val colors: List<Color>
 	
@@ -210,11 +210,11 @@ sealed class FlexBrush {
 	final override fun equals(other: Any?): Boolean {
 		if (this === other) return true
 		if (other !is FlexBrush) return false
-		return this.brush == other.brush
+		return this.original == other.original
 	}
 	
 	final override fun hashCode(): Int {
-		return brush.hashCode()
+		return original.hashCode()
 	}
 }
 
@@ -223,7 +223,7 @@ internal class FlexSolidColor(
 	private val color: Color,
 ) : FlexBrush() {
 	
-	override val brush = SolidColor(color)
+	override val original = SolidColor(color)
 	
 	override val colors by lazy {
 		listOf(color)
@@ -248,7 +248,7 @@ internal class FlexLinearGradient(
 	private val tileMode: TileMode,
 ) : FlexBrush() {
 	
-	override val brush = Brush.linearGradient(
+	override val original = Brush.linearGradient(
 		colors = colors,
 		start = start,
 		end = end,
@@ -283,7 +283,7 @@ internal class FlexStopsLinearGradient(
 	private val tileMode: TileMode,
 ) : FlexBrush() {
 	
-	override val brush = Brush.linearGradient(
+	override val original = Brush.linearGradient(
 		colorStops = colorStops,
 		start = start,
 		end = end,
@@ -324,7 +324,7 @@ internal class FlexRadialGradient(
 	private val tileMode: TileMode,
 ) : FlexBrush() {
 	
-	override val brush = Brush.radialGradient(
+	override val original = Brush.radialGradient(
 		colors = colors,
 		center = center,
 		radius = radius,
@@ -359,7 +359,7 @@ internal class FlexStopsRadialGradient(
 	private val tileMode: TileMode,
 ) : FlexBrush() {
 	
-	override val brush = Brush.radialGradient(
+	override val original = Brush.radialGradient(
 		colorStops = colorStops,
 		center = center,
 		radius = radius,
@@ -398,7 +398,7 @@ internal class FlexSweepGradient(
 	private val center: Offset,
 ) : FlexBrush() {
 	
-	override val brush = Brush.sweepGradient(
+	override val original = Brush.sweepGradient(
 		colors = colors,
 		center = center
 	)
@@ -425,7 +425,7 @@ internal class FlexStopsSweepGradient(
 	private val center: Offset,
 ) : FlexBrush() {
 	
-	override val brush = Brush.sweepGradient(
+	override val original = Brush.sweepGradient(
 		colorStops = colorStops,
 		center = center,
 	)

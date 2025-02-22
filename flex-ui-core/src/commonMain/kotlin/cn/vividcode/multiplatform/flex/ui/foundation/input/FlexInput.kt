@@ -49,7 +49,7 @@ import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
  * @param onValueChange 当输入值发生变化时调用的回调函数
  * @param modifier 应用于输入框的修饰符
  * @param sizeType 输入框的尺寸类型
- * @param colorType 输入框的颜色类型
+ * @param brushType 输入框的颜色类型
  * @param cornerType 输入框的圆角类型
  * @param inputType 输入框类型
  * @param enabled 是否启用输入框，默认为 `true`
@@ -71,7 +71,7 @@ fun FlexInput(
 	onValueChange: (String) -> Unit,
 	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexInputDefaults.DefaultSizeType,
-	colorType: FlexColorType = FlexInputDefaults.DefaultColorType,
+	brushType: FlexBrushType = FlexInputDefaults.DefaultbrushType,
 	cornerType: FlexCornerType = FlexInputDefaults.DefaultCornerType,
 	inputType: FlexInputType = FlexInputDefaults.DefaultInputType,
 	enabled: Boolean = true,
@@ -92,8 +92,8 @@ fun FlexInput(
 	
 	CompositionLocalProvider(
 		LocalTextSelectionColors provides TextSelectionColors(
-			handleColor = colorType.color,
-			backgroundColor = colorType.color.copy(alpha = 0.15f)
+			handleColor = brushType.color,
+			backgroundColor = brushType.color.copy(alpha = 0.15f)
 		)
 	) {
 		val leadingIconInteractionSource = remember { MutableInteractionSource() }
@@ -115,7 +115,7 @@ fun FlexInput(
 		val fontSize by animateFloatAsState(config.fontSize.value)
 		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 		val contentColor by animateColorAsState(
-			targetValue = if (enabled) colorType.color else colorType.color.disabledWithColor
+			targetValue = if (enabled) brushType.color else brushType.color.disabledWithColor
 		)
 		val textStyle by remember(fontSize, config.fontWeight, letterSpacing, contentColor) {
 			derivedStateOf {
@@ -154,7 +154,7 @@ fun FlexInput(
 					value = value,
 					modifier = modifier,
 					enabled = enabled,
-					colorType = colorType,
+					brushType = brushType,
 					cornerType = cornerType,
 					inputType = inputType,
 					innerTextField = innerTextField,
@@ -206,7 +206,7 @@ private fun FlexInputDecorationBox(
 	value: String,
 	modifier: Modifier,
 	enabled: Boolean,
-	colorType: FlexColorType,
+	brushType: FlexBrushType,
 	cornerType: FlexCornerType,
 	inputType: FlexInputType,
 	innerTextField: @Composable () -> Unit,
@@ -232,11 +232,11 @@ private fun FlexInputDecorationBox(
 	}
 	val borderColor by animateColorAsState(
 		targetValue = when {
-			isFocused -> colorType.color
-			isHovered -> colorType.color.copy(alpha = 0.8f)
-			inputType == FlexInputType.Default -> colorType.color.copy(alpha = 0f)
+			isFocused -> brushType.color
+			isHovered -> brushType.color.copy(alpha = 0.8f)
+			inputType == FlexInputType.Default -> brushType.color.copy(alpha = 0f)
 			enabled -> MaterialTheme.colorScheme.outline.copy(alpha = 0.8f)
-			else -> colorType.color.disabledWithColor
+			else -> brushType.color.disabledWithColor
 		},
 	)
 	val backgroundColor by animateColorAsState(
@@ -267,7 +267,7 @@ private fun FlexInputDecorationBox(
 			FlexInputIcon(
 				icon = leadingIcon,
 				iconSize = iconSize,
-				iconColor = colorType.color,
+				iconColor = brushType.color,
 				isFocused = isFocused,
 				focusRequester = focusRequester,
 				interactionSource = leadingIconInteractionSource
@@ -312,7 +312,7 @@ private fun FlexInputDecorationBox(
 			FlexInputIcon(
 				icon = trailingIcon,
 				iconSize = iconSize,
-				iconColor = colorType.color,
+				iconColor = brushType.color,
 				isFocused = isFocused,
 				focusRequester = focusRequester,
 				interactionSource = trailingIconInteractionSource

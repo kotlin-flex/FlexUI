@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexColorType
+import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.sample.page.*
@@ -144,17 +144,17 @@ fun App() {
 								text = frameText,
 								modifier = Modifier
 									.width(90.dp),
-								colorType = when {
-									frameRate >= 60 -> FlexColorType.Primary
-									frameRate >= 30 -> FlexColorType.Secondary
-									else -> FlexColorType.Error
+								brushType = when {
+									frameRate >= 60 -> FlexBrushType.Primary
+									frameRate >= 30 -> FlexBrushType.Secondary
+									else -> FlexBrushType.Error
 								}
 							)
 							Spacer(modifier = Modifier.width(if (FlexPlatform.isMobile) 8.dp else 70.dp))
 							if (FlexPlatform.isMobile) {
 								FlexButton(
 									icon = if (showSidebar) Icons.Outlined.PlaylistRemove else Icons.AutoMirrored.Outlined.PlaylistPlay,
-									colorType = if (showSidebar) FlexColorType.Primary else FlexColorType.InverseSurface,
+									brushType = if (showSidebar) FlexBrushType.Primary else FlexBrushType.InverseSurface,
 									buttonType = FlexButtonType.Primary
 								) {
 									showSidebar = !showSidebar
@@ -281,7 +281,7 @@ fun App() {
 				FlexButton(
 					icon = Icons.Outlined.Preview,
 					buttonType = FlexButtonType.Primary,
-					colorType = if (showPreviews) FlexColorType.Primary else FlexColorType.InverseSurface,
+					brushType = if (showPreviews) FlexBrushType.Primary else FlexBrushType.InverseSurface,
 					scaleEffect = true
 				) {
 					showPreviews = !showPreviews
@@ -291,7 +291,7 @@ fun App() {
 				FlexButton(
 					icon = Icons.Outlined.Settings,
 					buttonType = FlexButtonType.Primary,
-					colorType = if (showSettings) FlexColorType.Primary else FlexColorType.InverseSurface,
+					brushType = if (showSettings) FlexBrushType.Primary else FlexBrushType.InverseSurface,
 					scaleEffect = true
 				) {
 					showSettings = !showSettings
@@ -303,7 +303,7 @@ fun App() {
 						true -> Icons.Outlined.PlaylistRemove
 						false -> Icons.AutoMirrored.Outlined.PlaylistPlay
 					},
-					colorType = if (showSidebar) FlexColorType.Primary else FlexColorType.InverseSurface,
+					brushType = if (showSidebar) FlexBrushType.Primary else FlexBrushType.InverseSurface,
 					buttonType = FlexButtonType.Primary,
 					scaleEffect = true
 				) {
