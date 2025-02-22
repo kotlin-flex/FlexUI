@@ -1,7 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.config
 
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType.*
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType.*
 
 /**
  * 尺寸配置

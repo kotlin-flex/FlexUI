@@ -27,9 +27,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
+import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
+import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.*
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
 import cn.vividcode.multiplatform.flex.ui.utils.lightenWithColor
 import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
@@ -41,7 +45,7 @@ import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
  * @param onValueChange 当滑块值更改时调用的回调函数
  * @param modifier 组件的修饰符，用于控制布局和样式
  * @param sizeType 滑块的尺寸类型，默认为 [FlexSliderDefaults.DefaultSizeType]
- * @param brushType 滑块的颜色类型，默认为 [FlexSliderDefaults.DefaultbrushType]
+ * @param brushType 滑块的颜色类型，默认为 [FlexSliderDefaults.DefaultBrushType]
  * @param cornerType 滑块的圆角类型，默认为 [FlexSliderDefaults.DefaultCornerType]
  * @param direction 滑块的滑动方向，默认为 [FlexSliderDefaults.DefaultSliderDirection]
  * @param enabled 是否启用，默认为 `true`
@@ -56,7 +60,7 @@ fun FlexSlider(
 	onValueChange: (Float) -> Unit,
 	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexSliderDefaults.DefaultSizeType,
-	brushType: FlexBrushType = FlexSliderDefaults.DefaultbrushType,
+	brushType: FlexBrushType = FlexSliderDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexSliderDefaults.DefaultCornerType,
 	direction: FlexSliderDirection = FlexSliderDefaults.DefaultSliderDirection,
 	enabled: Boolean = true,

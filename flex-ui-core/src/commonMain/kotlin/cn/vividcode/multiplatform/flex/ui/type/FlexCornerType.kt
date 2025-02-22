@@ -1,8 +1,9 @@
-package cn.vividcode.multiplatform.flex.ui.config.type
+package cn.vividcode.multiplatform.flex.ui.type
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
+import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 
 /**

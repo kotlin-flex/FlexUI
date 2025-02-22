@@ -26,12 +26,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMapIndexed
+import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
+import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.graphics.toSolidColor
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.type.darkenBrush
+import cn.vividcode.multiplatform.flex.ui.type.lightenBrush
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
 import kotlin.jvm.JvmName
@@ -56,7 +62,7 @@ fun <Key : Any> FlexRadio(
 	onSelectedKeyChange: (Key) -> Unit,
 	options: FlexRadioOptions.() -> List<RadioOption<Key>>,
 	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
-	brushType: FlexBrushType = FlexRadioDefaults.DefaultbrushType,
+	brushType: FlexBrushType = FlexRadioDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
 	radioType: FlexRadioType = FlexRadioDefaults.DefaultRadioType,
 	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,

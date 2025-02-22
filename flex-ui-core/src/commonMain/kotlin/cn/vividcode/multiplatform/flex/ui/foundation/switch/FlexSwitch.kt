@@ -25,8 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
+import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
+import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.*
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithContent
@@ -38,7 +42,7 @@ fun FlexSwitch(
 	onCheckedChange: (Boolean) -> Unit,
 	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexSwitchDefaults.DefaultSizeType,
-	brushType: FlexBrushType = FlexSwitchDefaults.DefaultbrushType,
+	brushType: FlexBrushType = FlexSwitchDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexSwitchDefaults.DefaultCornerType,
 	label: FlexSwitchLabel? = null,
 	enabled: Boolean = true,

@@ -1,6 +1,7 @@
-package cn.vividcode.multiplatform.flex.ui.config.type
+package cn.vividcode.multiplatform.flex.ui.config
 
 import androidx.compose.runtime.Composable
+import cn.vividcode.multiplatform.flex.ui.type.*
 
 /**
  * 默认类型配置
@@ -57,7 +58,7 @@ class FlexDefaultConfig internal constructor(
 @Suppress("PropertyName")
 abstract class FlexDefaults(
 	private val defaultSizeType: FlexSizeType = FlexSizeType.Medium,
-	private val defaultbrushType: FlexBrushType = FlexBrushType.Primary,
+	private val defaultBrushType: FlexBrushType = FlexBrushType.Primary,
 	private val defaultCornerType: FlexCornerType = FlexCornerType.Medium,
 ) {
 	
@@ -70,10 +71,10 @@ abstract class FlexDefaults(
 			composeDefaultSizeType = { defaultConfig?.sizeType }
 		)
 	
-	val DefaultbrushType: FlexBrushType
+	val DefaultBrushType: FlexBrushType
 		@Composable
 		get() = getDefaultbrushType(
-			defaultbrushType = defaultbrushType,
+			defaultbrushType = defaultBrushType,
 			composeDefaultbrushType = { defaultConfig?.brushType }
 		)
 	

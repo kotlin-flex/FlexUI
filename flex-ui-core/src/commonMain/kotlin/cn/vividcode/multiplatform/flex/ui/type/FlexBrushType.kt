@@ -1,4 +1,4 @@
-package cn.vividcode.multiplatform.flex.ui.config.type
+package cn.vividcode.multiplatform.flex.ui.type
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -6,6 +6,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.util.fastMap
+import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme

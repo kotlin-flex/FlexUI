@@ -22,8 +22,13 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.util.fastForEachIndexed
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.type.TransparentBrush
+import cn.vividcode.multiplatform.flex.ui.type.darkenBrush
+import cn.vividcode.multiplatform.flex.ui.type.lightenBrush
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border

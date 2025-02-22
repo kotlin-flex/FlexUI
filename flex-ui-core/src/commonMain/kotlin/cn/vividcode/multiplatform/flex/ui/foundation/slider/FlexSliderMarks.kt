@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMap
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
 
 /**

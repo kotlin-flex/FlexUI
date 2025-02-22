@@ -23,9 +23,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
+import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.foundation.icon.FlexIcon
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.type.TransparentBrush
+import cn.vividcode.multiplatform.flex.ui.type.darkenBrush
+import cn.vividcode.multiplatform.flex.ui.type.disabledBrush
+import cn.vividcode.multiplatform.flex.ui.type.lightenBrush
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border
@@ -53,7 +61,7 @@ fun FlexButton(
 	icon: ImageVector? = null,
 	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexButtonDefaults.DefaultSizeType,
-	brushType: FlexBrushType = FlexButtonDefaults.DefaultbrushType,
+	brushType: FlexBrushType = FlexButtonDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexButtonDefaults.DefaultCornerType,
 	buttonType: FlexButtonType = FlexButtonDefaults.DefaultButtonType,
 	iconPosition: FlexButtonIconPosition = FlexButtonDefaults.DefaultIconDirection,

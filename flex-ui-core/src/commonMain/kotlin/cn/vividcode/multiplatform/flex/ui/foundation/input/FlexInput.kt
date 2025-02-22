@@ -37,9 +37,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
+import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexInputConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.*
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
 
 /**
@@ -71,7 +75,7 @@ fun FlexInput(
 	onValueChange: (String) -> Unit,
 	modifier: Modifier = Modifier,
 	sizeType: FlexSizeType = FlexInputDefaults.DefaultSizeType,
-	brushType: FlexBrushType = FlexInputDefaults.DefaultbrushType,
+	brushType: FlexBrushType = FlexInputDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexInputDefaults.DefaultCornerType,
 	inputType: FlexInputType = FlexInputDefaults.DefaultInputType,
 	enabled: Boolean = true,
