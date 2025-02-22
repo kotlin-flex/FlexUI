@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,10 +29,11 @@ import androidx.compose.ui.util.fastMapIndexed
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
 import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
+import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
+import cn.vividcode.multiplatform.flex.ui.graphics.toSolidColor
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
-import cn.vividcode.multiplatform.flex.ui.utils.darkenWithContent
+import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
 import kotlin.jvm.JvmName
 
 /**
@@ -202,6 +204,14 @@ private object FlexRadioOptionsImpl : FlexRadioOptions {
 	): List<RadioOption<T>> = this.fastMapIndexed(transform)
 }
 
+internal val DisabledBackgroundBrush: FlexBrush
+	@Composable
+	get() = if (LocalDarkTheme.current) {
+		Color.DarkGray.copy(alpha = 0.6f).toSolidColor()
+	} else {
+		Color.LightGray.copy(alpha = 0.6f).toSolidColor()
+	}
+
 internal val DisabledBackgroundColor: Color
 	@Composable
 	get() = (if (LocalDarkTheme.current) Color.DarkGray else Color.LightGray).disabledWithColor
@@ -230,21 +240,21 @@ internal fun FlexRadioText(
 		}
 	)
 	val fontSize by animateFloatAsState(config.fontSize.value)
-	val contentColor by animateColorAsState(
+	val onBrush by animateFlexBrushAsState(
 		targetValue = when {
-			!enabled -> MaterialTheme.colorScheme.outline
+			!enabled -> MaterialTheme.colorScheme.outline.toSolidColor()
 			!selected -> when {
-				isPressed || isHovered -> brushType.color
-				else -> MaterialTheme.colorScheme.outline
+				isPressed || isHovered -> brushType.brush
+				else -> MaterialTheme.colorScheme.outline.toSolidColor()
 			}
 			
-			radioType == Button -> brushType.onColor
+			radioType == Button -> brushType.onBrush
+			
 			else -> {
-				val color = brushType.color
 				when {
-					isPressed -> color.darkenWithContent
-					isHovered -> color.lightenWithContent
-					else -> color
+					isPressed -> brushType.darkenBrush()
+					isHovered -> brushType.lightenBrush()
+					else -> brushType.brush
 				}
 			}
 		}
@@ -252,11 +262,13 @@ internal fun FlexRadioText(
 	Text(
 		text = value,
 		modifier = Modifier.scale(scale),
-		color = contentColor,
 		fontSize = fontSize.sp,
 		fontWeight = config.fontWeight,
 		lineHeight = fontSize.sp,
 		letterSpacing = config.letterSpacing,
+		style = LocalTextStyle.current.copy(
+			brush = onBrush.original
+		)
 	)
 }
 
@@ -289,7 +301,7 @@ internal fun <Key : Any> FlexRadioLine(
 	)
 }
 
-internal fun Modifier.bottomBorder(
+internal fun Modifier.buttonBorder(
 	width: Dp,
 	color: Color,
 	corner: Dp,

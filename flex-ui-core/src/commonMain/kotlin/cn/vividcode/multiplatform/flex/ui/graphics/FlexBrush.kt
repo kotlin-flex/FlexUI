@@ -451,3 +451,19 @@ internal class FlexStopsSweepGradient(
 		)
 	}
 }
+
+internal fun Color.toSolidColor(): FlexBrush {
+	return FlexBrush.solidColor(this)
+}
+
+internal fun List<Color>.toLinearGradient(): FlexBrush {
+	return FlexBrush.linearGradient(this)
+}
+
+internal fun List<Color>.toRadialGradient(): FlexBrush {
+	return FlexBrush.radialGradient(this)
+}
+
+internal fun List<Color>.toSweepGradient(): FlexBrush {
+	return FlexBrush.sweepGradient(this)
+}

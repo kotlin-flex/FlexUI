@@ -192,7 +192,7 @@ fun FlexButton(
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.Center
 		) {
-			val onBrush by animateFlexBrushAsState(
+			val contentBrush by animateFlexBrushAsState(
 				targetValue = when (buttonType) {
 					FlexButtonType.Primary -> brushType.onBrush
 					FlexButtonType.Filled, FlexButtonType.Text -> {
@@ -229,7 +229,7 @@ fun FlexButton(
 						modifier = Modifier
 							.rotate(rotation)
 							.size(iconSize),
-						tint = onBrush
+						tint = contentBrush
 					)
 					val internal by remember(text) {
 						derivedStateOf {
@@ -256,7 +256,7 @@ fun FlexButton(
 					overflow = TextOverflow.Ellipsis,
 					maxLines = 1,
 					style = LocalTextStyle.current.copy(
-						brush = onBrush.original
+						brush = contentBrush.original
 					)
 				)
 			}

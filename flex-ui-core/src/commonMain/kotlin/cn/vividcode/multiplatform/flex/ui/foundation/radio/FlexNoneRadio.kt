@@ -4,8 +4,6 @@ package cn.vividcode.multiplatform.flex.ui.foundation.radio
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -24,14 +22,11 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.util.fastForEachIndexed
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.config.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.config.type.*
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
-import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
-import cn.vividcode.multiplatform.flex.ui.utils.darkenWithContent
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithColor
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
+import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.background
+import cn.vividcode.multiplatform.flex.ui.utils.border
 
 /**
  * FlexRadio 单选框，类型：无效果
@@ -69,7 +64,7 @@ internal fun <Key : Any> FlexNoneRadio(
 		modifier = Modifier
 			.height(height)
 			.clip(cornerShape)
-			.bottomBorder(
+			.buttonBorder(
 				width = borderWidth,
 				color = borderColor,
 				corner = corner
@@ -92,37 +87,32 @@ internal fun <Key : Any> FlexNoneRadio(
 			val interactionSource = remember { MutableInteractionSource() }
 			val isHovered by interactionSource.collectIsHoveredAsState()
 			val isPressed by interactionSource.collectIsPressedAsState()
-			val borderColor by animateColorAsState(
-				targetValue = run {
-					val color = brushType.color
-					when {
-						!option.enabled -> color.copy(alpha = 0f)
-						selectedKey != option.key -> color.copy(alpha = 0f)
-						radioType == Button -> color.copy(alpha = 0f)
-						else -> {
-							when {
-								isPressed -> color.darkenWithContent
-								isHovered -> color.lightenWithContent
-								else -> color
-							}
+			val borderBrush by animateFlexBrushAsState(
+				targetValue = when {
+					!option.enabled || selectedKey != option.key || radioType == Button -> brushType.TransparentBrush
+					else -> {
+						when {
+							isPressed -> brushType.darkenBrush()
+							isHovered -> brushType.lightenBrush()
+							else -> brushType.brush
 						}
 					}
 				}
 			)
-			val backgroundColor by animateColorAsState(
-				targetValue = run {
-					val color = brushType.color
-					when {
-						!option.enabled -> DisabledBackgroundColor
-						selectedKey != option.key || radioType == FlexRadioType.Default -> color.copy(alpha = 0f)
-						else -> when {
-							isPressed -> color.darkenWithColor
-							isHovered -> color.lightenWithColor
-							else -> color
+			val backgroundBrush by animateFlexBrushAsState(
+				targetValue = when {
+					!option.enabled -> DisabledBackgroundBrush
+					selectedKey != option.key || radioType == FlexRadioType.Default -> brushType.TransparentBrush
+					else -> {
+						when {
+							isPressed -> brushType.darkenBrush()
+							isHovered -> brushType.lightenBrush()
+							else -> brushType.brush
 						}
 					}
 				}
 			)
+			
 			if (index != 0) {
 				FlexRadioLine(
 					index = index,
@@ -145,12 +135,12 @@ internal fun <Key : Any> FlexNoneRadio(
 						vertical = if (!option.enabled) config.borderWidth else Dp.Hairline
 					)
 					.background(
-						color = backgroundColor,
+						brush = backgroundBrush,
 						shape = buttonCornerShape
 					)
 					.border(
 						width = config.borderWidth,
-						color = borderColor,
+						brush = borderBrush,
 						shape = buttonCornerShape
 					)
 					.padding(horizontal = horizontalPadding),
