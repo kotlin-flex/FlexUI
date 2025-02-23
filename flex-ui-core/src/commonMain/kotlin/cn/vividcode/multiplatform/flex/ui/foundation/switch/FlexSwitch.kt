@@ -110,10 +110,10 @@ fun FlexSwitch(
 				false -> config.height - config.padding * 2
 			},
 		)
-		val brush by animateFlexBrushAsState(
+		val onBrush by animateFlexBrushAsState(
 			targetValue = run {
-				val brush = if (checked) brushType.onBrush else FlexBrush.White
-				if (enabled) brush else brush.disabledWithOnBrush
+				val onBrush = if (checked) brushType.onBrush else FlexBrush.White
+				if (enabled) onBrush else onBrush.copy(alpha = 0.85f)
 			}
 		)
 		Box(
@@ -123,7 +123,7 @@ fun FlexSwitch(
 				.height(height - padding * 2)
 				.clip(checkBoxCornerShape)
 				.background(
-					brush = brush,
+					brush = onBrush,
 					shape = checkBoxCornerShape
 				)
 		)
@@ -150,7 +150,7 @@ fun FlexSwitch(
 							lineHeight = textSize.sp,
 							maxLines = 1,
 							style = LocalTextStyle.current.copy(
-								brush = brush.original
+								brush = onBrush.original
 							)
 						)
 					}
@@ -161,7 +161,7 @@ fun FlexSwitch(
 							imageVector = label.checked,
 							contentDescription = null,
 							modifier = Modifier.size(iconSize),
-							tint = brush,
+							tint = onBrush,
 						)
 					}
 				}
@@ -192,7 +192,7 @@ fun FlexSwitch(
 							lineHeight = textSize.sp,
 							maxLines = 1,
 							style = LocalTextStyle.current.copy(
-								brush = brush.original
+								brush = onBrush.original
 							)
 						)
 					}
@@ -203,7 +203,7 @@ fun FlexSwitch(
 							imageVector = label.unchecked,
 							contentDescription = null,
 							modifier = Modifier.size(iconSize),
-							tint = brush
+							tint = onBrush
 						)
 					}
 				}

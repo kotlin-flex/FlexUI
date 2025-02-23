@@ -23,16 +23,6 @@ interface FlexBrushType {
 		@Composable
 		get
 	
-	@Deprecated("Please replace onBrush")
-	val onColor: Color
-		@Composable
-		get
-	
-	@Deprecated("Please replace color")
-	val color: Color
-		@Composable
-		get
-	
 	data object Primary : FlexBrushType {
 		
 		override val onBrush: FlexBrush
@@ -42,14 +32,6 @@ interface FlexBrushType {
 		override val brush: FlexBrush
 			@Composable
 			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.primary)
-		
-		override val onColor: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.onPrimary
-		
-		override val color: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.primary
 	}
 	
 	data object Secondary : FlexBrushType {
@@ -61,14 +43,6 @@ interface FlexBrushType {
 		override val brush: FlexBrush
 			@Composable
 			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.secondary)
-		
-		override val onColor: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.onSecondary
-		
-		override val color: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.secondary
 	}
 	
 	data object Tertiary : FlexBrushType {
@@ -80,14 +54,6 @@ interface FlexBrushType {
 		override val brush: FlexBrush
 			@Composable
 			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.tertiary)
-		
-		override val onColor: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.onTertiary
-		
-		override val color: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.tertiary
 	}
 	
 	data object Error : FlexBrushType {
@@ -99,14 +65,6 @@ interface FlexBrushType {
 		override val brush: FlexBrush
 			@Composable
 			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.error)
-		
-		override val onColor: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.onError
-		
-		override val color: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.error
 	}
 	
 	data object InverseSurface : FlexBrushType {
@@ -118,14 +76,6 @@ interface FlexBrushType {
 		override val brush: FlexBrush
 			@Composable
 			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.inverseSurface)
-		
-		override val onColor: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.inverseOnSurface
-		
-		override val color: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.inverseSurface
 	}
 	
 	data object LinearGradient : FlexBrushType {
@@ -142,14 +92,6 @@ interface FlexBrushType {
 		override val onBrush: FlexBrush
 			@Composable
 			get() = if (LocalDarkTheme.current) darkOnBrush else lightOnBrush
-		
-		override val onColor: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.inverseOnSurface
-		
-		override val color: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.inverseSurface
 	}
 	
 	data object RadialGradient : FlexBrushType {
@@ -158,14 +100,6 @@ interface FlexBrushType {
 		private val lightOnBrush by lazy { FlexBrush.solidColor(Color.White) }
 		private val darkBrush by lazy { FlexBrush.radialGradient(listOf(Color(0xFF40A9FF), Color(0xFF587DF7))) }
 		private val darkOnBrush by lazy { FlexBrush.radialGradient(listOf(Color(0xFF002765), Color(0xFF030752))) }
-		
-		override val onColor: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.inverseOnSurface
-		
-		override val color: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.inverseSurface
 		
 		override val brush: FlexBrush
 			@Composable
@@ -190,14 +124,6 @@ interface FlexBrushType {
 		override val onBrush: FlexBrush
 			@Composable
 			get() = if (LocalDarkTheme.current) darkOnBrush else lightOnBrush
-		
-		override val onColor: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.inverseOnSurface
-		
-		override val color: Color
-			@Composable
-			get() = MaterialTheme.colorScheme.inverseSurface
 	}
 }
 

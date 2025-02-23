@@ -1,12 +1,11 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.slider
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -25,8 +23,11 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
+import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.background
 import kotlin.math.sqrt
 
 /**
@@ -76,8 +77,8 @@ internal fun FlexSliderTooltipPopup(
 		val arrowCornerShape by remember(arrowCornerPercent) {
 			derivedStateOf { RoundedCornerShape(bottomEndPercent = arrowCornerPercent) }
 		}
-		val color by animateColorAsState(brushType.color)
-		val contentColor by animateColorAsState(brushType.onColor)
+		val brush by animateFlexBrushAsState(brushType.brush)
+		val onBrush by animateFlexBrushAsState(brushType.onBrush)
 		var targetAlpha by remember { mutableStateOf(0f) }
 		var targetScale by remember { mutableStateOf(1f) }
 		val alpha by animateFloatAsState(
@@ -114,8 +115,8 @@ internal fun FlexSliderTooltipPopup(
 				TooltipText(
 					tooltipText = tooltipText,
 					config = config,
-					color = color,
-					contentColor = contentColor,
+					brush = brush,
+					onBrush = onBrush,
 					tooltipCornerShape = tooltipCornerShape
 				)
 				Box(
@@ -126,7 +127,7 @@ internal fun FlexSliderTooltipPopup(
 						.rotate(45f)
 						.size(arrowSize)
 						.background(
-							color = color,
+							brush = brush,
 							shape = arrowCornerShape
 						)
 				)
@@ -148,15 +149,15 @@ internal fun FlexSliderTooltipPopup(
 						.rotate(135f)
 						.size(arrowSize)
 						.background(
-							color = color,
+							brush = brush,
 							shape = arrowCornerShape
 						)
 				)
 				TooltipText(
 					tooltipText = tooltipText,
 					config = config,
-					color = color,
-					contentColor = contentColor,
+					brush = brush,
+					onBrush = onBrush,
 					tooltipCornerShape = tooltipCornerShape,
 				)
 			}
@@ -168,8 +169,8 @@ internal fun FlexSliderTooltipPopup(
 private fun TooltipText(
 	tooltipText: String,
 	config: FlexSliderConfig,
-	color: Color,
-	contentColor: Color,
+	brush: FlexBrush,
+	onBrush: FlexBrush,
 	tooltipCornerShape: RoundedCornerShape,
 ) {
 	val tooltipHeight by animateDpAsState(config.toolbarHeight)
@@ -179,7 +180,7 @@ private fun TooltipText(
 			.height(tooltipHeight)
 			.clip(tooltipCornerShape)
 			.background(
-				color = color,
+				brush = brush,
 				shape = tooltipCornerShape
 			)
 			.padding(
@@ -190,11 +191,13 @@ private fun TooltipText(
 		val fontSize by animateFloatAsState(config.toolbarFontSize.value)
 		Text(
 			text = tooltipText,
-			color = contentColor,
 			fontSize = fontSize.sp,
 			fontWeight = config.toolbarFontWeight,
 			lineHeight = fontSize.sp,
-			letterSpacing = config.toolbarFontLetterSpacing
+			letterSpacing = config.toolbarFontLetterSpacing,
+			style = LocalTextStyle.current.copy(
+				brush = onBrush.original
+			)
 		)
 	}
 }

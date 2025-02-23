@@ -6,7 +6,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMapIndexed
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
@@ -35,7 +34,7 @@ internal fun animateFlexBrushAsState(
 		).value
 	}
 	val flexBrush by remember(targetValue, colors) {
-		derivedStateOf { targetValue.replace(colors) }
+		derivedStateOf { targetValue.replace(colors, false) }
 	}
 	if (finishedListener != null) {
 		LaunchedEffect(flexBrush) {
@@ -68,12 +67,12 @@ internal fun List<Color>.toSweepGradient(): FlexBrush {
 }
 
 internal fun FlexBrush.darken(fraction: Float): FlexBrush {
-	val colors = this.colors.fastMap { lerp(it, Color.Black, fraction) }
+	val colors = this.colors.fastMap { it.darken(fraction) }
 	return this.replace(colors)
 }
 
 internal fun FlexBrush.lighten(fraction: Float): FlexBrush {
-	val colors = this.colors.fastMap { lerp(it, Color.White, fraction) }
+	val colors = this.colors.fastMap { it.lighten(fraction) }
 	return this.replace(colors)
 }
 

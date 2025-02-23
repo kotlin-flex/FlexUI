@@ -13,6 +13,7 @@ plugins {
 }
 
 val flexUIVersion = property("flex-ui.version").toString()
+val flexUIAutomaticRelease = property("flex-ui.automatic-release").toString().toBoolean()
 
 group = "cn.vividcode.multiplatform.flex.ui.api"
 version = flexUIVersion
@@ -117,26 +118,8 @@ android {
 	}
 }
 
-fun String.isReleaseVersion(): Boolean {
-	val versionRegex = """^\d+\.\d+\.\d+(-(exp|alpha|beta|rc)-\d{2})?$""".toRegex()
-	check(this.matches(versionRegex)) {
-		"""
-			$this 是一个非法的版本号
-			以下为正确实例：
-			1. 1.0.0-exp-01     (早期开发阶段)
-			2. 1.0.0-alpha-01   (组件确定，会修改功能)
-			3. 1.0.0-beta-01    (功能确定，主要以修复为主)
-			4. 1.0.0-rc-01      (最终错误修复，正式版前推出版本)
-			5. 1.0.0            (正式版本)
-		""".trimIndent()
-	}
-	val regex = "^(?!.*(exp|rc|alpha|beta)).*$".toRegex()
-	return this.matches(regex)
-}
-
 mavenPublishing {
-	val release = flexUIVersion.isReleaseVersion()
-	publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = release)
+	publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = flexUIAutomaticRelease)
 	signAllPublications()
 	
 	coordinates("cn.vividcode.multiplatform", "flex-ui", flexUIVersion)

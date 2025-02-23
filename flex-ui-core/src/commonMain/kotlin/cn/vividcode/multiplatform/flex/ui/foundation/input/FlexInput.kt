@@ -91,8 +91,8 @@ fun FlexInput(
 	
 	CompositionLocalProvider(
 		LocalTextSelectionColors provides TextSelectionColors(
-			handleColor = brushType.color,
-			backgroundColor = brushType.color.copy(alpha = 0.15f)
+			handleColor = brushType.brush.colors.first(),
+			backgroundColor = brushType.brush.colors.first().copy(alpha = 0.15f),
 		)
 	) {
 		val leadingIconInteractionSource = remember { MutableInteractionSource() }

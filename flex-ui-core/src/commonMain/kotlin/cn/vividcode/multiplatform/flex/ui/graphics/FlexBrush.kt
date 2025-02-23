@@ -23,15 +23,15 @@ sealed class FlexBrush {
 		private const val SWEEP_GRADIENT = 5
 		private const val SWEEP_GRADIENT_STOPS = 6
 		
-		private val cache by lazy { arrayOfNulls<MutableMap<String, FlexBrush>>(7) }
+		private val brushCaches by lazy { arrayOfNulls<MutableMap<String, FlexBrush>>(7) }
 		
 		private fun createOrCache(
 			type: Int,
 			key: String,
 			create: () -> FlexBrush,
 		): FlexBrush {
-			val cacheMap = cache[type] ?: mutableMapOf<String, FlexBrush>()
-				.also { cache[type] = it }
+			val cacheMap = brushCaches[type] ?: mutableMapOf<String, FlexBrush>()
+				.also { brushCaches[type] = it }
 			return cacheMap.getOrPut(key, create)
 		}
 		
@@ -216,7 +216,7 @@ sealed class FlexBrush {
 	
 	internal abstract fun copy(alpha: Float = 1f): FlexBrush
 	
-	internal abstract fun replace(colors: List<Color>): FlexBrush
+	internal abstract fun replace(colors: List<Color>, needCache: Boolean = true): FlexBrush
 	
 	final override fun equals(other: Any?): Boolean {
 		if (this === other) return true
@@ -244,10 +244,9 @@ internal class FlexSolidColor(
 		return solidColor(this.color.copy(alpha = alpha))
 	}
 	
-	override fun replace(colors: List<Color>): FlexBrush {
-		return FlexSolidColor(
-			color = colors.first(),
-		)
+	override fun replace(colors: List<Color>, needCache: Boolean): FlexBrush {
+		val color = colors.first()
+		return if (needCache) solidColor(color) else FlexSolidColor(color)
 	}
 }
 
@@ -276,13 +275,22 @@ internal class FlexLinearGradient(
 		)
 	}
 	
-	override fun replace(colors: List<Color>): FlexBrush {
-		return FlexLinearGradient(
-			colors = colors,
-			start = start,
-			end = end,
-			tileMode = tileMode
-		)
+	override fun replace(colors: List<Color>, needCache: Boolean): FlexBrush {
+		return if (needCache) {
+			linearGradient(
+				colors = colors,
+				start = start,
+				end = end,
+				tileMode = tileMode,
+			)
+		} else {
+			FlexLinearGradient(
+				colors = colors,
+				start = start,
+				end = end,
+				tileMode = tileMode
+			)
+		}
 	}
 }
 
@@ -306,8 +314,8 @@ internal class FlexStopsLinearGradient(
 	}
 	
 	override fun copy(alpha: Float): FlexBrush {
-		val colorStops = Array(this.colorStops.size) { i ->
-			this.colorStops[i].let { it.first to it.second.copy(alpha = alpha) }
+		val colorStops = Array(colorStops.size) {
+			colorStops[it].first to colorStops[it].second.copy(alpha = alpha)
 		}
 		return linearGradient(
 			colorStops = colorStops,
@@ -317,13 +325,23 @@ internal class FlexStopsLinearGradient(
 		)
 	}
 	
-	override fun replace(colors: List<Color>): FlexBrush {
-		return FlexStopsLinearGradient(
-			colorStops = Array(colorStops.size) { colorStops[it].first to colors[it] },
-			start = start,
-			end = end,
-			tileMode = tileMode,
-		)
+	override fun replace(colors: List<Color>, needCache: Boolean): FlexBrush {
+		val colorStops = Array(colorStops.size) { colorStops[it].first to colors[it] }
+		return if (needCache) {
+			linearGradient(
+				colorStops = colorStops,
+				start = start,
+				end = end,
+				tileMode = tileMode,
+			)
+		} else {
+			FlexStopsLinearGradient(
+				colorStops = colorStops,
+				start = start,
+				end = end,
+				tileMode = tileMode,
+			)
+		}
 	}
 }
 
@@ -352,13 +370,22 @@ internal class FlexRadialGradient(
 		)
 	}
 	
-	override fun replace(colors: List<Color>): FlexBrush {
-		return FlexRadialGradient(
-			colors = colors,
-			center = center,
-			radius = radius,
-			tileMode = tileMode,
-		)
+	override fun replace(colors: List<Color>, needCache: Boolean): FlexBrush {
+		return if (needCache) {
+			radialGradient(
+				colors = colors,
+				center = center,
+				radius = radius,
+				tileMode = tileMode,
+			)
+		} else {
+			FlexRadialGradient(
+				colors = colors,
+				center = center,
+				radius = radius,
+				tileMode = tileMode,
+			)
+		}
 	}
 }
 
@@ -393,13 +420,23 @@ internal class FlexStopsRadialGradient(
 		)
 	}
 	
-	override fun replace(colors: List<Color>): FlexBrush {
-		return FlexStopsRadialGradient(
-			colorStops = Array(colorStops.size) { colorStops[it].first to colors[it] },
-			center = center,
-			radius = radius,
-			tileMode = tileMode,
-		)
+	override fun replace(colors: List<Color>, needCache: Boolean): FlexBrush {
+		val colorStops = Array(colorStops.size) { colorStops[it].first to colors[it] }
+		return if (needCache) {
+			radialGradient(
+				colorStops = colorStops,
+				center = center,
+				radius = radius,
+				tileMode = tileMode,
+			)
+		} else {
+			FlexStopsRadialGradient(
+				colorStops = colorStops,
+				center = center,
+				radius = radius,
+				tileMode = tileMode,
+			)
+		}
 	}
 }
 
@@ -422,11 +459,18 @@ internal class FlexSweepGradient(
 		)
 	}
 	
-	override fun replace(colors: List<Color>): FlexBrush {
-		return FlexSweepGradient(
-			colors = colors,
-			center = center
-		)
+	override fun replace(colors: List<Color>, needCache: Boolean): FlexBrush {
+		return if (needCache) {
+			sweepGradient(
+				colors = colors,
+				center = center
+			)
+		} else {
+			FlexSweepGradient(
+				colors = colors,
+				center = center
+			)
+		}
 	}
 }
 
@@ -455,10 +499,18 @@ internal class FlexStopsSweepGradient(
 		)
 	}
 	
-	override fun replace(colors: List<Color>): FlexBrush {
-		return FlexStopsSweepGradient(
-			colorStops = Array(colorStops.size) { colorStops[it].first to colors[it] },
-			center = center
-		)
+	override fun replace(colors: List<Color>, needCache: Boolean): FlexBrush {
+		val colorStops = Array(colorStops.size) { colorStops[it].first to colors[it] }
+		return if (needCache) {
+			sweepGradient(
+				colorStops = colorStops,
+				center = center
+			)
+		} else {
+			FlexStopsSweepGradient(
+				colorStops = colorStops,
+				center = center
+			)
+		}
 	}
 }

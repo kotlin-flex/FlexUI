@@ -2,7 +2,6 @@ package cn.vividcode.multiplatform.flex.ui.foundation.slider
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -19,8 +18,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMap
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
+import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.border
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithBrush
+import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
 
 /**
  * 滑动条的标记点
@@ -91,6 +93,7 @@ data class FlexSliderMark(
 	val value: Float,
 	val text: String? = null,
 	val color: Color? = null,
+	val brush: FlexBrush? = null,
 	val weight: FontWeight? = null,
 )
 
@@ -125,12 +128,12 @@ internal fun FlexSliderMarks(
 				(length - thickness) / valueRange.range * (it.value - valueRange.start) + thickness / 2 - markBorderWidth - sliderThickness / 2
 			}
 		}
-		val color = brushType.color
-		val darkenSurfaceVariant = MaterialTheme.colorScheme.surfaceVariant.darkenWithColor
-		val borderColor by remember(it.value, value, color, darkenSurfaceVariant, isFocused) {
+		val darkenSurfaceVariant = MaterialTheme.colorScheme.surfaceVariant.toSolidColor().darkenWithBrush
+		val brush = brushType.brush
+		val borderBrush by remember(it.value, value, brush, darkenSurfaceVariant, isFocused) {
 			derivedStateOf {
-				val color = if (it.value <= value) color else darkenSurfaceVariant
-				if (isFocused) color else color.copy(alpha = 0.75f)
+				val brush = if (it.value <= value) brush else darkenSurfaceVariant
+				if (isFocused) brush else brush.copy(alpha = 0.75f)
 			}
 		}
 		Box(
@@ -142,7 +145,7 @@ internal fun FlexSliderMarks(
 				.size(sliderThickness + markBorderWidth * 2)
 				.border(
 					width = markBorderWidth,
-					color = borderColor,
+					brush = borderBrush,
 					shape = shape
 				)
 				.background(

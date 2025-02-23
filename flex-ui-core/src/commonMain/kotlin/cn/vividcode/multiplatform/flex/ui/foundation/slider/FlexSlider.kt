@@ -1,11 +1,8 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.slider
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.hoverable
@@ -13,6 +10,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -31,12 +29,8 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithColor
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithContent
+import cn.vividcode.multiplatform.flex.ui.type.*
+import cn.vividcode.multiplatform.flex.ui.utils.*
 
 /**
  * FlexSlider 滑动条
@@ -182,10 +176,9 @@ fun FlexSlider(
 			val padding by remember(thickness, sliderThickness) {
 				derivedStateOf { thickness / 2 - sliderThickness / 2 }
 			}
-			val sliderColor by animateColorAsState(
-				targetValue = when (enabled) {
-					true -> MaterialTheme.colorScheme.surfaceVariant
-					false -> MaterialTheme.colorScheme.surfaceVariant.disabledWithColor
+			val sliderBrush by animateFlexBrushAsState(
+				targetValue = MaterialTheme.colorScheme.surfaceVariant.toSolidColor().let {
+					if (enabled) it else it.disabledWithBrush
 				}
 			)
 			Box(
@@ -205,7 +198,7 @@ fun FlexSlider(
 					)
 					.clip(shape)
 					.background(
-						color = sliderColor,
+						brush = sliderBrush,
 						shape = shape
 					)
 			)
@@ -220,21 +213,15 @@ fun FlexSlider(
 			val isFocused by remember(isHovered, isDragging) {
 				derivedStateOf { isHovered || isDragging }
 			}
-			val thumbColor by animateColorAsState(
-				targetValue = run {
-					val color = brushType.color
-					when {
-						!enabled -> color.disabledWithColor
-						isFocused -> color
-						else -> color.copy(alpha = 0.75f)
-					}
+			val thumbBrush by animateFlexBrushAsState(
+				targetValue = when {
+					!enabled -> brushType.disabledBrush
+					isFocused -> brushType.brush
+					else -> brushType.brush.copy(alpha = 0.75f)
 				}
 			)
-			val contentColor by animateColorAsState(
-				targetValue = run {
-					val color = brushType.onColor
-					if (enabled) color else color.lightenWithContent
-				}
+			val contentBrush by animateFlexBrushAsState(
+				targetValue = if (enabled) brushType.onBrush else brushType.lightenOnBrush
 			)
 			Box(
 				modifier = Modifier
@@ -248,7 +235,7 @@ fun FlexSlider(
 					)
 					.clip(shape)
 					.background(
-						color = thumbColor,
+						brush = thumbBrush,
 						shape = shape
 					)
 			)
@@ -286,17 +273,15 @@ fun FlexSlider(
 			val thumbBorderWidth by animateDpAsState(
 				targetValue = if (isThumbFocused) config.thumbBorderWidth * 1.1f else config.thumbBorderWidth
 			)
-			val borderColor by animateColorAsState(
-				targetValue = run {
-					val color = brushType.color
-					when {
-						!enabled -> color.disabledWithColor
-						isThumbFocused -> color.lightenWithColor
-						isFocused -> color
-						else -> color.copy(alpha = 0.8f)
-					}
+			val borderBrush by animateFlexBrushAsState(
+				targetValue = when {
+					!enabled -> brushType.disabledBrush
+					isThumbFocused -> brushType.lightenBrush
+					isFocused -> brushType.brush
+					else -> brushType.brush.copy(alpha = 0.8f)
 				}
 			)
+			
 			Box(
 				modifier = Modifier
 					.offset(
@@ -308,11 +293,11 @@ fun FlexSlider(
 					.clip(shape)
 					.border(
 						width = thumbBorderWidth,
-						color = borderColor,
+						brush = borderBrush,
 						shape = shape
 					)
 					.background(
-						color = contentColor,
+						brush = contentBrush,
 						shape = shape
 					)
 					.hoverable(
@@ -390,8 +375,8 @@ private fun FlexSliderTextMarks(
 					(length - thickness) / valueRange.range * (it.value - valueRange.start) + thickness / 2 - markTextLength / 2
 				}
 			}
-			val color by animateColorAsState(
-				targetValue = it.color ?: brushType.color
+			val brush by animateFlexBrushAsState(
+				targetValue = it.brush ?: it.color?.toSolidColor() ?: brushType.brush
 			)
 			val markFontSize by animateFloatAsState(
 				targetValue = config.markFontSize.value
@@ -411,10 +396,12 @@ private fun FlexSliderTextMarks(
 					.alpha(
 						alpha = if (markTextLength == Dp.Hairline) 0f else 1f
 					),
-				color = color,
 				fontWeight = it.weight ?: config.markFontWeight,
 				fontSize = markFontSize.sp,
-				lineHeight = markFontSize.sp
+				lineHeight = markFontSize.sp,
+				style = LocalTextStyle.current.copy(
+					brush = brush.original
+				)
 			)
 		}
 	}
