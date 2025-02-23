@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.util.fastMap
+import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
 
 @Immutable
 sealed class FlexBrush {
@@ -197,6 +198,16 @@ sealed class FlexBrush {
 				center = center,
 			)
 		}
+		
+		val White by lazy { Color.White.toSolidColor() }
+		
+		val Black by lazy { Color.Black.toSolidColor() }
+		
+		val Gray by lazy { Color.Gray.toSolidColor() }
+		
+		val LightGray by lazy { Color.LightGray.toSolidColor() }
+		
+		val DarkGray by lazy { Color.DarkGray.toSolidColor() }
 	}
 	
 	internal abstract val original: Brush
@@ -450,20 +461,4 @@ internal class FlexStopsSweepGradient(
 			center = center
 		)
 	}
-}
-
-internal fun Color.toSolidColor(): FlexBrush {
-	return FlexBrush.solidColor(this)
-}
-
-internal fun List<Color>.toLinearGradient(): FlexBrush {
-	return FlexBrush.linearGradient(this)
-}
-
-internal fun List<Color>.toRadialGradient(): FlexBrush {
-	return FlexBrush.radialGradient(this)
-}
-
-internal fun List<Color>.toSweepGradient(): FlexBrush {
-	return FlexBrush.sweepGradient(this)
 }

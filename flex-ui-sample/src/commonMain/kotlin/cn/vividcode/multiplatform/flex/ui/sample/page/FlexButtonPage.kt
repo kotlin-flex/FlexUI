@@ -11,9 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
@@ -22,8 +19,12 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
+import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 
 /**
  * 按钮展示页
@@ -49,7 +50,7 @@ fun ColumnScope.FlexButtonPage() {
 							text = "$buttonText",
 							icon = ${iconType.code},
 							sizeType = FlexSizeType.$sizeType,
-							brushType = FlexbrushType.$brushType,
+							brushType = FlexBrushType.$brushType,
 							cornerType = FlexCornerType.$cornerType,
 							buttonType = FlexButtonType.$buttonType,
 							iconPosition = FlexButtonIconPosition.$iconPosition,
@@ -111,7 +112,7 @@ fun ColumnScope.FlexButtonPage() {
 				FlexRadio(
 					selectedKey = brushType,
 					onSelectedKeyChange = { brushType = it },
-					options = { FlexBrushType.entries.options() },
+					options = brushTypeOptions,
 					sizeType = FlexSizeType.Small,
 					brushType = brushType,
 					radioType = FlexRadioType.Button,

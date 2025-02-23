@@ -2,16 +2,17 @@ package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.*
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitchLabels
+import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 
 /**
  * 按钮展示页
@@ -40,7 +41,7 @@ fun ColumnScope.FlexSwitchPage() {
 							checked = checked,
 							onCheckedChange = { checked = it },
 							sizeType = FlexSizeType.$sizeType,
-							brushType = FlexbrushType.$brushType,
+							brushType = FlexBrushType.$brushType,
 							cornerType = FlexCornerType.$cornerType,
 							label = $label,
 							enabled = $enabled
@@ -82,7 +83,7 @@ fun ColumnScope.FlexSwitchPage() {
 				FlexRadio(
 					selectedKey = brushType,
 					onSelectedKeyChange = { brushType = it },
-					options = { FlexBrushType.entries.options() },
+					options = brushTypeOptions,
 					sizeType = FlexSizeType.Small,
 					brushType = brushType,
 					radioType = FlexRadioType.Button,

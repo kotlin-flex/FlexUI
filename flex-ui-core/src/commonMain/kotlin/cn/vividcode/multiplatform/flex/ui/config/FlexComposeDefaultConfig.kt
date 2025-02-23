@@ -73,9 +73,9 @@ abstract class FlexDefaults(
 	
 	val DefaultBrushType: FlexBrushType
 		@Composable
-		get() = getDefaultbrushType(
-			defaultbrushType = defaultBrushType,
-			composeDefaultbrushType = { defaultConfig?.brushType }
+		get() = getDefaultBrushType(
+			defaultBrushType = defaultBrushType,
+			composeDefaultBrushType = { defaultConfig?.brushType }
 		)
 	
 	val DefaultCornerType: FlexCornerType

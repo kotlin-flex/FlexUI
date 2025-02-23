@@ -2,6 +2,7 @@ package cn.vividcode.multiplatform.flex.ui.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.math.abs
 import kotlin.math.max
@@ -111,4 +112,12 @@ private fun hslToRgb(h: Float, s: Float, l: Float): Color {
 	}
 	
 	return Color(r + m, g + m, b + m)
+}
+
+internal fun Color.darken(fraction: Float): Color {
+	return lerp(this, Color.Black, fraction)
+}
+
+internal fun Color.lighten(fraction: Float): Color {
+	return lerp(this, Color.White, fraction)
 }

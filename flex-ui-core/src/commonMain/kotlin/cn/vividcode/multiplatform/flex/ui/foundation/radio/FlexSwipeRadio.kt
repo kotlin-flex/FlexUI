@@ -23,12 +23,7 @@ import androidx.compose.ui.util.fastForEachIndexed
 import androidx.compose.ui.util.fastMap
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.type.TransparentBrush
-import cn.vividcode.multiplatform.flex.ui.type.darkenBrush
-import cn.vividcode.multiplatform.flex.ui.type.lightenBrush
+import cn.vividcode.multiplatform.flex.ui.type.*
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border
@@ -107,11 +102,11 @@ internal fun <Key : Any> FlexSwipeRadio(
 			val option = options[currentIndex]
 			val borderBrush by animateFlexBrushAsState(
 				targetValue = when {
-					!option.enabled || selectedKey != option.key || radioType == Button -> brushType.TransparentBrush
+					!option.enabled || selectedKey != option.key || radioType == Button -> brushType.transparentBrush
 					else -> {
 						when {
-							isButtonPressed -> brushType.darkenBrush()
-							isButtonHovered -> brushType.lightenBrush()
+							isButtonPressed -> brushType.darkenBrush
+							isButtonHovered -> brushType.lightenBrush
 							else -> brushType.brush
 						}
 					}
@@ -120,11 +115,11 @@ internal fun <Key : Any> FlexSwipeRadio(
 			val backgroundBrush by animateFlexBrushAsState(
 				targetValue = when {
 					!option.enabled -> DisabledBackgroundBrush
-					selectedKey != option.key || radioType == FlexRadioType.Default -> brushType.TransparentBrush
+					selectedKey != option.key || radioType == FlexRadioType.Default -> brushType.transparentBrush
 					else -> {
 						when {
-							isButtonPressed -> brushType.darkenBrush()
-							isButtonHovered -> brushType.lightenBrush()
+							isButtonPressed -> brushType.darkenBrush
+							isButtonHovered -> brushType.lightenBrush
 							else -> brushType.brush
 						}
 					}
@@ -192,7 +187,7 @@ internal fun <Key : Any> FlexSwipeRadio(
 						)
 						.then(
 							if (option.enabled) Modifier else Modifier.background(
-								color = DisabledBackgroundColor
+								color = DisabledColor
 							)
 						)
 						.padding(horizontal = horizontalPadding),

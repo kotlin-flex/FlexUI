@@ -6,8 +6,11 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMapIndexed
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
+import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import kotlin.math.min
 
 /**
@@ -47,3 +50,59 @@ internal fun animateFlexBrushAsState(
 }
 
 private val flexBrushDefaultSpring = spring<Color>()
+
+internal fun Color.toSolidColor(): FlexBrush {
+	return FlexBrush.solidColor(this)
+}
+
+internal fun List<Color>.toLinearGradient(): FlexBrush {
+	return FlexBrush.linearGradient(this)
+}
+
+internal fun List<Color>.toRadialGradient(): FlexBrush {
+	return FlexBrush.radialGradient(this)
+}
+
+internal fun List<Color>.toSweepGradient(): FlexBrush {
+	return FlexBrush.sweepGradient(this)
+}
+
+internal fun FlexBrush.darken(fraction: Float): FlexBrush {
+	val colors = this.colors.fastMap { lerp(it, Color.Black, fraction) }
+	return this.replace(colors)
+}
+
+internal fun FlexBrush.lighten(fraction: Float): FlexBrush {
+	val colors = this.colors.fastMap { lerp(it, Color.White, fraction) }
+	return this.replace(colors)
+}
+
+internal val FlexBrush.darkenWithBrush: FlexBrush
+	@Composable
+	get() = this.darken(
+		fraction = if (LocalDarkTheme.current) 0.06f else 0.1f
+	)
+
+internal val FlexBrush.lightenWithBrush: FlexBrush
+	@Composable
+	get() = this.lighten(
+		fraction = if (LocalDarkTheme.current) 0.06f else 0.1f
+	)
+
+internal val FlexBrush.disabledWithBrush: FlexBrush
+	get() = this.copy(alpha = 0.6f)
+
+internal val FlexBrush.darkenWithOnBrush: FlexBrush
+	@Composable
+	get() = this.darken(
+		fraction = if (LocalDarkTheme.current) 0.05f else 0.15f
+	)
+
+internal val FlexBrush.lightenWithOnBrush: FlexBrush
+	@Composable
+	get() = this.lighten(
+		fraction = if (LocalDarkTheme.current) 0.05f else 0.15f
+	)
+
+internal val FlexBrush.disabledWithOnBrush: FlexBrush
+	get() = this.copy(alpha = 0.8f)

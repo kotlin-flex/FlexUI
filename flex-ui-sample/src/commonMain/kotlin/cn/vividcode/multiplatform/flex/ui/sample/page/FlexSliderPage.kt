@@ -8,16 +8,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.*
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
+import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import kotlin.math.floor
 
 /**
@@ -86,7 +87,7 @@ fun ColumnScope.FlexSliderPage() {
 							value = value,
 							onValueChange = { value = it },
 							sizeType = FlexSizeType.$sizeType,
-							brushType = FlexbrushType.$brushType,
+							brushType = FlexBrushType.$brushType,
 							cornerType = FlexCornerType.$cornerType,
 							direction = FlexSliderDirection.$direction,
 							valueRange = 0f .. 100f,
@@ -158,7 +159,7 @@ fun ColumnScope.FlexSliderPage() {
 				FlexRadio(
 					selectedKey = brushType,
 					onSelectedKeyChange = { brushType = it },
-					options = { FlexBrushType.entries.options() },
+					options = brushTypeOptions,
 					sizeType = FlexSizeType.Small,
 					brushType = brushType,
 					radioType = FlexRadioType.Button,

@@ -31,15 +31,12 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
-import cn.vividcode.multiplatform.flex.ui.graphics.toSolidColor
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.type.darkenBrush
-import cn.vividcode.multiplatform.flex.ui.type.lightenBrush
+import cn.vividcode.multiplatform.flex.ui.type.*
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithBrush
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
+import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
 import kotlin.jvm.JvmName
 
 /**
@@ -213,12 +210,12 @@ private object FlexRadioOptionsImpl : FlexRadioOptions {
 internal val DisabledBackgroundBrush: FlexBrush
 	@Composable
 	get() = if (LocalDarkTheme.current) {
-		Color.DarkGray.copy(alpha = 0.6f).toSolidColor()
+		FlexBrush.DarkGray.disabledWithBrush
 	} else {
-		Color.LightGray.copy(alpha = 0.6f).toSolidColor()
+		FlexBrush.LightGray.disabledWithBrush
 	}
 
-internal val DisabledBackgroundColor: Color
+internal val DisabledColor: Color
 	@Composable
 	get() = (if (LocalDarkTheme.current) Color.DarkGray else Color.LightGray).disabledWithColor
 
@@ -258,8 +255,8 @@ internal fun FlexRadioText(
 			
 			else -> {
 				when {
-					isPressed -> brushType.darkenBrush()
-					isHovered -> brushType.lightenBrush()
+					isPressed -> brushType.darkenBrush
+					isHovered -> brushType.lightenBrush
 					else -> brushType.brush
 				}
 			}
@@ -291,7 +288,7 @@ internal fun <Key : Any> FlexRadioLine(
 	val lineColor by animateColorAsState(
 		targetValue = when {
 			options[index].key != selectedKey && options[index - 1].key != selectedKey -> MaterialTheme.colorScheme.outlineVariant
-			!options[index].enabled || !options[index - 1].enabled -> DisabledBackgroundColor
+			!options[index].enabled || !options[index - 1].enabled -> DisabledColor
 			else -> Color.Transparent
 		}
 	)

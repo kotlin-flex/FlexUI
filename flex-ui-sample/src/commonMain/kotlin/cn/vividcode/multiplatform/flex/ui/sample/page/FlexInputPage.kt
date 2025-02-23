@@ -5,12 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputIcons
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputType
@@ -18,8 +14,13 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
+import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
+import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 
 /**
  * 输入框展示页
@@ -47,7 +48,7 @@ fun ColumnScope.FlexInputPage() {
 									value = value,
 									onValueChange = { value = it },
 									sizeType = FlexSizeType.$sizeType,
-									brushType = FlexbrushType.$brushType,
+									brushType = FlexBrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
 									inputType = FlexInputType.$inputType,
 									enabled = $enabled,
@@ -69,7 +70,7 @@ fun ColumnScope.FlexInputPage() {
 									value = value,
 									onValueChange = { value = it },
 									sizeType = FlexSizeType.$sizeType,
-									brushType = FlexbrushType.$brushType,
+									brushType = FlexBrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
 									inputType = FlexInputType.$inputType,
 									enabled = $enabled,
@@ -105,7 +106,7 @@ fun ColumnScope.FlexInputPage() {
 									value = value,
 									onValueChange = { value = it },
 									sizeType = FlexSizeType.$sizeType,
-									brushType = FlexbrushType.$brushType,
+									brushType = FlexBrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
 									inputType = FlexInputType.$inputType,
 									enabled = $enabled,
@@ -202,7 +203,7 @@ fun ColumnScope.FlexInputPage() {
 						),
 						trailingIcon = if (isEmpty) null else FlexInputIcons.icon(
 							icon = Icons.Rounded.Cancel,
-							tint = Color.Gray,
+							tint = FlexBrush.Gray,
 							onClick = {
 								value = ""
 							},
@@ -236,7 +237,7 @@ fun ColumnScope.FlexInputPage() {
 				FlexRadio(
 					selectedKey = brushType,
 					onSelectedKeyChange = { brushType = it },
-					options = { FlexBrushType.entries.options() },
+					options = brushTypeOptions,
 					sizeType = FlexSizeType.Small,
 					brushType = brushType,
 					radioType = FlexRadioType.Button,

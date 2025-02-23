@@ -1,11 +1,9 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.input
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -18,17 +16,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
@@ -41,10 +35,11 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexInputConfig
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
+import cn.vividcode.multiplatform.flex.ui.foundation.icon.FlexIcon
+import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
+import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import cn.vividcode.multiplatform.flex.ui.type.*
+import cn.vividcode.multiplatform.flex.ui.utils.*
 
 /**
  * FlexInput 输入框
@@ -118,16 +113,16 @@ fun FlexInput(
 		
 		val fontSize by animateFloatAsState(config.fontSize.value)
 		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
-		val contentColor by animateColorAsState(
-			targetValue = if (enabled) brushType.color else brushType.color.disabledWithColor
+		val contentBrush by animateFlexBrushAsState(
+			targetValue = if (enabled) brushType.brush else brushType.disabledBrush
 		)
-		val textStyle by remember(fontSize, config.fontWeight, letterSpacing, contentColor) {
+		val textStyle by remember(fontSize, config.fontWeight, letterSpacing, contentBrush) {
 			derivedStateOf {
 				TextStyle(
 					fontSize = fontSize.sp,
 					fontWeight = config.fontWeight,
 					letterSpacing = if (letterSpacing >= 0f) letterSpacing.sp else TextUnit.Unspecified,
-					color = contentColor
+					brush = contentBrush.original
 				)
 			}
 		}
@@ -152,7 +147,7 @@ fun FlexInput(
 			singleLine = true,
 			visualTransformation = visualTransformation,
 			interactionSource = interactionSource,
-			cursorBrush = SolidColor(contentColor),
+			cursorBrush = contentBrush.original,
 			decorationBox = @Composable { innerTextField ->
 				FlexInputDecorationBox(
 					value = value,
@@ -234,19 +229,39 @@ private fun FlexInputDecorationBox(
 	val cornerShape by remember(corner) {
 		derivedStateOf { RoundedCornerShape(corner) }
 	}
-	val borderColor by animateColorAsState(
-		targetValue = when {
-			isFocused -> brushType.color
-			isHovered -> brushType.color.copy(alpha = 0.8f)
-			inputType == FlexInputType.Default -> brushType.color.copy(alpha = 0f)
-			enabled -> MaterialTheme.colorScheme.outline.copy(alpha = 0.8f)
-			else -> brushType.color.disabledWithColor
-		},
+	val borderBrush by animateFlexBrushAsState(
+		targetValue = when (inputType) {
+			FlexInputType.Default -> {
+				when {
+					!enabled -> brushType.transparentBrush
+					isFocused -> brushType.brush
+					isHovered -> brushType.brush.copy(alpha = 0.8f)
+					else -> brushType.transparentBrush
+				}
+			}
+			
+			FlexInputType.Outlined -> {
+				when {
+					!enabled -> brushType.disabledBrush
+					isFocused -> brushType.brush
+					isHovered -> brushType.brush.copy(alpha = 0.8f)
+					else -> brushType.brush.copy(alpha = 0.6f)
+				}
+			}
+		}
 	)
-	val backgroundColor by animateColorAsState(
-		targetValue = MaterialTheme.colorScheme.surfaceVariant.copy(
-			alpha = if (isFocused || isHovered || inputType == FlexInputType.Outlined) 0f else 0.7f
-		)
+	val backgroundBrush by animateFlexBrushAsState(
+		targetValue = run {
+			val brush = brushType.brush.let {
+				if (LocalDarkTheme.current) it.darken(0.65f) else it.lighten(0.85f)
+			}
+			when {
+				inputType == FlexInputType.Outlined -> brush.copy(alpha = 0f)
+				!enabled -> brush.copy(alpha = 0.8f)
+				isFocused || isHovered -> brush.copy(alpha = 0f)
+				else -> brush
+			}
+		}
 	)
 	val interval by animateDpAsState(config.horizontalPadding / 2)
 	Row(
@@ -255,11 +270,11 @@ private fun FlexInputDecorationBox(
 			.height(height)
 			.border(
 				width = borderWidth,
-				color = borderColor,
+				brush = borderBrush,
 				shape = cornerShape
 			)
 			.background(
-				color = backgroundColor,
+				brush = backgroundBrush,
 				shape = cornerShape
 			)
 			.then(modifier)
@@ -271,8 +286,10 @@ private fun FlexInputDecorationBox(
 			FlexInputIcon(
 				icon = leadingIcon,
 				iconSize = iconSize,
-				iconColor = brushType.color,
+				iconBrush = brushType.brush,
+				enabled = enabled,
 				isFocused = isFocused,
+				isHovered = isHovered,
 				focusRequester = focusRequester,
 				interactionSource = leadingIconInteractionSource
 			)
@@ -294,7 +311,7 @@ private fun FlexInputDecorationBox(
 			if (placeholder != null && isEmpty) {
 				CompositionLocalProvider(
 					LocalTextStyle provides textStyle.copy(
-						color = textStyle.color.copy(alpha = 0.75f)
+						brush = brushType.brush.copy(alpha = 0.7f).original
 					)
 				) {
 					placeholder()
@@ -316,8 +333,10 @@ private fun FlexInputDecorationBox(
 			FlexInputIcon(
 				icon = trailingIcon,
 				iconSize = iconSize,
-				iconColor = brushType.color,
+				iconBrush = brushType.brush,
+				enabled = enabled,
 				isFocused = isFocused,
+				isHovered = isHovered,
 				focusRequester = focusRequester,
 				interactionSource = trailingIconInteractionSource
 			)
@@ -329,18 +348,21 @@ private fun FlexInputDecorationBox(
 private fun FlexInputIcon(
 	icon: FlexInputIcon,
 	iconSize: Dp,
-	iconColor: Color,
+	iconBrush: FlexBrush,
+	enabled: Boolean,
 	isFocused: Boolean,
+	isHovered: Boolean,
 	focusRequester: FocusRequester,
 	interactionSource: MutableInteractionSource,
 ) {
 	val isPressed by interactionSource.collectIsPressedAsState()
-	val tint = if (icon.tint != Color.Unspecified) icon.tint else iconColor
-	val iconTint by animateColorAsState(
+	val brush = icon.tint ?: iconBrush
+	val iconTint by animateFlexBrushAsState(
 		targetValue = when {
-			!isFocused -> tint.copy(alpha = 0.6f)
-			isPressed -> tint.copy(alpha = 0.8f)
-			else -> tint
+			!enabled -> brush.disabledWithBrush
+			isPressed -> brush.darkenWithBrush
+			isFocused || isHovered -> brush
+			else -> brush.copy(alpha = 0.7f)
 		}
 	)
 	val size by animateDpAsState(
@@ -348,23 +370,26 @@ private fun FlexInputIcon(
 	)
 	val rotateDegrees by animateFloatAsState(icon.rotateDegrees)
 	val onClick = icon.onClick
-	Icon(
+	FlexIcon(
 		imageVector = icon.icon,
-		contentDescription = null,
 		modifier = Modifier
 			.size(size)
 			.rotate(rotateDegrees)
 			.pointerHoverIcon(PointerIcon.Default)
 			.hoverable(interactionSource)
 			.then(
-				if (onClick == null) Modifier else Modifier.clickable(
-					interactionSource = interactionSource,
-					indication = null,
-					onClick = {
-						onClick()
-						focusRequester.requestFocus()
-					}
-				)
+				if (onClick == null) Modifier else Modifier
+					.focusable(
+						interactionSource = interactionSource
+					)
+					.clickable(
+						interactionSource = interactionSource,
+						indication = null,
+						onClick = {
+							onClick()
+							focusRequester.requestFocus()
+						}
+					),
 			),
 		tint = iconTint
 	)
@@ -372,7 +397,7 @@ private fun FlexInputIcon(
 
 class FlexInputIcon internal constructor(
 	val icon: ImageVector,
-	val tint: Color,
+	val tint: FlexBrush?,
 	val rotateDegrees: Float,
 	val size: Dp,
 	val onClick: (() -> Unit)?,
@@ -383,7 +408,7 @@ object FlexInputIcons {
 	@Composable
 	fun icon(
 		icon: ImageVector,
-		tint: Color = Color.Unspecified,
+		tint: FlexBrush? = null,
 		rotate: Float = 0f,
 		size: Dp = Dp.Unspecified,
 		onClick: (() -> Unit)? = null,

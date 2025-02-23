@@ -27,13 +27,7 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.icon.FlexIcon
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.type.TransparentBrush
-import cn.vividcode.multiplatform.flex.ui.type.darkenBrush
-import cn.vividcode.multiplatform.flex.ui.type.disabledBrush
-import cn.vividcode.multiplatform.flex.ui.type.lightenBrush
+import cn.vividcode.multiplatform.flex.ui.type.*
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border
@@ -84,22 +78,22 @@ fun FlexButton(
 		val borderBrush by animateFlexBrushAsState(
 			targetValue = when (buttonType) {
 				FlexButtonType.Default, FlexButtonType.Dashed -> when {
-					!enabled -> brushType.disabledBrush(alpha = 0.8f)
-					isPressed -> brushType.darkenBrush()
-					isHovered -> brushType.lightenBrush()
+					!enabled -> brushType.disabledBrush
+					isPressed -> brushType.darkenBrush
+					isHovered -> brushType.lightenBrush
 					else -> brushType.brush
 				}
 				
-				else -> brushType.TransparentBrush
+				else -> brushType.transparentBrush
 			}
 		)
 		val backgroundBrush by animateFlexBrushAsState(
 			targetValue = when (buttonType) {
 				FlexButtonType.Primary -> {
 					when {
-						!enabled -> brushType.disabledBrush()
-						isPressed -> brushType.darkenBrush()
-						isHovered -> brushType.lightenBrush()
+						!enabled -> brushType.disabledBrush
+						isPressed -> brushType.darkenBrush
+						isHovered -> brushType.lightenBrush
 						else -> brushType.brush
 					}
 				}
@@ -115,14 +109,14 @@ fun FlexButton(
 				
 				FlexButtonType.Text -> {
 					when {
-						!enabled -> brushType.TransparentBrush
+						!enabled -> brushType.transparentBrush
 						isPressed -> brushType.brush.copy(alpha = 0.2f)
 						isHovered -> brushType.brush.copy(alpha = 0.1f)
-						else -> brushType.TransparentBrush
+						else -> brushType.transparentBrush
 					}
 				}
 				
-				else -> brushType.TransparentBrush
+				else -> brushType.transparentBrush
 			},
 			label = text
 		)
@@ -204,23 +198,23 @@ fun FlexButton(
 				targetValue = when (buttonType) {
 					FlexButtonType.Primary -> brushType.onBrush
 					FlexButtonType.Filled, FlexButtonType.Text -> {
-						if (enabled) brushType.brush else brushType.disabledBrush()
+						if (enabled) brushType.brush else brushType.disabledBrush
 					}
 					
 					FlexButtonType.Link -> {
 						when {
-							!enabled -> brushType.disabledBrush()
-							isPressed -> brushType.darkenBrush()
-							isHovered -> brushType.lightenBrush()
+							!enabled -> brushType.disabledBrush
+							isPressed -> brushType.darkenBrush
+							isHovered -> brushType.lightenBrush
 							else -> brushType.brush
 						}
 					}
 					
 					FlexButtonType.Default, FlexButtonType.Dashed -> {
 						when {
-							!enabled -> brushType.disabledBrush()
-							isPressed -> brushType.darkenBrush()
-							isHovered -> brushType.lightenBrush()
+							!enabled -> brushType.disabledBrush
+							isPressed -> brushType.darkenBrush
+							isHovered -> brushType.lightenBrush
 							else -> brushType.brush
 						}
 					}

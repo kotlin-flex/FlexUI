@@ -1,9 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.switch
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -13,7 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -22,19 +20,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
-import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.utils.darkenWithColor
-import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
-import cn.vividcode.multiplatform.flex.ui.utils.disabledWithContent
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithColor
+import cn.vividcode.multiplatform.flex.ui.foundation.icon.FlexIcon
+import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
+import cn.vividcode.multiplatform.flex.ui.type.*
+import cn.vividcode.multiplatform.flex.ui.utils.*
 
 @Composable
 fun FlexSwitch(
@@ -57,27 +51,32 @@ fun FlexSwitch(
 	val interactionSource = remember { MutableInteractionSource() }
 	val isHovered by interactionSource.collectIsHoveredAsState()
 	val isPressed by interactionSource.collectIsPressedAsState()
-	val backgroundColor by animateColorAsState(
-		targetValue = run {
-			val color = when {
-				checked -> brushType.color
-				else -> Color.Gray
-			}
+	
+	val backgroundBrush by animateFlexBrushAsState(
+		targetValue = if (checked) {
 			when {
-				!enabled -> color.disabledWithColor
-				isPressed -> color.darkenWithColor
-				isHovered -> color.lightenWithColor
-				else -> color
+				!enabled -> brushType.disabledBrush
+				isPressed -> brushType.darkenBrush
+				isHovered -> brushType.lightenBrush
+				else -> brushType.brush
+			}
+		} else {
+			when {
+				!enabled -> FlexBrush.Gray.disabledWithBrush
+				isPressed -> FlexBrush.Gray.darkenWithBrush
+				isHovered -> FlexBrush.Gray.lightenWithBrush
+				else -> FlexBrush.Gray
 			}
 		}
 	)
+	
 	Box(
 		modifier = modifier
 			.width(height * 2)
 			.height(height)
 			.clip(cornerShape)
 			.background(
-				color = backgroundColor,
+				brush = backgroundBrush,
 				shape = cornerShape
 			)
 			.clickable(
@@ -111,10 +110,10 @@ fun FlexSwitch(
 				false -> config.height - config.padding * 2
 			},
 		)
-		val contentColor by animateColorAsState(
+		val brush by animateFlexBrushAsState(
 			targetValue = run {
-				val color = if (checked) brushType.onColor else Color.White
-				if (enabled) color else color.disabledWithContent
+				val brush = if (checked) brushType.onBrush else FlexBrush.White
+				if (enabled) brush else brush.disabledWithOnBrush
 			}
 		)
 		Box(
@@ -124,7 +123,7 @@ fun FlexSwitch(
 				.height(height - padding * 2)
 				.clip(checkBoxCornerShape)
 				.background(
-					color = contentColor,
+					brush = brush,
 					shape = checkBoxCornerShape
 				)
 		)
@@ -147,20 +146,22 @@ fun FlexSwitch(
 						val textSize by animateFloatAsState(config.textLabelSize.value)
 						Text(
 							text = label.checked,
-							color = contentColor,
 							fontSize = textSize.sp,
 							lineHeight = textSize.sp,
-							maxLines = 1
+							maxLines = 1,
+							style = LocalTextStyle.current.copy(
+								brush = brush.original
+							)
 						)
 					}
 					
 					is FlexSwitchIconLabel -> {
 						val iconSize by animateDpAsState(config.iconLabelSize)
-						Icon(
+						FlexIcon(
 							imageVector = label.checked,
 							contentDescription = null,
 							modifier = Modifier.size(iconSize),
-							tint = contentColor,
+							tint = brush,
 						)
 					}
 				}
@@ -187,20 +188,22 @@ fun FlexSwitch(
 						val textSize by animateFloatAsState(config.textLabelSize.value)
 						Text(
 							text = label.unchecked,
-							color = contentColor,
 							fontSize = textSize.sp,
 							lineHeight = textSize.sp,
-							maxLines = 1
+							maxLines = 1,
+							style = LocalTextStyle.current.copy(
+								brush = brush.original
+							)
 						)
 					}
 					
 					is FlexSwitchIconLabel -> {
 						val iconSize by animateDpAsState(config.iconLabelSize)
-						Icon(
+						FlexIcon(
 							imageVector = label.unchecked,
 							contentDescription = null,
 							modifier = Modifier.size(iconSize),
-							tint = contentColor
+							tint = brush
 						)
 					}
 				}
