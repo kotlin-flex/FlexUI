@@ -6,4 +6,4 @@ import androidx.compose.ui.unit.dp
 /**
  * 求 所有 Dp 的和
  */
-fun List<Dp>.sum(): Dp = this.sumOf { it.value.toDouble() }.dp
+internal fun List<Dp>.sum(): Dp = this.sumOf { it.value.toDouble() }.dp
