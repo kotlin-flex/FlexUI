@@ -1,55 +1,49 @@
 package cn.vividcode.multiplatform.flex.ui.config.foundation
 
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 
 /**
  * 选择器配置
  */
-class FlexSelectConfig internal constructor(
+data class FlexSelectConfig internal constructor(
+	var minWidth: Dp,
 	var height: Dp,
+	var horizontalPadding: Dp,
+	var borderWidth: Dp,
+	var fontSize: TextUnit,
+	var fontWeight: FontWeight,
+	var letterSpacing: TextUnit,
+	var iconSize: Dp
 )
 
-internal object FlexSelectSizeDefaults : FlexSizeDefaults<FlexSelectConfig> {
+internal object FlexSelectSizeDefaults : FlexSizeDefaults<FlexSelectConfig>() {
 	
-	/**
-	 * 默认超小尺寸按钮配置
-	 */
-	override val DefaultExtraSmall: FlexSelectConfig
-		get() = FlexSelectConfig(
-			height = 20.dp
+	override val DefaultMedium: FlexSelectConfig by lazy {
+		FlexSelectConfig(
+			minWidth = 150.dp,
+			height = 36.dp,
+			horizontalPadding = 10.dp,
+			borderWidth = 1.5.dp,
+			fontSize = 14.sp,
+			fontWeight = FontWeight.Normal,
+			letterSpacing = TextUnit.Unspecified,
+			iconSize = 24.dp
 		)
+	}
 	
-	/**
-	 * 默认小尺寸按钮配置
-	 */
-	override val DefaultSmall: FlexSelectConfig
-		get() = FlexSelectConfig(
-			height = 28.dp
+	override fun FlexSelectConfig.scale(scale: Float): FlexSelectConfig {
+		return this.copy(
+			minWidth = minWidth * scale,
+			height = height * scale,
+			horizontalPadding = horizontalPadding * scale,
+			borderWidth = borderWidth * scale,
+			fontSize = fontSize * scale,
+			iconSize = iconSize * scale
 		)
-	
-	/**
-	 * 默认中尺寸按钮配置
-	 */
-	override val DefaultMedium: FlexSelectConfig
-		get() = FlexSelectConfig(
-			height = 36.dp
-		)
-	
-	/**
-	 * 默认大尺寸按钮配置
-	 */
-	override val DefaultLarge: FlexSelectConfig
-		get() = FlexSelectConfig(
-			height = 44.dp
-		)
-	
-	/**
-	 * 默认大尺寸按钮配置
-	 */
-	override val DefaultExtraLarge: FlexSelectConfig
-		get() = FlexSelectConfig(
-			height = 52.dp
-		)
+	}
 }

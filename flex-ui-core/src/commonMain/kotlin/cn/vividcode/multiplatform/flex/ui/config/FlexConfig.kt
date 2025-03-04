@@ -2,7 +2,18 @@ package cn.vividcode.multiplatform.flex.ui.config
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import cn.vividcode.multiplatform.flex.ui.config.foundation.*
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexButtonConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexButtonSizeDefaults
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexInputConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexInputSizeDefaults
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioSizeDefaults
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSelectConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSelectSizeDefaults
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderSizeDefaults
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSwitchConfig
+import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSwitchSizeDefaults
 
 /**
  * Flex 配置
