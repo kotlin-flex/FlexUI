@@ -81,19 +81,19 @@ fun FlexSlider(
 		var offsetX by remember { mutableStateOf(Dp.Unspecified) }
 		LaunchedEffect(offsetX, value, length, valueRange, stepValues, thickness) {
 			if (length == Dp.Unspecified || offsetX == Dp.Unspecified) return@LaunchedEffect
-			var value = (offsetX - thickness / 2) / (length - thickness) * valueRange.range + valueRange.start
-			value = value.coerceIn(valueRange)
+			var newValue = (offsetX - thickness / 2) / (length - thickness) * valueRange.range + valueRange.start
+			newValue = newValue.coerceIn(valueRange)
 			stepValues?.also { values ->
 				for (i in 1 ..< values.size) {
-					if (value <= values[i]) {
-						val leftDistance = value - values[i - 1]
-						val rightDistance = values[i] - value
-						value += if (leftDistance > rightDistance) rightDistance else -leftDistance
+					if (newValue <= values[i]) {
+						val leftDistance = newValue - values[i - 1]
+						val rightDistance = values[i] - newValue
+						newValue += if (leftDistance > rightDistance) rightDistance else -leftDistance
 						break
 					}
 				}
 			}
-			onValueChange(value)
+			onValueChange(newValue)
 		}
 		
 		val interactionSource = remember { MutableInteractionSource() }

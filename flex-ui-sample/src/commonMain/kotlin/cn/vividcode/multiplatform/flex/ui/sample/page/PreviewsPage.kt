@@ -1,15 +1,28 @@
 package cn.vividcode.multiplatform.flex.ui.sample.page
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import cn.vividcode.multiplatform.flex.ui.common.FlexOption
+import cn.vividcode.multiplatform.flex.ui.common.options
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
@@ -17,7 +30,6 @@ import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputIcons
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderMarks
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
@@ -66,15 +78,15 @@ fun PreviewsPage(
 			FlexRadio(
 				selectedKey = selectedKey1,
 				onSelectedKeyChange = { selectedKey1 = it },
-				options = { listOf("Option1", "Option2", "Option3").options() }
+				options = remember { listOf("Option1", "Option2", "Option3").options() },
 			)
 			Spacer(modifier = Modifier.width(8.dp))
 			FlexRadio(
 				selectedKey = selectedKey2,
 				onSelectedKeyChange = { selectedKey2 = it },
-				options = {
+				options = remember {
 					listOf("Option1", "Disabled").options {
-						RadioOption(it, it.toString(), enabled = it == "Option1")
+						FlexOption(it, it, enabled = it == "Option1")
 					}
 				}
 			)
@@ -82,7 +94,7 @@ fun PreviewsPage(
 			FlexRadio(
 				selectedKey = selectedKey3,
 				onSelectedKeyChange = { selectedKey3 = it },
-				options = { listOf("Option1", "Option2", "Option3").options() },
+				options = remember { listOf("Option1", "Option2", "Option3").options() },
 				radioType = FlexRadioType.Button
 			)
 		}

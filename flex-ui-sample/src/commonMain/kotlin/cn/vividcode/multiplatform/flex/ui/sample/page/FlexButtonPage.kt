@@ -7,10 +7,16 @@ import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import cn.vividcode.multiplatform.flex.ui.common.options
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
@@ -92,7 +98,7 @@ fun ColumnScope.FlexButtonPage() {
 				FlexRadio(
 					selectedKey = buttonType,
 					onSelectedKeyChange = { buttonType = it },
-					options = { FlexButtonType.entries.options() },
+					options = remember { FlexButtonType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
@@ -102,7 +108,7 @@ fun ColumnScope.FlexButtonPage() {
 				FlexRadio(
 					selectedKey = sizeType,
 					onSelectedKeyChange = { sizeType = it },
-					options = { FlexSizeType.entries.options() },
+					options = remember { FlexSizeType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
@@ -123,7 +129,7 @@ fun ColumnScope.FlexButtonPage() {
 				FlexRadio(
 					selectedKey = cornerType,
 					onSelectedKeyChange = { cornerType = it },
-					options = { FlexCornerType.entries.options() },
+					options = remember { FlexCornerType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					cornerType = cornerType,
 					radioType = FlexRadioType.Button,
@@ -134,7 +140,7 @@ fun ColumnScope.FlexButtonPage() {
 				FlexRadio(
 					selectedKey = iconType,
 					onSelectedKeyChange = { iconType = it },
-					options = { IconType.entries.options() },
+					options = remember { IconType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
@@ -144,7 +150,7 @@ fun ColumnScope.FlexButtonPage() {
 				FlexRadio(
 					selectedKey = iconPosition,
 					onSelectedKeyChange = { iconPosition = it },
-					options = { FlexButtonIconPosition.entries.options() },
+					options = remember { FlexButtonIconPosition.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe

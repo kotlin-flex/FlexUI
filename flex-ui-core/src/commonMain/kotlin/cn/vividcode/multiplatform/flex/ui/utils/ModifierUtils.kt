@@ -57,7 +57,11 @@ internal fun Modifier.dashedBorder(
 }
 
 @Stable
-internal fun Modifier.border(width: Dp, brush: FlexBrush, shape: Shape) =
+internal fun Modifier.border(
+	width: Dp,
+	brush: FlexBrush,
+	shape: Shape = RectangleShape
+) =
 	this.border(
 		width = width,
 		brush = brush.original,

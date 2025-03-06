@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.util.fastForEachIndexed
+import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.type.*
@@ -42,7 +43,7 @@ import cn.vividcode.multiplatform.flex.ui.utils.border
  */
 @Composable
 internal fun <Key : Any> FlexNoneRadio(
-	options: List<RadioOption<Key>>,
+	options: List<FlexOption<Key>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
 	sizeType: FlexSizeType,

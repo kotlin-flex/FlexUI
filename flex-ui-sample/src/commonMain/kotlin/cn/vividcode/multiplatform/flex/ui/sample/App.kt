@@ -58,10 +58,10 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
+import cn.vividcode.multiplatform.flex.ui.common.FlexOption
+import cn.vividcode.multiplatform.flex.ui.common.options
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioOptions
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.sample.page.FlexButtonPage
 import cn.vividcode.multiplatform.flex.ui.sample.page.FlexInputPage
 import cn.vividcode.multiplatform.flex.ui.sample.page.FlexRadioPage
@@ -475,11 +475,11 @@ private fun frameRateListener(callback: (frame: Long) -> Unit) {
 	}
 }
 
-val brushTypeOptions: FlexRadioOptions.() -> List<RadioOption<FlexBrushType>> = {
+val brushTypeOptions by lazy {
 	listOf(
 		FlexBrushType.Primary,
 		FlexBrushType.LinearGradient,
 		FlexBrushType.RadialGradient,
 		FlexBrushType.SweepGradient
-	).options { RadioOption(it, if (it == FlexBrushType.Primary) "SolidColor" else it.toString()) }
+	).options { FlexOption(it, if (it == FlexBrushType.Primary) "SolidColor" else it.toString()) }
 }

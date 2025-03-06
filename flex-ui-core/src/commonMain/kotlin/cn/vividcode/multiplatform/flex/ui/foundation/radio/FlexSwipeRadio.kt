@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.compose.ui.util.fastMap
+import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.type.*
@@ -43,7 +44,7 @@ import cn.vividcode.multiplatform.flex.ui.utils.sum
  */
 @Composable
 internal fun <Key : Any> FlexSwipeRadio(
-	options: List<RadioOption<Key>>,
+	options: List<FlexOption<Key>>,
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
 	sizeType: FlexSizeType,

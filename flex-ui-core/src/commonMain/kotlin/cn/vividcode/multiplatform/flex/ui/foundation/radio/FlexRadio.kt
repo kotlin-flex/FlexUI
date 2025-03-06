@@ -24,15 +24,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.fastMap
-import androidx.compose.ui.util.fastMapIndexed
+import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexRadioConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
-import cn.vividcode.multiplatform.flex.ui.type.*
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.type.darkenBrush
+import cn.vividcode.multiplatform.flex.ui.type.lightenBrush
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithBrush
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
@@ -57,7 +60,7 @@ import kotlin.jvm.JvmName
 fun <Key : Any> FlexRadio(
 	selectedKey: Key,
 	onSelectedKeyChange: (Key) -> Unit,
-	options: FlexRadioOptions.() -> List<RadioOption<Key>>,
+	options: List<FlexOption<Key>>,
 	sizeType: FlexSizeType = FlexRadioDefaults.DefaultSizeType,
 	brushType: FlexBrushType = FlexRadioDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexRadioDefaults.DefaultCornerType,
@@ -65,11 +68,6 @@ fun <Key : Any> FlexRadio(
 	switchType: FlexRadioSwitchType = FlexRadioDefaults.DefaultSwitchType,
 	scaleEffect: Boolean = FlexRadioDefaults.DefaultScaleEffect,
 ) {
-	val options by remember(options) {
-		derivedStateOf {
-			FlexRadioOptionsImpl.options()
-		}
-	}
 	val targetSelectedKey by remember(options, selectedKey) {
 		derivedStateOf {
 			val option = options.find { it.key == selectedKey }
@@ -142,69 +140,6 @@ enum class FlexRadioSwitchType {
 	 * 滑动切换
 	 */
 	Swipe
-}
-
-/**
- * 选项
- */
-class RadioOption<Key : Any>(
-	val key: Key,
-	val value: String = key.toString(),
-	val enabled: Boolean = true,
-)
-
-sealed interface FlexRadioOptions {
-	
-	fun <T : Any> Array<T>.options(
-		transform: (T) -> RadioOption<T> = { RadioOption(it, it.toString()) },
-	): List<RadioOption<T>>
-	
-	fun <T : Any> Array<T>.optionsIndexed(
-		transform: (index: Int, T) -> RadioOption<T> = { _, it -> RadioOption(it, it.toString()) },
-	): List<RadioOption<T>>
-	
-	fun <T : Any> Iterable<T>.options(
-		transform: (T) -> RadioOption<T> = { RadioOption(it, it.toString()) },
-	): List<RadioOption<T>>
-	
-	fun <T : Any> Iterable<T>.optionsIndexed(
-		transform: (index: Int, T) -> RadioOption<T> = { _, it -> RadioOption(it, it.toString()) },
-	): List<RadioOption<T>>
-	
-	fun <T : Any> List<T>.options(
-		transform: (T) -> RadioOption<T> = { RadioOption(it, it.toString()) },
-	): List<RadioOption<T>>
-	
-	fun <T : Any> List<T>.optionsIndexed(
-		transform: (index: Int, T) -> RadioOption<T> = { _, it -> RadioOption(it, it.toString()) },
-	): List<RadioOption<T>>
-}
-
-private object FlexRadioOptionsImpl : FlexRadioOptions {
-	
-	override fun <T : Any> Array<T>.options(
-		transform: (T) -> RadioOption<T>,
-	): List<RadioOption<T>> = this.map(transform)
-	
-	override fun <T : Any> Array<T>.optionsIndexed(
-		transform: (Int, T) -> RadioOption<T>,
-	): List<RadioOption<T>> = this.mapIndexed(transform)
-	
-	override fun <T : Any> Iterable<T>.options(
-		transform: (T) -> RadioOption<T>,
-	): List<RadioOption<T>> = this.map(transform)
-	
-	override fun <T : Any> Iterable<T>.optionsIndexed(
-		transform: (Int, T) -> RadioOption<T>,
-	): List<RadioOption<T>> = this.mapIndexed(transform)
-	
-	override fun <T : Any> List<T>.options(
-		transform: (T) -> RadioOption<T>,
-	): List<RadioOption<T>> = this.fastMap(transform)
-	
-	override fun <T : Any> List<T>.optionsIndexed(
-		transform: (Int, T) -> RadioOption<T>,
-	): List<RadioOption<T>> = this.fastMapIndexed(transform)
 }
 
 internal val DisabledBackgroundBrush: FlexBrush
@@ -281,7 +216,7 @@ internal fun FlexRadioText(
 @Composable
 internal fun <Key : Any> FlexRadioLine(
 	index: Int,
-	options: List<RadioOption<Key>>,
+	options: List<FlexOption<Key>>,
 	selectedKey: Key,
 	borderWidth: Dp,
 ) {

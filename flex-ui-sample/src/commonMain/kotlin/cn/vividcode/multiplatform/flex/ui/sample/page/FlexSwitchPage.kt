@@ -1,7 +1,13 @@
 package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import cn.vividcode.multiplatform.flex.ui.common.options
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
@@ -73,7 +79,7 @@ fun ColumnScope.FlexSwitchPage() {
 				FlexRadio(
 					selectedKey = sizeType,
 					onSelectedKeyChange = { sizeType = it },
-					options = { FlexSizeType.entries.options() },
+					options = remember { FlexSizeType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
@@ -94,7 +100,7 @@ fun ColumnScope.FlexSwitchPage() {
 				FlexRadio(
 					selectedKey = cornerType,
 					onSelectedKeyChange = { cornerType = it },
-					options = { FlexCornerType.entries.options() },
+					options = remember { FlexCornerType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					cornerType = cornerType,
 					radioType = FlexRadioType.Button,
@@ -105,7 +111,7 @@ fun ColumnScope.FlexSwitchPage() {
 				FlexRadio(
 					selectedKey = labelType,
 					onSelectedKeyChange = { labelType = it },
-					options = { FlexSwitchLabelType.entries.options() },
+					options = remember { FlexSwitchLabelType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe

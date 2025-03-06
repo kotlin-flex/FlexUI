@@ -1,11 +1,17 @@
 package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import cn.vividcode.multiplatform.flex.ui.common.FlexOption
+import cn.vividcode.multiplatform.flex.ui.common.options
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
-import cn.vividcode.multiplatform.flex.ui.foundation.radio.RadioOption
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
@@ -32,15 +38,15 @@ fun ColumnScope.FlexRadioPage() {
 			val code by remember(sizeType, brushType, cornerType, radioType, switchType, scaleEffect, disabledOption) {
 				derivedStateOf {
 					"""
-						var selectedKey by remember { mutableStateOf("option1") }
+						var selectedKey by remember { mutableStateOf(1) }
 						FlexRadio(
 							selectedKey = selectedKey,
 							onSelectedKeyChange = { selectedKey = it },
-							options = {
-								(1 .. 3).map {
-									RadioOption("option${'$'}it", "Option ${'$'}it", it != $disabledOption)
-								}
-							}
+							options = remember {
+								(1 .. 3).options {
+									FlexOption(it, "Option ${'$'}it", it != $disabledOption)
+								},
+							},
 							sizeType = FlexSizeType.$sizeType,
 							brushType = FlexBrushType.$brushType,
 							cornerType = FlexCornerType.$cornerType,
@@ -54,13 +60,13 @@ fun ColumnScope.FlexRadioPage() {
 			Code(code)
 		},
 		preview = {
-			var selectedKey by remember { mutableStateOf("option1") }
+			var selectedKey by remember { mutableStateOf(1) }
 			FlexRadio(
 				selectedKey = selectedKey,
 				onSelectedKeyChange = { selectedKey = it },
-				options = {
-					(1 .. 3).map {
-						RadioOption("option$it", "Option $it", it != disabledOption)
+				options = remember(disabledOption) {
+					(1 .. 3).options {
+						FlexOption(it, "Option $it", it != disabledOption)
 					}
 				},
 				sizeType = sizeType,
@@ -76,7 +82,7 @@ fun ColumnScope.FlexRadioPage() {
 				FlexRadio(
 					selectedKey = radioType,
 					onSelectedKeyChange = { radioType = it },
-					options = { FlexRadioType.entries.options() },
+					options = remember { FlexRadioType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
@@ -86,7 +92,7 @@ fun ColumnScope.FlexRadioPage() {
 				FlexRadio(
 					selectedKey = sizeType,
 					onSelectedKeyChange = { sizeType = it },
-					options = { FlexSizeType.entries.options() },
+					options = remember { FlexSizeType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
@@ -107,7 +113,7 @@ fun ColumnScope.FlexRadioPage() {
 				FlexRadio(
 					selectedKey = cornerType,
 					onSelectedKeyChange = { cornerType = it },
-					options = { FlexCornerType.entries.options() },
+					options = remember { FlexCornerType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					cornerType = cornerType,
 					radioType = FlexRadioType.Button,
@@ -118,7 +124,7 @@ fun ColumnScope.FlexRadioPage() {
 				FlexRadio(
 					selectedKey = switchType,
 					onSelectedKeyChange = { switchType = it },
-					options = { FlexRadioSwitchType.entries.options() },
+					options = remember { FlexRadioSwitchType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
@@ -135,9 +141,9 @@ fun ColumnScope.FlexRadioPage() {
 				FlexRadio(
 					selectedKey = disabledOption,
 					onSelectedKeyChange = { disabledOption = it },
-					options = {
+					options = remember {
 						(1 .. 4).options {
-							RadioOption(it, if (it < 4) "Option $it" else "None")
+							FlexOption(it, if (it < 4) "Option $it" else "None")
 						}
 					},
 					sizeType = FlexSizeType.Small,
