@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 
+@ConsistentCopyVisibility
 data class FlexSliderConfig internal constructor(
 	var thickness: Dp,
 	var sliderThickness: Dp,

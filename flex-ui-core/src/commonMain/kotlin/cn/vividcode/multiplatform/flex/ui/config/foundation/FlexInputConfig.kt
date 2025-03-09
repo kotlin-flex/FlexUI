@@ -10,6 +10,7 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 /**
  * 输入框配置
  */
+@ConsistentCopyVisibility
 data class FlexInputConfig internal constructor(
 	var minWidth: Dp,
 	var height: Dp,

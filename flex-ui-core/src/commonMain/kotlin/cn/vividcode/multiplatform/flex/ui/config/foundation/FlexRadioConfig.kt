@@ -10,6 +10,7 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 /**
  * 单选框组配置
  */
+@ConsistentCopyVisibility
 data class FlexRadioConfig internal constructor(
 	var height: Dp,
 	var horizontalPadding: Dp,

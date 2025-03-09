@@ -9,6 +9,7 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 /**
  * 开关配置
  */
+@ConsistentCopyVisibility
 data class FlexSwitchConfig internal constructor(
 	var height: Dp,
 	var padding: Dp,

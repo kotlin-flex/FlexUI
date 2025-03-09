@@ -10,6 +10,7 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 /**
  * 选择器配置
  */
+@ConsistentCopyVisibility
 data class FlexSelectConfig internal constructor(
 	var minWidth: Dp,
 	var height: Dp,

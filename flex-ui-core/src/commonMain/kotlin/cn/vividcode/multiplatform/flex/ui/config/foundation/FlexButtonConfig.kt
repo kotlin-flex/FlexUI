@@ -10,6 +10,7 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 /**
  * 按钮配置
  */
+@ConsistentCopyVisibility
 data class FlexButtonConfig internal constructor(
 	var height: Dp,
 	var horizontalPadding: Dp,
