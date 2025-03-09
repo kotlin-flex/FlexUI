@@ -21,7 +21,7 @@ fun FlexIcon(
 		imageVector = imageVector,
 		contentDescription = contentDescription,
 		modifier = modifier
-			.graphicsLayer(alpha = 0.999f)
+			.graphicsLayer(alpha = 0.99f)
 			.drawWithCache {
 				onDrawWithContent {
 					drawContent()
