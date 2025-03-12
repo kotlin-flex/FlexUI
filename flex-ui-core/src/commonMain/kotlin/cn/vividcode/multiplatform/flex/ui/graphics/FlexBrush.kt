@@ -199,15 +199,41 @@ sealed class FlexBrush {
 			)
 		}
 		
-		val White by lazy { Color.White.toSolidColor() }
-		
+		@Stable
 		val Black by lazy { Color.Black.toSolidColor() }
 		
+		@Stable
+		val DarkGray by lazy { Color.DarkGray.toSolidColor() }
+		
+		@Stable
 		val Gray by lazy { Color.Gray.toSolidColor() }
 		
+		@Stable
 		val LightGray by lazy { Color.LightGray.toSolidColor() }
 		
-		val DarkGray by lazy { Color.DarkGray.toSolidColor() }
+		@Stable
+		val White by lazy { Color.White.toSolidColor() }
+		
+		@Stable
+		val Red by lazy { Color.Red.toSolidColor() }
+		
+		@Stable
+		val Green by lazy { Color.Green.toSolidColor() }
+		
+		@Stable
+		val Blue by lazy { Color.Blue.toSolidColor() }
+		
+		@Stable
+		val Yellow by lazy { Color.Yellow.toSolidColor() }
+		
+		@Stable
+		val Cyan by lazy { Color.Cyan.toSolidColor() }
+		
+		@Stable
+		val Magenta by lazy { Color.Magenta.toSolidColor() }
+		
+		@Stable
+		val Transparent by lazy { Color.Transparent.toSolidColor() }
 	}
 	
 	internal abstract val original: Brush

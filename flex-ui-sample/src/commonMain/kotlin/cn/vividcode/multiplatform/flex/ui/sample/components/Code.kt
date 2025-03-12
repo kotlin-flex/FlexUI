@@ -3,9 +3,21 @@ package cn.vividcode.multiplatform.flex.ui.sample.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
@@ -15,7 +27,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -27,13 +46,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
-import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButton
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonIconPosition
 import cn.vividcode.multiplatform.flex.ui.foundation.button.FlexButtonType
 import cn.vividcode.multiplatform.flex.ui.sample.util.setText
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -140,28 +159,37 @@ fun Code(code: String) {
 					textAlign = TextAlign.Center,
 				)
 				VerticalDivider()
-				Text(
-					text = codeString,
-					modifier = Modifier
-						.weight(1f)
-						.fillMaxHeight()
-						.padding(4.dp)
-						.horizontalScroll(
-							state = horizontalScrollState,
-							enabled = !verticalScrollState.isScrollInProgress
+				CompositionLocalProvider(
+					LocalTextSelectionColors provides TextSelectionColors(
+						handleColor = MaterialTheme.colorScheme.primary,
+						backgroundColor = MaterialTheme.colorScheme.primaryContainer
+					)
+				) {
+					SelectionContainer {
+						Text(
+							text = codeString,
+							modifier = Modifier
+								.weight(1f)
+								.fillMaxHeight()
+								.padding(4.dp)
+								.horizontalScroll(
+									state = horizontalScrollState,
+									enabled = !verticalScrollState.isScrollInProgress
+								)
+								.verticalScroll(
+									state = verticalScrollState,
+									enabled = !horizontalScrollState.isScrollInProgress
+								)
+								.padding(
+									horizontal = 8.dp,
+									vertical = 3.dp
+								),
+							color = TextColor,
+							fontSize = 14.sp,
+							lineHeight = 24.sp,
 						)
-						.verticalScroll(
-							state = verticalScrollState,
-							enabled = !horizontalScrollState.isScrollInProgress
-						)
-						.padding(
-							horizontal = 8.dp,
-							vertical = 3.dp
-						),
-					color = TextColor,
-					fontSize = 14.sp,
-					lineHeight = 24.sp,
-				)
+					}
+				}
 			}
 			val isStartTop by remember {
 				derivedStateOf { horizontalScrollState.value == 0 && verticalScrollState.value == 0 }

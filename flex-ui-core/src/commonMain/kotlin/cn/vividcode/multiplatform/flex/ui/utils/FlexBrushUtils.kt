@@ -4,7 +4,13 @@ import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMapIndexed
@@ -18,7 +24,7 @@ import kotlin.math.min
 @Composable
 internal fun animateFlexBrushAsState(
 	targetValue: FlexBrush,
-	transitionSpec: @Composable FiniteAnimationSpec<Color> = flexBrushDefaultSpring,
+	transitionSpec: FiniteAnimationSpec<Color> = flexBrushDefaultSpring,
 	label: String = "FlexBrushAnimation",
 	finishedListener: ((FlexBrush) -> Unit)? = null,
 ): State<FlexBrush> {
@@ -50,27 +56,33 @@ internal fun animateFlexBrushAsState(
 
 private val flexBrushDefaultSpring = spring<Color>()
 
+@Stable
 internal fun Color.toSolidColor(): FlexBrush {
 	return FlexBrush.solidColor(this)
 }
 
+@Stable
 internal fun List<Color>.toLinearGradient(): FlexBrush {
 	return FlexBrush.linearGradient(this)
 }
 
+@Stable
 internal fun List<Color>.toRadialGradient(): FlexBrush {
 	return FlexBrush.radialGradient(this)
 }
 
+@Stable
 internal fun List<Color>.toSweepGradient(): FlexBrush {
 	return FlexBrush.sweepGradient(this)
 }
 
+@Stable
 internal fun FlexBrush.darken(fraction: Float): FlexBrush {
 	val colors = this.colors.fastMap { it.darken(fraction) }
 	return this.replace(colors)
 }
 
+@Stable
 internal fun FlexBrush.lighten(fraction: Float): FlexBrush {
 	val colors = this.colors.fastMap { it.lighten(fraction) }
 	return this.replace(colors)

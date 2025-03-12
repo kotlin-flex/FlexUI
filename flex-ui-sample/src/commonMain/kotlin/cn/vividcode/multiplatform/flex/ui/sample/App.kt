@@ -77,7 +77,7 @@ import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.utils.multiplatform
 import kotlin.math.sqrt
 
-private const val VERSION_NAME = "v1.0.0-exp-07"
+private const val VERSION_NAME = "v1.0.0-exp-08"
 
 private val versionType = VersionType.EXP
 
@@ -98,7 +98,7 @@ fun App() {
 					awaitPointerEventScope {
 						if (toolbarSize == IntSize.Zero) return@awaitPointerEventScope
 						val thresholdX = toolbarSize.width * 2 + 16.dp.toPx()
-						val thresholdY = toolbarSize.height + 36.dp.toPx() + 16.dp.toPx()
+						val thresholdY = toolbarSize.height + 52.dp.toPx()
 						while (true) {
 							val event = awaitPointerEvent()
 							val position = event.changes.first().position

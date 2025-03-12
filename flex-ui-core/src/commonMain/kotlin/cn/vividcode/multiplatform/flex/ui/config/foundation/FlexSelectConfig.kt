@@ -19,7 +19,12 @@ data class FlexSelectConfig internal constructor(
 	var fontSize: TextUnit,
 	var fontWeight: FontWeight,
 	var letterSpacing: TextUnit,
-	var iconSize: Dp
+	var iconSize: Dp,
+	var intervalWithPopup: Dp,
+	var heightWithPopup: Dp,
+	var paddingWithPopup: Dp,
+	var heightWhenOptionEmptyWithPopup: Dp,
+	var maxHeightWithPopup: Dp
 )
 
 internal object FlexSelectSizeDefaults : FlexSizeDefaults<FlexSelectConfig>() {
@@ -33,18 +38,26 @@ internal object FlexSelectSizeDefaults : FlexSizeDefaults<FlexSelectConfig>() {
 			fontSize = 14.sp,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 24.dp
+			iconSize = 24.dp,
+			intervalWithPopup = 4.dp,
+			heightWithPopup = 36.dp,
+			paddingWithPopup = 6.dp,
+			heightWhenOptionEmptyWithPopup = 80.dp,
+			maxHeightWithPopup = 192.dp
 		)
 	}
 	
-	override fun FlexSelectConfig.scale(scale: Float): FlexSelectConfig {
-		return this.copy(
-			minWidth = minWidth * scale,
-			height = height * scale,
-			horizontalPadding = horizontalPadding * scale,
-			borderWidth = borderWidth * scale,
-			fontSize = fontSize * scale,
-			iconSize = iconSize * scale
-		)
-	}
+	override fun FlexSelectConfig.scale(scale: Float) = this.copy(
+		minWidth = minWidth * scale,
+		height = height * scale,
+		horizontalPadding = horizontalPadding * scale,
+		borderWidth = borderWidth * scale,
+		fontSize = fontSize * scale,
+		iconSize = iconSize * scale,
+		intervalWithPopup = intervalWithPopup * scale,
+		heightWithPopup = heightWithPopup * scale,
+		paddingWithPopup = paddingWithPopup * scale,
+		heightWhenOptionEmptyWithPopup = heightWhenOptionEmptyWithPopup * scale,
+		maxHeightWithPopup = maxHeightWithPopup * scale
+	)
 }

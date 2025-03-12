@@ -9,7 +9,14 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -17,7 +24,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -38,8 +50,18 @@ import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexInputConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.icon.FlexIcon
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
-import cn.vividcode.multiplatform.flex.ui.type.*
-import cn.vividcode.multiplatform.flex.ui.utils.*
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.type.disabledBrush
+import cn.vividcode.multiplatform.flex.ui.type.transparentBrush
+import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.background
+import cn.vividcode.multiplatform.flex.ui.utils.border
+import cn.vividcode.multiplatform.flex.ui.utils.darken
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithBrush
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithBrush
+import cn.vividcode.multiplatform.flex.ui.utils.lighten
 
 /**
  * FlexInput 输入框

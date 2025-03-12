@@ -28,12 +28,10 @@ internal object FlexSwitchSizeDefaults : FlexSizeDefaults<FlexSwitchConfig>() {
 		)
 	}
 	
-	override fun FlexSwitchConfig.scale(scale: Float): FlexSwitchConfig {
-		return this.copy(
-			height = height * scale,
-			padding = padding * scale,
-			textLabelSize = textLabelSize * scale,
-			iconLabelSize = iconLabelSize * scale
-		)
-	}
+	override fun FlexSwitchConfig.scale(scale: Float) = this.copy(
+		height = height * scale,
+		padding = padding * scale,
+		textLabelSize = textLabelSize * scale,
+		iconLabelSize = iconLabelSize * scale
+	)
 }

@@ -37,14 +37,12 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig>() {
 		)
 	}
 	
-	override fun FlexButtonConfig.scale(scale: Float): FlexButtonConfig {
-		return this.copy(
-			height = height * scale,
-			horizontalPadding = horizontalPadding * scale,
-			borderWidth = borderWidth * scale,
-			fontSize = fontSize * scale,
-			iconSize = iconSize * scale,
-			iconInterval = iconInterval * scale
-		)
-	}
+	override fun FlexButtonConfig.scale(scale: Float) = this.copy(
+		height = height * scale,
+		horizontalPadding = horizontalPadding * scale,
+		borderWidth = borderWidth * scale,
+		fontSize = fontSize * scale,
+		iconSize = iconSize * scale,
+		iconInterval = iconInterval * scale
+	)
 }

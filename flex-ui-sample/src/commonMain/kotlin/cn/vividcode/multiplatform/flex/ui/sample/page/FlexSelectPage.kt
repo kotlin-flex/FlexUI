@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.common.options
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
@@ -44,11 +45,13 @@ fun ColumnScope.FlexSelectPage() {
 			Code(code)
 		},
 		preview = {
-			var selectedKey by remember { mutableStateOf("Option 1") }
+			var selectedKeys by remember { mutableStateOf(listOf(1, 2)) }
 			FlexSelect(
-				selectedKey = selectedKey,
-				onSelectedKeyChanged = { selectedKey = it },
-				options = remember { listOf("Option 1", "Option 2", "Option 3").options() },
+				selectedKeys = selectedKeys,
+				onSelectedKeysChanged = { selectedKeys = it },
+				options = remember {
+					(1 .. 10).options { FlexOption(it, "Option $it") }
+				},
 				sizeType = sizeType,
 				brushType = brushType,
 				cornerType = cornerType

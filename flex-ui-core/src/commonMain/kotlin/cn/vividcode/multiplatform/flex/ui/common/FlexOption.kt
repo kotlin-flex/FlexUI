@@ -4,13 +4,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.util.fastMap
 
 /**
- * 项目：flex-ui
- *
- * 作者：李佳伟
- *
- * 创建：2025/3/6 16:06
- *
- * 介绍：选项
+ * FlexOption 选项
  */
 class FlexOption<Key : Any>(
 	val key: Key,

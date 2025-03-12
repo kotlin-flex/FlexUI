@@ -53,17 +53,15 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig>() {
 		)
 	}
 	
-	override fun FlexSliderConfig.scale(scale: Float): FlexSliderConfig {
-		return this.copy(
-			thickness = thickness * scale,
-			sliderThickness = sliderThickness * scale,
-			thumbBorderWidth = thumbBorderWidth * scale,
-			toolbarFontSize = toolbarFontSize * scale,
-			toolbarHeight = toolbarHeight * scale,
-			toolbarHorizontalPadding = toolbarHorizontalPadding * scale,
-			markBorderWidth = markBorderWidth * scale,
-			markFontSize = markFontSize * scale,
-			markInterval = markInterval * scale
-		)
-	}
+	override fun FlexSliderConfig.scale(scale: Float) = this.copy(
+		thickness = thickness * scale,
+		sliderThickness = sliderThickness * scale,
+		thumbBorderWidth = thumbBorderWidth * scale,
+		toolbarFontSize = toolbarFontSize * scale,
+		toolbarHeight = toolbarHeight * scale,
+		toolbarHorizontalPadding = toolbarHorizontalPadding * scale,
+		markBorderWidth = markBorderWidth * scale,
+		markFontSize = markFontSize * scale,
+		markInterval = markInterval * scale
+	)
 }

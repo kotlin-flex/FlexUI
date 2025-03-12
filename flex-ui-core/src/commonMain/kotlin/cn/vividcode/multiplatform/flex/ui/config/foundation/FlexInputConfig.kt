@@ -36,14 +36,12 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig>() {
 			iconSize = 24.dp
 		)
 	
-	override fun FlexInputConfig.scale(scale: Float): FlexInputConfig {
-		return this.copy(
-			minWidth = minWidth * scale,
-			height = height * scale,
-			horizontalPadding = horizontalPadding * scale,
-			borderWidth = borderWidth * scale,
-			fontSize = fontSize * scale,
-			iconSize = iconSize * scale
-		)
-	}
+	override fun FlexInputConfig.scale(scale: Float) = this.copy(
+		minWidth = minWidth * scale,
+		height = height * scale,
+		horizontalPadding = horizontalPadding * scale,
+		borderWidth = borderWidth * scale,
+		fontSize = fontSize * scale,
+		iconSize = iconSize * scale
+	)
 }

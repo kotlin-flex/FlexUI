@@ -32,12 +32,10 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig>() {
 			letterSpacing = TextUnit.Unspecified
 		)
 	
-	override fun FlexRadioConfig.scale(scale: Float): FlexRadioConfig {
-		return this.copy(
-			height = height * scale,
-			horizontalPadding = horizontalPadding * scale,
-			borderWidth = borderWidth * scale,
-			fontSize = fontSize * scale
-		)
-	}
+	override fun FlexRadioConfig.scale(scale: Float) = this.copy(
+		height = height * scale,
+		horizontalPadding = horizontalPadding * scale,
+		borderWidth = borderWidth * scale,
+		fontSize = fontSize * scale
+	)
 }

@@ -8,7 +8,15 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
-import cn.vividcode.multiplatform.flex.ui.utils.*
+import cn.vividcode.multiplatform.flex.ui.utils.darken
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithBrush
+import cn.vividcode.multiplatform.flex.ui.utils.darkenWithOnBrush
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithBrush
+import cn.vividcode.multiplatform.flex.ui.utils.disabledWithOnBrush
+import cn.vividcode.multiplatform.flex.ui.utils.lighten
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithBrush
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithOnBrush
+import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
 
 /**
  * 颜色类型
@@ -23,26 +31,50 @@ interface FlexBrushType {
 		@Composable
 		get
 	
+	val onBrushContainer: FlexBrush
+		@Composable
+		get() = onBrush
+	
+	val brushContainer: FlexBrush
+		@Composable
+		get() = brush
+	
 	data object Primary : FlexBrushType {
 		
 		override val onBrush: FlexBrush
 			@Composable
-			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.onPrimary)
+			get() = MaterialTheme.colorScheme.onPrimary.toSolidColor()
 		
 		override val brush: FlexBrush
 			@Composable
-			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.primary)
+			get() = MaterialTheme.colorScheme.primary.toSolidColor()
+		
+		override val onBrushContainer: FlexBrush
+			@Composable
+			get() = MaterialTheme.colorScheme.onPrimaryContainer.toSolidColor()
+		
+		override val brushContainer: FlexBrush
+			@Composable
+			get() = MaterialTheme.colorScheme.primaryContainer.toSolidColor()
 	}
 	
 	data object Secondary : FlexBrushType {
 		
 		override val onBrush: FlexBrush
 			@Composable
-			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.onSecondary)
+			get() = MaterialTheme.colorScheme.onSecondary.toSolidColor()
 		
 		override val brush: FlexBrush
 			@Composable
-			get() = FlexBrush.solidColor(MaterialTheme.colorScheme.secondary)
+			get() = MaterialTheme.colorScheme.secondary.toSolidColor()
+		
+		override val onBrushContainer: FlexBrush
+			@Composable
+			get() = MaterialTheme.colorScheme.onSecondaryContainer.toSolidColor()
+		
+		override val brushContainer: FlexBrush
+			@Composable
+			get() = MaterialTheme.colorScheme.secondaryContainer.toSolidColor()
 	}
 	
 	data object Tertiary : FlexBrushType {
