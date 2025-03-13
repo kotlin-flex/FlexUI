@@ -28,7 +28,7 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig>() {
 		get() = FlexInputConfig(
 			minWidth = 150.dp,
 			height = 36.dp,
-			horizontalPadding = 10.dp,
+			horizontalPadding = 8.dp,
 			borderWidth = 1.5.dp,
 			fontSize = 14.sp,
 			fontWeight = FontWeight.Normal,

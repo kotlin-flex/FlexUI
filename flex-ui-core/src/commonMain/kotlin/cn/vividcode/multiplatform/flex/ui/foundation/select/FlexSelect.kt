@@ -9,11 +9,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -26,6 +29,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,6 +49,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
@@ -58,6 +63,7 @@ import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.animateTextUnitAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border
 import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
@@ -168,13 +174,28 @@ private fun <Key : Any> FlexSelectImpl(
 				brush = borderBrush,
 				shape = shape
 			)
-			.padding(horizontal = horizontalPadding)
+			.padding(horizontal = horizontalPadding / 2)
 	) {
-		FlexSelectedOptions(
-			selectedKeys = selectedKeys,
-			options = options,
-			config = config
-		)
+		val density = LocalDensity.current
+		if (multiple) {
+			FlexSelectedOptions(
+				selectedKeys = selectedKeys,
+				options = options,
+				config = config,
+				horizontalPadding = horizontalPadding,
+				maxWidth = remember(density, size, horizontalPadding) {
+					with(density) {
+						val width = size.width.dp + horizontalPadding * 2
+						when (selectType) {
+							FlexSelectType.Default -> width
+							FlexSelectType.Search -> width / 2
+						}
+					}
+				},
+				brushType = brushType,
+				cornerType = cornerType
+			)
+		}
 		
 		val isPressed by interactionSource.collectIsPressedAsState()
 		var isIdle by remember { mutableStateOf(true) }
@@ -184,7 +205,6 @@ private fun <Key : Any> FlexSelectImpl(
 			}
 		}
 		val intervalWithPopup by animateDpAsState(config.popupInterval)
-		val density = LocalDensity.current
 		FlexSelectPopup(
 			isPopupVisible = isPopupVisible,
 			onDismissRequest = {
@@ -195,7 +215,7 @@ private fun <Key : Any> FlexSelectImpl(
 			width = with(density) { size.width.toDp() },
 			offset = with(density) {
 				IntOffset(
-					x = -horizontalPadding.roundToPx(),
+					x = -(horizontalPadding / 2).roundToPx(),
 					y = size.height + intervalWithPopup.roundToPx()
 				)
 			},
@@ -279,15 +299,72 @@ private val DefaultExitTransition = shrinkVertically(animationSpec = spring()) +
 private fun <Key : Any> FlexSelectedOptions(
 	selectedKeys: List<Key>,
 	options: List<FlexOption<Key>>,
-	config: FlexSelectConfig
+	config: FlexSelectConfig,
+	horizontalPadding: Dp,
+	maxWidth: Dp,
+	brushType: FlexBrushType,
+	cornerType: FlexCornerType,
 ) {
-	val tagHeight by animateDpAsState(config.tagHeight)
+	val horizontalScrollState = rememberScrollState()
 	Row(
 		modifier = Modifier
-			.height(tagHeight)
-			.padding()
+			.widthIn(max = maxWidth)
+			.fillMaxHeight()
+			.horizontalScroll(horizontalScrollState)
+			.padding(horizontal = horizontalPadding / 2),
+		verticalAlignment = Alignment.CenterVertically
 	) {
-	
+		val tagHeight by animateDpAsState(config.tagHeight)
+		val tagHorizontalPadding by animateDpAsState(config.tagHorizontalPadding)
+		val tagFontSize by animateTextUnitAsState(config.tagFontSize)
+		val tagLetterSpacing by animateTextUnitAsState(config.tagLetterSpacing)
+		val tagInterval by animateDpAsState(config.tagInterval)
+		val tagCorner by animateDpAsState(config.tagHeight * cornerType.scale)
+		val tagShape by remember(tagCorner) {
+			derivedStateOf { RoundedCornerShape(tagCorner) }
+		}
+		val tagIconSize by animateDpAsState(config.tagIconSize)
+		val brushContainer by animateFlexBrushAsState(brushType.brushContainer)
+		val onBrushContainer by animateFlexBrushAsState(brushType.onBrushContainer)
+		val selectedOptions by remember(selectedKeys, options) {
+			derivedStateOf {
+				selectedKeys.map { key ->
+					options.first { it.key == key }
+				}
+			}
+		}
+		selectedOptions.forEachIndexed { index, option ->
+			Row(
+				modifier = Modifier
+					.height(tagHeight)
+					.clip(tagShape)
+					.background(
+						brush = brushContainer,
+						shape = tagShape
+					)
+					.padding(horizontal = tagHorizontalPadding),
+				verticalAlignment = Alignment.CenterVertically
+			) {
+				Text(
+					text = option.value,
+					fontSize = tagFontSize,
+					fontWeight = config.tagFontWeight,
+					letterSpacing = tagLetterSpacing,
+					style = LocalTextStyle.current.copy(
+						brush = onBrushContainer.original
+					)
+				)
+				Spacer(modifier = Modifier.width(tagHorizontalPadding))
+				FlexIcon(
+					imageVector = Icons.Rounded.Close,
+					modifier = Modifier.size(tagIconSize),
+					tint = onBrushContainer
+				)
+			}
+			if (index < selectedOptions.size - 1) {
+				Spacer(modifier = Modifier.width(tagInterval))
+			}
+		}
 	}
 }
 

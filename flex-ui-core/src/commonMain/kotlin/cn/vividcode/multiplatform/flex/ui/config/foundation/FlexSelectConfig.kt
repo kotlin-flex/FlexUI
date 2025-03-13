@@ -4,7 +4,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.FlexSizeDefaults
 
@@ -22,6 +21,7 @@ data class FlexSelectConfig internal constructor(
 	var letterSpacing: TextUnit,
 	var iconSize: Dp,
 	var tagHeight: Dp,
+	var tagInterval: Dp,
 	var tagFontSize: TextUnit,
 	var tagFontWeight: FontWeight,
 	var tagLetterSpacing: TextUnit,
@@ -40,17 +40,18 @@ internal object FlexSelectSizeDefaults : FlexSizeDefaults<FlexSelectConfig>() {
 		FlexSelectConfig(
 			minWidth = 150.dp,
 			height = 36.dp,
-			horizontalPadding = 10.dp,
+			horizontalPadding = 6.dp,
 			borderWidth = 1.5.dp,
 			fontSize = 14.sp,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
 			iconSize = 24.dp,
 			tagHeight = 24.dp,
+			tagInterval = 3.dp,
 			tagFontSize = 12.sp,
 			tagFontWeight = FontWeight.Normal,
 			tagLetterSpacing = TextUnit.Unspecified,
-			tagIconSize = 20.dp,
+			tagIconSize = 16.dp,
 			tagHorizontalPadding = 4.dp,
 			popupHeight = 36.dp,
 			popupMaxHeight = 192.dp,
