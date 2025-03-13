@@ -1,5 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.config
 
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.isUnspecified
 import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
 import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType.ExtraLarge
 import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType.ExtraSmall
@@ -74,4 +76,7 @@ internal abstract class FlexSizeDefaults<Config> {
 	val DefaultExtraLarge: Config by lazy { DefaultMedium.scale(EXTRA_LARGE_SCALE) }
 	
 	abstract fun Config.scale(scale: Float): Config
+	
+	internal fun TextUnit.scale(scale: Float): TextUnit =
+		if (this.isUnspecified) TextUnit.Unspecified else this * scale
 }

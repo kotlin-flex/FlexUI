@@ -58,6 +58,7 @@ internal object FlexSliderSizeDefaults : FlexSizeDefaults<FlexSliderConfig>() {
 		sliderThickness = sliderThickness * scale,
 		thumbBorderWidth = thumbBorderWidth * scale,
 		toolbarFontSize = toolbarFontSize * scale,
+		toolbarFontLetterSpacing = toolbarFontLetterSpacing.scale(scale),
 		toolbarHeight = toolbarHeight * scale,
 		toolbarHorizontalPadding = toolbarHorizontalPadding * scale,
 		markBorderWidth = markBorderWidth * scale,

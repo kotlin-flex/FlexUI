@@ -1,18 +1,24 @@
 package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.common.options
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.select.FlexSelect
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderMarks
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderSteps
 import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
@@ -25,6 +31,8 @@ fun ColumnScope.FlexSelectPage() {
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
+	var quantityType by remember { mutableStateOf(FlexSelectQuantityType.Single) }
+	var selectWidth by remember { mutableStateOf(150.dp) }
 	AdaptiveLayout(
 		code = {
 			val code by remember(sizeType, brushType, cornerType) {
@@ -35,7 +43,7 @@ fun ColumnScope.FlexSelectPage() {
 							selectedKey = selectedKey,
 							onSelectedKeyChanged = { selectedKey = it },
 							options = remember { listOf("Option 1", "Option 2", "Option 3").options() },
-							sizeType = $sizeType,
+							sizeType = FlexSizeType$sizeType,
 							brushType = $brushType,
 							cornerType = $cornerType
 						)
@@ -45,17 +53,33 @@ fun ColumnScope.FlexSelectPage() {
 			Code(code)
 		},
 		preview = {
-			var selectedKeys by remember { mutableStateOf(listOf(1, 2)) }
-			FlexSelect(
-				selectedKeys = selectedKeys,
-				onSelectedKeysChanged = { selectedKeys = it },
-				options = remember {
-					(1 .. 10).options { FlexOption(it, "Option $it") }
-				},
-				sizeType = sizeType,
-				brushType = brushType,
-				cornerType = cornerType
-			)
+			if (quantityType == FlexSelectQuantityType.Single) {
+				var selectedKey by remember { mutableStateOf<Int?>(null) }
+				FlexSelect(
+					selectedKey = selectedKey,
+					onSelectedKeyChanged = { selectedKey = it },
+					options = remember {
+						(1 .. 10).options { FlexOption(it, "Option $it") }
+					},
+					modifier = Modifier.width(selectWidth),
+					sizeType = sizeType,
+					brushType = brushType,
+					cornerType = cornerType
+				)
+			} else {
+				var selectedKeys by remember { mutableStateOf(listOf<Int>()) }
+				FlexSelect(
+					selectedKeys = selectedKeys,
+					onSelectedKeysChanged = { selectedKeys = it },
+					options = remember {
+						(1 .. 10).options { FlexOption(it, "Option $it") }
+					},
+					modifier = Modifier.width(selectWidth),
+					sizeType = sizeType,
+					brushType = brushType,
+					cornerType = cornerType
+				)
+			}
 		},
 		options = {
 			item("Size Type") {
@@ -75,6 +99,7 @@ fun ColumnScope.FlexSelectPage() {
 					options = remember { FlexCornerType.entries.options() },
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
+					cornerType = cornerType,
 					switchType = FlexRadioSwitchType.Swipe
 				)
 			}
@@ -88,6 +113,37 @@ fun ColumnScope.FlexSelectPage() {
 					switchType = FlexRadioSwitchType.Swipe
 				)
 			}
+			item("Single Or Multiple") {
+				FlexRadio(
+					selectedKey = quantityType,
+					onSelectedKeyChange = { quantityType = it },
+					options = remember { FlexSelectQuantityType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Select Width") {
+				FlexSlider(
+					value = selectWidth.value,
+					onValueChange = { selectWidth = it.dp },
+					modifier = Modifier.width(400.dp),
+					sizeType = FlexSizeType.Small,
+					valueRange = 150f .. 400f,
+					steps = FlexSliderSteps.rememberAverageSteps(250),
+					marks = FlexSliderMarks.rememberTextMarks(
+						150f to "150dp",
+						400f to "400dp"
+					)
+				)
+			}
 		}
 	)
+}
+
+private enum class FlexSelectQuantityType {
+	
+	Single,
+	
+	Multiple
 }

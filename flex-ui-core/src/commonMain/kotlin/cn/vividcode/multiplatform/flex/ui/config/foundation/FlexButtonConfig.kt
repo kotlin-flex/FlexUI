@@ -42,6 +42,7 @@ internal object FlexButtonSizeDefaults : FlexSizeDefaults<FlexButtonConfig>() {
 		horizontalPadding = horizontalPadding * scale,
 		borderWidth = borderWidth * scale,
 		fontSize = fontSize * scale,
+		letterSpacing = letterSpacing.scale(scale),
 		iconSize = iconSize * scale,
 		iconInterval = iconInterval * scale
 	)

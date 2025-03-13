@@ -36,6 +36,7 @@ internal object FlexRadioSizeDefaults : FlexSizeDefaults<FlexRadioConfig>() {
 		height = height * scale,
 		horizontalPadding = horizontalPadding * scale,
 		borderWidth = borderWidth * scale,
-		fontSize = fontSize * scale
+		fontSize = fontSize * scale,
+		letterSpacing = letterSpacing.scale(scale)
 	)
 }

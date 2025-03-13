@@ -3,10 +3,7 @@ package cn.vividcode.multiplatform.flex.ui.layout.popup
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -66,9 +63,8 @@ fun FlexAnimatedPopup(
 			properties = properties
 		) {
 			ShadowBoxIfUse(
-				shadow = shadow,
-				shape = shape,
-				visible = transitionState.targetState
+				visible = transitionState.targetState,
+				shadow = shadow
 			) {
 				AnimatedVisibility(
 					visibleState = transitionState,
@@ -87,32 +83,19 @@ fun FlexAnimatedPopup(
 
 @Composable
 private fun ShadowBoxIfUse(
-	shadow: FlexAnimatedPopupShadow?,
-	shape: Shape,
 	visible: Boolean,
+	shadow: FlexAnimatedPopupShadow?,
 	content: @Composable () -> Unit
 ) {
 	if (shadow != null) {
-		val spotColor by animateColorAsState(
-			targetValue = if (visible) shadow.spotColor else shadow.spotColor.copy(alpha = 0f),
-			animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
-		)
-		val ambientColor by animateColorAsState(
-			targetValue = if (visible) shadow.ambientColor else shadow.ambientColor.copy(alpha = 0f),
-			animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
-		)
-		val elevation by animateDpAsState(
-			targetValue = if (visible) shadow.elevation else Dp.Hairline,
-			animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
-		)
 		Box(
 			modifier = Modifier
 				.shadow(
-					elevation = elevation,
+					elevation = shadow.elevation,
 					shape = shadow.shape,
 					clip = shadow.clip,
-					ambientColor = ambientColor,
-					spotColor = spotColor
+					ambientColor = shadow.ambientColor,
+					spotColor = shadow.spotColor
 				)
 		) {
 			content()
@@ -128,11 +111,11 @@ object FlexAnimatedPopupDefaults {
 	
 	internal val DefaultExitTransition = fadeOut(animationSpec = spring())
 	
-	private val DefaultShadowElevation = 20.dp
+	private val DefaultShadowElevation = 16.dp
 	
 	internal val DefaultShape = RectangleShape
 	
-	private val DefaultShadowColor = Color.Black
+	private val DefaultShadowColor = Color.Black.copy(alpha = 0.5f)
 	
 	fun shadow(
 		elevation: Dp = DefaultShadowElevation,
