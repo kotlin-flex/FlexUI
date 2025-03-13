@@ -174,11 +174,10 @@ private fun <Key : Any> FlexSelectImpl(
 				brush = borderBrush,
 				shape = shape
 			)
-			.padding(horizontal = horizontalPadding / 2)
 	) {
 		val density = LocalDensity.current
 		if (multiple) {
-			FlexSelectedOptions(
+			FlexMultipleSelectedOptions(
 				selectedKeys = selectedKeys,
 				options = options,
 				config = config,
@@ -204,7 +203,7 @@ private fun <Key : Any> FlexSelectImpl(
 				isPopupVisible = true
 			}
 		}
-		val intervalWithPopup by animateDpAsState(config.popupInterval)
+		val popupInterval by animateDpAsState(config.popupInterval)
 		FlexSelectPopup(
 			isPopupVisible = isPopupVisible,
 			onDismissRequest = {
@@ -215,8 +214,8 @@ private fun <Key : Any> FlexSelectImpl(
 			width = with(density) { size.width.toDp() },
 			offset = with(density) {
 				IntOffset(
-					x = -(horizontalPadding / 2).roundToPx(),
-					y = size.height + intervalWithPopup.roundToPx()
+					x = 0,
+					y = size.height + popupInterval.roundToPx()
 				)
 			},
 			onIdleChanged = { isIdle = it },
@@ -295,8 +294,11 @@ private fun <Key> FlexSelectPopup(
 private val DefaultEnterTransition = expandVertically(animationSpec = spring()) + fadeIn(animationSpec = spring(), initialAlpha = 0.8f)
 private val DefaultExitTransition = shrinkVertically(animationSpec = spring()) + fadeOut(animationSpec = spring(), targetAlpha = 0.8f)
 
+/**
+ * 多选框的选项
+ */
 @Composable
-private fun <Key : Any> FlexSelectedOptions(
+private fun <Key : Any> FlexMultipleSelectedOptions(
 	selectedKeys: List<Key>,
 	options: List<FlexOption<Key>>,
 	config: FlexSelectConfig,
@@ -311,7 +313,7 @@ private fun <Key : Any> FlexSelectedOptions(
 			.widthIn(max = maxWidth)
 			.fillMaxHeight()
 			.horizontalScroll(horizontalScrollState)
-			.padding(horizontal = horizontalPadding / 2),
+			.padding(horizontal = horizontalPadding),
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		val tagHeight by animateDpAsState(config.tagHeight)
@@ -379,30 +381,29 @@ private fun <Key> FlexSelectOptionList(
 	corner: Dp,
 	multiple: Boolean
 ) {
-	val paddingWithPopup by animateDpAsState(config.popupPadding)
-	val maxHeightWithPopup by animateDpAsState(config.popupMaxHeight)
+	val popupPadding by animateDpAsState(config.popupPadding)
+	val popupMaxHeight by animateDpAsState(config.popupMaxHeight)
 	val verticalScrollState = rememberScrollState()
 	Column(
 		modifier = Modifier
 			.width(width)
 			.then(
 				if (options.isEmpty()) {
-					val heightWhenOptionEmptyWithPopup by animateDpAsState(config.popupHeightWithEmpty)
-					Modifier.height(heightWhenOptionEmptyWithPopup)
+					val popupHeightWithEmptyOptions by animateDpAsState(config.popupHeightWithEmptyOptions)
+					Modifier.height(popupHeightWithEmptyOptions)
 				} else {
 					Modifier.heightIn(
-						max = maxHeightWithPopup
+						max = popupMaxHeight
 					)
 				}
 			)
 			.background(MaterialTheme.colorScheme.surface)
-			.padding(paddingWithPopup / 2)
+			.padding(popupPadding)
 			.verticalScroll(verticalScrollState)
-			.padding(paddingWithPopup / 2)
 	) {
 		val fontSize by animateFloatAsState(config.fontSize.value)
 		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
-		val heightWithPopup by animateDpAsState(config.popupHeight)
+		val popupItemHeight by animateDpAsState(config.popupItemHeight)
 		val brush by animateFlexBrushAsState(brushType.brush)
 		val brushContainer by animateFlexBrushAsState(brushType.brushContainer)
 		val onBrushContainer by animateFlexBrushAsState(brushType.onBrushContainer)
@@ -423,7 +424,7 @@ private fun <Key> FlexSelectOptionList(
 			Row(
 				modifier = Modifier
 					.fillMaxWidth()
-					.height(heightWithPopup)
+					.height(popupItemHeight)
 					.background(
 						brush = if (selected) brushContainer else FlexBrush.Transparent,
 						shape = RoundedCornerShape(
@@ -444,7 +445,7 @@ private fun <Key> FlexSelectOptionList(
 							onSelectedKeysChanged(listOf(option.key))
 						}
 					}
-					.padding(horizontal = paddingWithPopup),
+					.padding(horizontal = popupPadding),
 				horizontalArrangement = Arrangement.SpaceBetween,
 				verticalAlignment = Alignment.CenterVertically,
 			) {
