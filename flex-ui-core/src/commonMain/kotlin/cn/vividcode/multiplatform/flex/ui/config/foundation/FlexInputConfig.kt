@@ -26,7 +26,7 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig>() {
 	
 	override val DefaultMedium: FlexInputConfig
 		get() = FlexInputConfig(
-			minWidth = 150.dp,
+			minWidth = 180.dp,
 			height = 36.dp,
 			horizontalPadding = 8.dp,
 			borderWidth = 1.5.dp,

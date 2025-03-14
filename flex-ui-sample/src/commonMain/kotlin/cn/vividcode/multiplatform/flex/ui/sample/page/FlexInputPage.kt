@@ -1,6 +1,7 @@
 package cn.vividcode.multiplatform.flex.ui.sample.page
 
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Lock
@@ -14,8 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import cn.vividcode.multiplatform.flex.ui.common.options
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInput
 import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputIcons
@@ -23,6 +26,9 @@ import cn.vividcode.multiplatform.flex.ui.foundation.input.FlexInputType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderMarks
+import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderSteps
 import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
@@ -43,12 +49,13 @@ fun ColumnScope.FlexInputPage() {
 	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var inputType by remember { mutableStateOf(FlexInputType.Default) }
+	var inputWidth by remember { mutableStateOf(180.dp) }
 	var enabled by remember { mutableStateOf(true) }
 	var readOnly by remember { mutableStateOf(false) }
 	
 	AdaptiveLayout(
 		code = {
-			val code by remember(exampleType, sizeType, brushType, cornerType, enabled, readOnly, prefixSuffixType) {
+			val code by remember(exampleType, sizeType, brushType, cornerType, enabled, readOnly, prefixSuffixType, inputWidth) {
 				derivedStateOf {
 					when (exampleType) {
 						ExampleType.Default -> {
@@ -57,6 +64,7 @@ fun ColumnScope.FlexInputPage() {
 								FlexInput(
 									value = value,
 									onValueChange = { value = it },
+									modifier = Modifier.width($inputWidth),
 									sizeType = FlexSizeType.$sizeType,
 									brushType = FlexBrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
@@ -79,6 +87,7 @@ fun ColumnScope.FlexInputPage() {
 								FlexInput(
 									value = value,
 									onValueChange = { value = it },
+									modifier = Modifier.width($inputWidth),
 									sizeType = FlexSizeType.$sizeType,
 									brushType = FlexBrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
@@ -115,6 +124,7 @@ fun ColumnScope.FlexInputPage() {
 								FlexInput(
 									value = value,
 									onValueChange = { value = it },
+									modifier = Modifier.width($inputWidth),
 									sizeType = FlexSizeType.$sizeType,
 									brushType = FlexBrushType.$brushType,
 									cornerType = FlexCornerType.$cornerType,
@@ -144,6 +154,7 @@ fun ColumnScope.FlexInputPage() {
 					FlexInput(
 						value = value,
 						onValueChange = { value = it },
+						modifier = Modifier.width(inputWidth),
 						sizeType = sizeType,
 						brushType = brushType,
 						cornerType = cornerType,
@@ -167,6 +178,7 @@ fun ColumnScope.FlexInputPage() {
 					FlexInput(
 						value = value,
 						onValueChange = { value = it },
+						modifier = Modifier.width(inputWidth),
 						sizeType = sizeType,
 						brushType = brushType,
 						cornerType = cornerType,
@@ -201,6 +213,7 @@ fun ColumnScope.FlexInputPage() {
 					FlexInput(
 						value = value,
 						onValueChange = { value = it },
+						modifier = Modifier.width(inputWidth),
 						sizeType = sizeType,
 						brushType = brushType,
 						cornerType = cornerType,
@@ -273,6 +286,20 @@ fun ColumnScope.FlexInputPage() {
 					sizeType = FlexSizeType.Small,
 					radioType = FlexRadioType.Button,
 					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
+			item("Input Width") {
+				FlexSlider(
+					value = inputWidth.value,
+					onValueChange = { inputWidth = it.dp },
+					modifier = Modifier.width(300.dp),
+					sizeType = FlexSizeType.Small,
+					valueRange = 180f .. 400f,
+					steps = FlexSliderSteps.rememberAverageSteps(220),
+					marks = FlexSliderMarks.rememberTextMarks(
+						180f to "min",
+						400f to "max"
+					)
 				)
 			}
 			item("Prefix & Suffix") {

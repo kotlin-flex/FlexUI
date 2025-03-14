@@ -285,10 +285,12 @@ private fun FlexInputDecorationBox(
 			}
 		}
 	)
-	val interval by animateDpAsState(config.horizontalPadding / 2)
+	val horizontalPadding by animateDpAsState(config.horizontalPadding)
 	Row(
 		modifier = Modifier
 			.widthIn(min = minWidth)
+			.then(modifier)
+			.width(minWidth)
 			.height(height)
 			.border(
 				width = borderWidth,
@@ -299,8 +301,7 @@ private fun FlexInputDecorationBox(
 				brush = backgroundBrush,
 				shape = cornerShape
 			)
-			.then(modifier)
-			.padding(horizontal = interval + borderWidth),
+			.padding(horizontal = horizontalPadding / 2 + borderWidth),
 		verticalAlignment = Alignment.CenterVertically,
 	) {
 		val iconSize by animateDpAsState(config.iconSize)
@@ -317,16 +318,18 @@ private fun FlexInputDecorationBox(
 			)
 		}
 		if (prefix != null) {
-			Spacer(modifier = Modifier.width(interval))
+			Spacer(modifier = Modifier.width(horizontalPadding / 2))
 			CompositionLocalProvider(
 				LocalTextStyle provides textStyle
 			) {
 				prefix()
 			}
 		}
-		Spacer(modifier = Modifier.width(interval))
-		
-		Box {
+		Spacer(modifier = Modifier.width(horizontalPadding))
+		Box(
+			modifier = Modifier
+				.weight(1f)
+		) {
 			val isEmpty by remember(value) {
 				derivedStateOf { value.isEmpty() }
 			}
@@ -342,14 +345,14 @@ private fun FlexInputDecorationBox(
 			innerTextField()
 		}
 		
-		Spacer(modifier = Modifier.width(interval))
+		Spacer(modifier = Modifier.width(horizontalPadding / 2))
 		if (suffix != null) {
 			CompositionLocalProvider(
 				LocalTextStyle provides textStyle
 			) {
 				suffix()
 			}
-			Spacer(modifier = Modifier.width(interval))
+			Spacer(modifier = Modifier.width(horizontalPadding / 2))
 		}
 		if (trailingIcon != null) {
 			FlexInputIcon(
