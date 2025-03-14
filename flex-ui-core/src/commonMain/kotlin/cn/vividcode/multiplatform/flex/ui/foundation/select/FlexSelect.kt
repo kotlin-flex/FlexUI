@@ -4,8 +4,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,8 +13,8 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -26,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
@@ -49,7 +48,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
@@ -81,6 +79,7 @@ fun <Key : Any> FlexSelect(
 	brushType: FlexBrushType = FlexSelectDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexSelectDefaults.DefaultCornerType,
 	selectType: FlexSelectType = FlexSelectDefaults.DefaultSelectType,
+	placeholderText: String = FlexSelectDefaults.DEFAULT_SINGLE_PLACEHOLDER_TEXT,
 	enabled: Boolean = true
 ) {
 	FlexSelectImpl(
@@ -95,6 +94,7 @@ fun <Key : Any> FlexSelect(
 		brushType = brushType,
 		cornerType = cornerType,
 		selectType = selectType,
+		placeholderText = placeholderText,
 		enabled = enabled
 	)
 }
@@ -109,6 +109,7 @@ fun <Key : Any> FlexSelect(
 	brushType: FlexBrushType = FlexSelectDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexSelectDefaults.DefaultCornerType,
 	selectType: FlexSelectType = FlexSelectDefaults.DefaultSelectType,
+	placeholderText: String = FlexSelectDefaults.DEFAULT_MULTIPLE_PLACEHOLDER_TEXT,
 	enabled: Boolean = true
 ) {
 	FlexSelectImpl(
@@ -121,6 +122,7 @@ fun <Key : Any> FlexSelect(
 		brushType = brushType,
 		cornerType = cornerType,
 		selectType = selectType,
+		placeholderText = placeholderText,
 		enabled = enabled
 	)
 }
@@ -131,11 +133,12 @@ private fun <Key : Any> FlexSelectImpl(
 	onSelectedKeysChanged: (List<Key>) -> Unit,
 	options: List<FlexOption<Key>>,
 	multiple: Boolean,
-	modifier: Modifier = Modifier,
-	sizeType: FlexSizeType = FlexSelectDefaults.DefaultSizeType,
-	brushType: FlexBrushType = FlexSelectDefaults.DefaultBrushType,
-	cornerType: FlexCornerType = FlexSelectDefaults.DefaultCornerType,
-	selectType: FlexSelectType = FlexSelectDefaults.DefaultSelectType,
+	modifier: Modifier,
+	sizeType: FlexSizeType,
+	brushType: FlexBrushType,
+	cornerType: FlexCornerType,
+	selectType: FlexSelectType,
+	placeholderText: String,
 	enabled: Boolean = true,
 ) {
 	val config = LocalFlexConfig.current.select.getConfig(sizeType)
@@ -158,8 +161,9 @@ private fun <Key : Any> FlexSelectImpl(
 	Row(
 		modifier = Modifier
 			.widthIn(min = minWidth)
-			.height(height)
 			.then(modifier)
+			.width(minWidth)
+			.height(height)
 			.onGloballyPositioned {
 				size = it.size
 			}
@@ -173,7 +177,8 @@ private fun <Key : Any> FlexSelectImpl(
 				width = borderWidth,
 				brush = borderBrush,
 				shape = shape
-			)
+			),
+		verticalAlignment = Alignment.CenterVertically
 	) {
 		val density = LocalDensity.current
 		if (multiple) {
@@ -182,28 +187,38 @@ private fun <Key : Any> FlexSelectImpl(
 				options = options,
 				config = config,
 				horizontalPadding = horizontalPadding,
-				maxWidth = remember(density, size, horizontalPadding) {
-					with(density) {
-						val width = size.width.dp + horizontalPadding * 2
-						when (selectType) {
-							FlexSelectType.Default -> width
-							FlexSelectType.Search -> width / 2
-						}
-					}
-				},
 				brushType = brushType,
 				cornerType = cornerType
 			)
 		}
 		
+		val searchInteractionSource = remember { MutableInteractionSource() }
+		val showSearch by remember(selectType, selectedKeys, multiple) {
+			derivedStateOf {
+				!multiple || selectedKeys.isEmpty() || selectType == FlexSelectType.Search
+			}
+		}
+		if (showSearch) {
+			FlexSelectSearch(
+				selectedKeys = selectedKeys,
+				options = options,
+				multiple = multiple,
+				selectType = selectType,
+				brushType = brushType,
+				config = config,
+				placeholderText = placeholderText,
+				interactionSource = searchInteractionSource
+			)
+		}
+		
 		val isPressed by interactionSource.collectIsPressedAsState()
+		val isSearchPressed by searchInteractionSource.collectIsPressedAsState()
 		var isIdle by remember { mutableStateOf(true) }
-		LaunchedEffect(isPressed) {
-			if (isPressed && isIdle) {
+		LaunchedEffect(isPressed, isSearchPressed) {
+			if ((isPressed || isSearchPressed) && isIdle) {
 				isPopupVisible = true
 			}
 		}
-		val popupInterval by animateDpAsState(config.popupInterval)
 		FlexSelectPopup(
 			isPopupVisible = isPopupVisible,
 			onDismissRequest = {
@@ -213,6 +228,7 @@ private fun <Key : Any> FlexSelectImpl(
 			},
 			width = with(density) { size.width.toDp() },
 			offset = with(density) {
+				val popupInterval by animateDpAsState(config.popupInterval)
 				IntOffset(
 					x = 0,
 					y = size.height + popupInterval.roundToPx()
@@ -236,6 +252,10 @@ object FlexSelectDefaults : FlexDefaults() {
 		get() = this.select
 	
 	val DefaultSelectType = FlexSelectType.Default
+	
+	const val DEFAULT_SINGLE_PLACEHOLDER_TEXT = "Please select it."
+	
+	const val DEFAULT_MULTIPLE_PLACEHOLDER_TEXT = "Please select them."
 }
 
 enum class FlexSelectType {
@@ -291,8 +311,8 @@ private fun <Key> FlexSelectPopup(
 	}
 }
 
-private val DefaultEnterTransition = expandVertically(animationSpec = spring()) + fadeIn(animationSpec = spring(), initialAlpha = 0.8f)
-private val DefaultExitTransition = shrinkVertically(animationSpec = spring()) + fadeOut(animationSpec = spring(), targetAlpha = 0.8f)
+private val DefaultEnterTransition = expandVertically(animationSpec = spring())
+private val DefaultExitTransition = shrinkVertically(animationSpec = spring())
 
 /**
  * 多选框的选项
@@ -303,15 +323,12 @@ private fun <Key : Any> FlexMultipleSelectedOptions(
 	options: List<FlexOption<Key>>,
 	config: FlexSelectConfig,
 	horizontalPadding: Dp,
-	maxWidth: Dp,
 	brushType: FlexBrushType,
 	cornerType: FlexCornerType,
 ) {
 	val horizontalScrollState = rememberScrollState()
 	Row(
 		modifier = Modifier
-			.widthIn(max = maxWidth)
-			.fillMaxHeight()
 			.horizontalScroll(horizontalScrollState)
 			.padding(horizontal = horizontalPadding),
 		verticalAlignment = Alignment.CenterVertically
@@ -384,6 +401,11 @@ private fun <Key> FlexSelectOptionList(
 	val popupPadding by animateDpAsState(config.popupPadding)
 	val popupMaxHeight by animateDpAsState(config.popupMaxHeight)
 	val verticalScrollState = rememberScrollState()
+	val itemShape by remember(corner) {
+		derivedStateOf {
+			RoundedCornerShape(corner)
+		}
+	}
 	Column(
 		modifier = Modifier
 			.width(width)
@@ -399,42 +421,47 @@ private fun <Key> FlexSelectOptionList(
 			)
 			.background(MaterialTheme.colorScheme.surface)
 			.padding(popupPadding)
+			.clip(itemShape)
 			.verticalScroll(verticalScrollState)
 	) {
 		val fontSize by animateFloatAsState(config.fontSize.value)
 		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
 		val popupItemHeight by animateDpAsState(config.popupItemHeight)
+		val popupItemHorizontalPadding by animateDpAsState(config.popupItemHorizontalPadding)
 		val brush by animateFlexBrushAsState(brushType.brush)
 		val brushContainer by animateFlexBrushAsState(brushType.brushContainer)
 		val onBrushContainer by animateFlexBrushAsState(brushType.onBrushContainer)
-		
+		val iconSize by animateDpAsState(config.iconSize)
 		val selectedList by remember(options, selectedKeys) {
 			derivedStateOf {
 				options.map { it.key in selectedKeys }
 			}
 		}
-		val iconSize by animateDpAsState(config.iconSize)
-		
 		options.forEachIndexed { index, option ->
 			val selected = selectedList[index]
 			val topSelected = index > 0 && selectedList[index - 1]
 			val bottomSelected = index < options.size - 1 && selectedList[index + 1]
 			val topCorner = if (topSelected) Dp.Hairline else corner
 			val bottomCorner = if (bottomSelected) Dp.Hairline else corner
+			val shape by remember(topCorner, bottomCorner) {
+				derivedStateOf {
+					RoundedCornerShape(
+						topStart = topCorner,
+						topEnd = topCorner,
+						bottomEnd = bottomCorner,
+						bottomStart = bottomCorner
+					)
+				}
+			}
 			Row(
 				modifier = Modifier
 					.fillMaxWidth()
 					.height(popupItemHeight)
 					.background(
 						brush = if (selected) brushContainer else FlexBrush.Transparent,
-						shape = RoundedCornerShape(
-							topStart = topCorner,
-							topEnd = topCorner,
-							bottomEnd = bottomCorner,
-							bottomStart = bottomCorner
-						).also { println(it) }
+						shape = shape
 					)
-					.clip(RoundedCornerShape(corner))
+					.clip(itemShape)
 					.clickable(
 						enabled = option.enabled
 					) {
@@ -445,7 +472,7 @@ private fun <Key> FlexSelectOptionList(
 							onSelectedKeysChanged(listOf(option.key))
 						}
 					}
-					.padding(horizontal = popupPadding),
+					.padding(horizontal = popupItemHorizontalPadding),
 				horizontalArrangement = Arrangement.SpaceBetween,
 				verticalAlignment = Alignment.CenterVertically,
 			) {
@@ -468,4 +495,43 @@ private fun <Key> FlexSelectOptionList(
 			}
 		}
 	}
+}
+
+@Composable
+private fun <Key : Any> RowScope.FlexSelectSearch(
+	selectedKeys: List<Key>,
+	options: List<FlexOption<Key>>,
+	multiple: Boolean,
+	selectType: FlexSelectType,
+	brushType: FlexBrushType,
+	config: FlexSelectConfig,
+	placeholderText: String,
+	interactionSource: MutableInteractionSource
+) {
+	var value by remember { mutableStateOf("") }
+	val brush by animateFlexBrushAsState(brushType.brush)
+	LaunchedEffect(selectedKeys, multiple) {
+		if (!multiple) {
+			value = options.find { it.key == selectedKeys.firstOrNull() }?.value ?: placeholderText
+		}
+	}
+	val fontSize by animateTextUnitAsState(config.fontSize)
+	val letterSpacing by animateTextUnitAsState(config.letterSpacing)
+	val horizontalPadding by animateDpAsState(config.horizontalPadding)
+	BasicTextField(
+		value = value,
+		onValueChange = { value = it },
+		modifier = Modifier
+			.weight(1f)
+			.padding(horizontal = horizontalPadding),
+		readOnly = selectType == FlexSelectType.Default,
+		textStyle = LocalTextStyle.current.copy(
+			brush = brush.original,
+			fontSize = fontSize,
+			fontWeight = config.fontWeight,
+			letterSpacing = letterSpacing
+		),
+		singleLine = true,
+		interactionSource = interactionSource
+	)
 }

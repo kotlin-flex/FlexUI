@@ -18,7 +18,6 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.select.FlexSelect
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderMarks
-import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderSteps
 import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
@@ -32,7 +31,7 @@ fun ColumnScope.FlexSelectPage() {
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
 	var quantityType by remember { mutableStateOf(FlexSelectQuantityType.Single) }
-	var selectWidth by remember { mutableStateOf(150.dp) }
+	var selectWidth by remember { mutableStateOf(180.dp) }
 	AdaptiveLayout(
 		code = {
 			val code by remember(sizeType, brushType, cornerType) {
@@ -127,13 +126,12 @@ fun ColumnScope.FlexSelectPage() {
 				FlexSlider(
 					value = selectWidth.value,
 					onValueChange = { selectWidth = it.dp },
-					modifier = Modifier.width(400.dp),
+					modifier = Modifier.width(300.dp),
 					sizeType = FlexSizeType.Small,
-					valueRange = 150f .. 400f,
-					steps = FlexSliderSteps.rememberAverageSteps(250),
+					valueRange = 180f .. 400f,
 					marks = FlexSliderMarks.rememberTextMarks(
-						150f to "150dp",
-						400f to "400dp"
+						180f to "min",
+						400f to "max"
 					)
 				)
 			}

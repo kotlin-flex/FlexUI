@@ -63,7 +63,6 @@ fun FlexAnimatedPopup(
 			properties = properties
 		) {
 			ShadowBoxIfUse(
-				visible = transitionState.targetState,
 				shadow = shadow
 			) {
 				AnimatedVisibility(
@@ -83,7 +82,6 @@ fun FlexAnimatedPopup(
 
 @Composable
 private fun ShadowBoxIfUse(
-	visible: Boolean,
 	shadow: FlexAnimatedPopupShadow?,
 	content: @Composable () -> Unit
 ) {
@@ -115,7 +113,7 @@ object FlexAnimatedPopupDefaults {
 	
 	internal val DefaultShape = RectangleShape
 	
-	private val DefaultShadowColor = Color.Black.copy(alpha = 0.6f)
+	private val DefaultShadowColor = Color.Gray
 	
 	fun shadow(
 		elevation: Dp = DefaultShadowElevation,
