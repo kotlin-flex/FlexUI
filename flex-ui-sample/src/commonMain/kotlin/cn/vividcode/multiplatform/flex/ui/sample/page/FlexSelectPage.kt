@@ -16,8 +16,10 @@ import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadio
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioSwitchType
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType
 import cn.vividcode.multiplatform.flex.ui.foundation.select.FlexSelect
+import cn.vividcode.multiplatform.flex.ui.foundation.select.FlexSelectType
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSlider
 import cn.vividcode.multiplatform.flex.ui.foundation.slider.FlexSliderMarks
+import cn.vividcode.multiplatform.flex.ui.foundation.switch.FlexSwitch
 import cn.vividcode.multiplatform.flex.ui.sample.brushTypeOptions
 import cn.vividcode.multiplatform.flex.ui.sample.components.AdaptiveLayout
 import cn.vividcode.multiplatform.flex.ui.sample.components.Code
@@ -30,8 +32,10 @@ fun ColumnScope.FlexSelectPage() {
 	var sizeType by remember { mutableStateOf(FlexSizeType.Medium) }
 	var cornerType by remember { mutableStateOf(FlexCornerType.Medium) }
 	var brushType by remember { mutableStateOf<FlexBrushType>(FlexBrushType.Primary) }
+	var selectType by remember { mutableStateOf(FlexSelectType.Default) }
 	var quantityType by remember { mutableStateOf(FlexSelectQuantityType.Single) }
 	var selectWidth by remember { mutableStateOf(180.dp) }
+	var enabled by remember { mutableStateOf(true) }
 	AdaptiveLayout(
 		code = {
 			val code by remember(sizeType, brushType, cornerType) {
@@ -42,9 +46,11 @@ fun ColumnScope.FlexSelectPage() {
 							selectedKey = selectedKey,
 							onSelectedKeyChanged = { selectedKey = it },
 							options = remember { listOf("Option 1", "Option 2", "Option 3").options() },
-							sizeType = FlexSizeType$sizeType,
-							brushType = $brushType,
-							cornerType = $cornerType
+							sizeType = FlexSizeType.$sizeType,
+							brushType = FlexBrushType.$brushType,
+							cornerType = FlexCornerType.$cornerType,
+							selectType = FlexSelectType.$selectType,
+							enabled = $enabled
 						)
 					""".trimIndent()
 				}
@@ -63,7 +69,9 @@ fun ColumnScope.FlexSelectPage() {
 					modifier = Modifier.width(selectWidth),
 					sizeType = sizeType,
 					brushType = brushType,
-					cornerType = cornerType
+					cornerType = cornerType,
+					selectType = selectType,
+					enabled = enabled
 				)
 			} else {
 				var selectedKeys by remember { mutableStateOf(listOf<Int>()) }
@@ -76,7 +84,9 @@ fun ColumnScope.FlexSelectPage() {
 					modifier = Modifier.width(selectWidth),
 					sizeType = sizeType,
 					brushType = brushType,
-					cornerType = cornerType
+					cornerType = cornerType,
+					selectType = selectType,
+					enabled = enabled
 				)
 			}
 		},
@@ -112,6 +122,16 @@ fun ColumnScope.FlexSelectPage() {
 					switchType = FlexRadioSwitchType.Swipe
 				)
 			}
+			item("Select Type") {
+				FlexRadio(
+					selectedKey = selectType,
+					onSelectedKeyChange = { selectType = it },
+					options = remember { FlexSelectType.entries.options() },
+					sizeType = FlexSizeType.Small,
+					radioType = FlexRadioType.Button,
+					switchType = FlexRadioSwitchType.Swipe
+				)
+			}
 			item("Single Or Multiple") {
 				FlexRadio(
 					selectedKey = quantityType,
@@ -133,6 +153,13 @@ fun ColumnScope.FlexSelectPage() {
 						180f to "min",
 						400f to "max"
 					)
+				)
+			}
+			item("Enabled") {
+				FlexSwitch(
+					checked = enabled,
+					onCheckedChange = { enabled = it },
+					sizeType = FlexSizeType.Small
 				)
 			}
 		}

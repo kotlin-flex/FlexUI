@@ -82,6 +82,7 @@ kotlin {
 				implementation(compose.material3)
 				implementation(compose.ui)
 				implementation(compose.components.resources)
+				implementation(compose.materialIconsExtended)
 			}
 			kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
 		}

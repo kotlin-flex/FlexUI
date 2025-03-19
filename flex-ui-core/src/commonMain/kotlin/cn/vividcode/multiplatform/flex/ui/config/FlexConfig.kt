@@ -2,6 +2,7 @@ package cn.vividcode.multiplatform.flex.ui.config
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexButtonConfig
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexButtonSizeDefaults
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexInputConfig
@@ -24,7 +25,6 @@ fun flexConfig(config: (FlexConfig.() -> Unit)? = null): FlexConfig =
 @Composable
 fun rememberFlexConfig(config: (FlexConfig.() -> Unit)? = null): FlexConfig =
 	remember(config) { flexConfig(config) }
-
 
 class FlexConfig internal constructor() {
 	
@@ -91,3 +91,5 @@ class FlexConfig internal constructor() {
 		this.select.apply(config)
 	}
 }
+
+internal val LocalFlexConfig = staticCompositionLocalOf { flexConfig() }

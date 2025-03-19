@@ -113,7 +113,7 @@ object FlexAnimatedPopupDefaults {
 	
 	internal val DefaultShape = RectangleShape
 	
-	private val DefaultShadowColor = Color.Gray
+	private val DefaultShadowColor = Color.Gray.copy(alpha = 0.8f)
 	
 	fun shadow(
 		elevation: Dp = DefaultShadowElevation,

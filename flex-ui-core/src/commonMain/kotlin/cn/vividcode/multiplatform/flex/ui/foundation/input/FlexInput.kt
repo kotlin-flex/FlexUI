@@ -334,9 +334,10 @@ private fun FlexInputDecorationBox(
 				derivedStateOf { value.isEmpty() }
 			}
 			if (placeholder != null && isEmpty) {
+				val placeholderBrush by animateFlexBrushAsState(brushType.brush.copy(alpha = 0.7f))
 				CompositionLocalProvider(
 					LocalTextStyle provides textStyle.copy(
-						brush = brushType.brush.copy(alpha = 0.7f).original
+						brush = placeholderBrush.original
 					)
 				) {
 					placeholder()

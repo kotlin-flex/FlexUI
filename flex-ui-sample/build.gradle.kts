@@ -79,6 +79,7 @@ kotlin {
 				implementation(compose.material3)
 				implementation(compose.ui)
 				implementation(compose.components.resources)
+				implementation(compose.components.uiToolingPreview)
 				implementation(compose.materialIconsExtended)
 			}
 			kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
@@ -144,4 +145,8 @@ compose.desktop {
 compose.resources {
 	packageOfResClass = "cn.vividcode.multiplatform.flex.ui.sample.generated.resources"
 	publicResClass = true
+}
+
+dependencies {
+	implementation(compose.uiTooling)
 }

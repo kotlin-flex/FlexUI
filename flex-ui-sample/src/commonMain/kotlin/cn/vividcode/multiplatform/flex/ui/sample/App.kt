@@ -129,21 +129,29 @@ fun App() {
 				Column(
 					modifier = Modifier
 						.fillMaxWidth()
-						.height(110.dp)
+						.height(120.dp)
 						.padding(top = 20.dp),
 					horizontalAlignment = Alignment.CenterHorizontally,
 					verticalArrangement = Arrangement.Center
 				) {
 					Text(
 						text = "Flex UI",
-						fontSize = 18.sp,
+						fontSize = 30.sp,
 						color = MaterialTheme.colorScheme.onSurface,
 						fontWeight = FontWeight.Medium
 					)
 					Text(
 						text = VERSION_NAME,
+						modifier = Modifier
+							.height(22.dp)
+							.background(
+								color = MaterialTheme.colorScheme.onSurface,
+								shape = RoundedCornerShape(4.dp)
+							)
+							.padding(horizontal = 4.dp),
 						fontSize = 13.sp,
-						color = MaterialTheme.colorScheme.onSurface
+						color = MaterialTheme.colorScheme.surface,
+						lineHeight = 22.sp
 					)
 				}
 				Spacer(modifier = Modifier.height(8.dp))

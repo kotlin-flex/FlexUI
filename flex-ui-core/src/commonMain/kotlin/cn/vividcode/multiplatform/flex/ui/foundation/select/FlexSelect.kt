@@ -1,5 +1,6 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.select
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -8,7 +9,9 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,12 +30,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -42,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -64,6 +71,7 @@ import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.animateTextUnitAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border
+import cn.vividcode.multiplatform.flex.ui.utils.lightenWithBrush
 import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
 
 /**
@@ -79,13 +87,13 @@ fun <Key : Any> FlexSelect(
 	brushType: FlexBrushType = FlexSelectDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexSelectDefaults.DefaultCornerType,
 	selectType: FlexSelectType = FlexSelectDefaults.DefaultSelectType,
-	placeholderText: String = FlexSelectDefaults.DEFAULT_SINGLE_PLACEHOLDER_TEXT,
+	placeholder: @Composable () -> Unit = { Text("Please select it.") },
 	enabled: Boolean = true
 ) {
 	FlexSelectImpl(
 		selectedKeys = listOfNotNull(selectedKey),
 		onSelectedKeysChanged = {
-			onSelectedKeyChanged(if (it.isEmpty()) null as Key else it.first())
+			onSelectedKeyChanged(it?.firstOrNull())
 		},
 		options = options,
 		multiple = false,
@@ -94,7 +102,7 @@ fun <Key : Any> FlexSelect(
 		brushType = brushType,
 		cornerType = cornerType,
 		selectType = selectType,
-		placeholderText = placeholderText,
+		placeholder = placeholder,
 		enabled = enabled
 	)
 }
@@ -109,12 +117,14 @@ fun <Key : Any> FlexSelect(
 	brushType: FlexBrushType = FlexSelectDefaults.DefaultBrushType,
 	cornerType: FlexCornerType = FlexSelectDefaults.DefaultCornerType,
 	selectType: FlexSelectType = FlexSelectDefaults.DefaultSelectType,
-	placeholderText: String = FlexSelectDefaults.DEFAULT_MULTIPLE_PLACEHOLDER_TEXT,
+	placeholder: @Composable () -> Unit = { Text("Please select them.") },
 	enabled: Boolean = true
 ) {
 	FlexSelectImpl(
 		selectedKeys = selectedKeys,
-		onSelectedKeysChanged = onSelectedKeysChanged,
+		onSelectedKeysChanged = {
+			onSelectedKeysChanged(it ?: emptyList())
+		},
 		options = options,
 		multiple = true,
 		modifier = modifier,
@@ -122,7 +132,7 @@ fun <Key : Any> FlexSelect(
 		brushType = brushType,
 		cornerType = cornerType,
 		selectType = selectType,
-		placeholderText = placeholderText,
+		placeholder = placeholder,
 		enabled = enabled
 	)
 }
@@ -130,7 +140,7 @@ fun <Key : Any> FlexSelect(
 @Composable
 private fun <Key : Any> FlexSelectImpl(
 	selectedKeys: List<Key>,
-	onSelectedKeysChanged: (List<Key>) -> Unit,
+	onSelectedKeysChanged: (List<Key>?) -> Unit,
 	options: List<FlexOption<Key>>,
 	multiple: Boolean,
 	modifier: Modifier,
@@ -138,8 +148,8 @@ private fun <Key : Any> FlexSelectImpl(
 	brushType: FlexBrushType,
 	cornerType: FlexCornerType,
 	selectType: FlexSelectType,
-	placeholderText: String,
-	enabled: Boolean = true,
+	placeholder: @Composable () -> Unit,
+	enabled: Boolean,
 ) {
 	val config = LocalFlexConfig.current.select.getConfig(sizeType)
 	val minWidth by animateDpAsState(config.minWidth)
@@ -158,6 +168,7 @@ private fun <Key : Any> FlexSelectImpl(
 	var size by remember { mutableStateOf(IntSize.Zero) }
 	val horizontalPadding by animateDpAsState(config.horizontalPadding)
 	val interactionSource = remember { MutableInteractionSource() }
+	val isHovered by interactionSource.collectIsHoveredAsState()
 	Row(
 		modifier = Modifier
 			.widthIn(min = minWidth)
@@ -173,43 +184,45 @@ private fun <Key : Any> FlexSelectImpl(
 				indication = null,
 				onClick = {}
 			)
+			.hoverable(interactionSource)
 			.border(
 				width = borderWidth,
 				brush = borderBrush,
 				shape = shape
-			),
+			)
+			.padding(horizontal = horizontalPadding),
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		val density = LocalDensity.current
+		val searchInteractionSource = remember { MutableInteractionSource() }
+		
 		if (multiple) {
 			FlexMultipleSelectedOptions(
 				selectedKeys = selectedKeys,
 				options = options,
 				config = config,
-				horizontalPadding = horizontalPadding,
 				brushType = brushType,
 				cornerType = cornerType
 			)
-		}
-		
-		val searchInteractionSource = remember { MutableInteractionSource() }
-		val showSearch by remember(selectType, selectedKeys, multiple) {
-			derivedStateOf {
-				!multiple || selectedKeys.isEmpty() || selectType == FlexSelectType.Search
-			}
-		}
-		if (showSearch) {
-			FlexSelectSearch(
-				selectedKeys = selectedKeys,
+		} else {
+			FlexSelectSingleSearch(
+				selectedKey = selectedKeys.firstOrNull(),
 				options = options,
-				multiple = multiple,
 				selectType = selectType,
 				brushType = brushType,
 				config = config,
-				placeholderText = placeholderText,
-				interactionSource = searchInteractionSource
+				placeholder = placeholder,
+				interactionSource = searchInteractionSource,
+				isPopupVisible = isPopupVisible
 			)
 		}
+		
+		FlexSelectIcon(
+			brushType = brushType,
+			config = config,
+			isSelectHovered = isHovered,
+			onClearListener = { onSelectedKeysChanged(null) }
+		)
 		
 		val isPressed by interactionSource.collectIsPressedAsState()
 		val isSearchPressed by searchInteractionSource.collectIsPressedAsState()
@@ -217,6 +230,17 @@ private fun <Key : Any> FlexSelectImpl(
 		LaunchedEffect(isPressed, isSearchPressed) {
 			if ((isPressed || isSearchPressed) && isIdle) {
 				isPopupVisible = true
+			}
+		}
+		val popupInterval by animateDpAsState(config.popupInterval)
+		val offset by remember(size, popupInterval) {
+			derivedStateOf {
+				with(density) {
+					IntOffset(
+						x = -horizontalPadding.roundToPx(),
+						y = size.height + popupInterval.roundToPx()
+					)
+				}
 			}
 		}
 		FlexSelectPopup(
@@ -227,13 +251,7 @@ private fun <Key : Any> FlexSelectImpl(
 				}
 			},
 			width = with(density) { size.width.toDp() },
-			offset = with(density) {
-				val popupInterval by animateDpAsState(config.popupInterval)
-				IntOffset(
-					x = 0,
-					y = size.height + popupInterval.roundToPx()
-				)
-			},
+			offset = offset,
 			onIdleChanged = { isIdle = it },
 			config = config,
 			selectedKeys = selectedKeys,
@@ -252,10 +270,6 @@ object FlexSelectDefaults : FlexDefaults() {
 		get() = this.select
 	
 	val DefaultSelectType = FlexSelectType.Default
-	
-	const val DEFAULT_SINGLE_PLACEHOLDER_TEXT = "Please select it."
-	
-	const val DEFAULT_MULTIPLE_PLACEHOLDER_TEXT = "Please select them."
 }
 
 enum class FlexSelectType {
@@ -318,19 +332,18 @@ private val DefaultExitTransition = shrinkVertically(animationSpec = spring())
  * 多选框的选项
  */
 @Composable
-private fun <Key : Any> FlexMultipleSelectedOptions(
+private fun <Key : Any> RowScope.FlexMultipleSelectedOptions(
 	selectedKeys: List<Key>,
 	options: List<FlexOption<Key>>,
 	config: FlexSelectConfig,
-	horizontalPadding: Dp,
 	brushType: FlexBrushType,
 	cornerType: FlexCornerType,
 ) {
 	val horizontalScrollState = rememberScrollState()
 	Row(
 		modifier = Modifier
-			.horizontalScroll(horizontalScrollState)
-			.padding(horizontal = horizontalPadding),
+			.weight(1f)
+			.horizontalScroll(horizontalScrollState),
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		val tagHeight by animateDpAsState(config.tagHeight)
@@ -429,7 +442,6 @@ private fun <Key> FlexSelectOptionList(
 		val popupItemHeight by animateDpAsState(config.popupItemHeight)
 		val popupItemHorizontalPadding by animateDpAsState(config.popupItemHorizontalPadding)
 		val brush by animateFlexBrushAsState(brushType.brush)
-		val brushContainer by animateFlexBrushAsState(brushType.brushContainer)
 		val onBrushContainer by animateFlexBrushAsState(brushType.onBrushContainer)
 		val iconSize by animateDpAsState(config.iconSize)
 		val selectedList by remember(options, selectedKeys) {
@@ -453,12 +465,15 @@ private fun <Key> FlexSelectOptionList(
 					)
 				}
 			}
+			val brushContainer by animateFlexBrushAsState(
+				targetValue = if (selected) brushType.brushContainer else FlexBrush.Transparent
+			)
 			Row(
 				modifier = Modifier
 					.fillMaxWidth()
 					.height(popupItemHeight)
 					.background(
-						brush = if (selected) brushContainer else FlexBrush.Transparent,
+						brush = brushContainer,
 						shape = shape
 					)
 					.clip(itemShape)
@@ -498,22 +513,22 @@ private fun <Key> FlexSelectOptionList(
 }
 
 @Composable
-private fun <Key : Any> RowScope.FlexSelectSearch(
-	selectedKeys: List<Key>,
+private fun <Key : Any> RowScope.FlexSelectSingleSearch(
+	selectedKey: Key?,
 	options: List<FlexOption<Key>>,
-	multiple: Boolean,
 	selectType: FlexSelectType,
 	brushType: FlexBrushType,
 	config: FlexSelectConfig,
-	placeholderText: String,
-	interactionSource: MutableInteractionSource
+	placeholder: @Composable () -> Unit,
+	interactionSource: MutableInteractionSource,
+	isPopupVisible: Boolean
 ) {
 	var value by remember { mutableStateOf("") }
-	val brush by animateFlexBrushAsState(brushType.brush)
-	LaunchedEffect(selectedKeys, multiple) {
-		if (!multiple) {
-			value = options.find { it.key == selectedKeys.firstOrNull() }?.value ?: placeholderText
-		}
+	val brush by animateFlexBrushAsState(
+		targetValue = if (isPopupVisible) FlexBrush.Gray else brushType.brush
+	)
+	LaunchedEffect(selectedKey) {
+		value = options.find { it.key == selectedKey }?.value ?: ""
 	}
 	val fontSize by animateTextUnitAsState(config.fontSize)
 	val letterSpacing by animateTextUnitAsState(config.letterSpacing)
@@ -529,9 +544,78 @@ private fun <Key : Any> RowScope.FlexSelectSearch(
 			brush = brush.original,
 			fontSize = fontSize,
 			fontWeight = config.fontWeight,
-			letterSpacing = letterSpacing
+			letterSpacing = letterSpacing,
+			lineHeight = fontSize
 		),
 		singleLine = true,
-		interactionSource = interactionSource
+		interactionSource = interactionSource,
+		decorationBox = @Composable { innerTextField ->
+			if (value.isEmpty()) {
+				val placeholderBrush by animateFlexBrushAsState(brushType.brush.copy(alpha = 0.7f))
+				CompositionLocalProvider(
+					LocalTextStyle provides LocalTextStyle.current.copy(
+						brush = placeholderBrush.original,
+						fontSize = fontSize,
+						fontWeight = config.fontWeight,
+						letterSpacing = letterSpacing,
+						lineHeight = fontSize
+					)
+				) {
+					placeholder()
+				}
+			} else {
+				innerTextField()
+			}
+		}
 	)
+}
+
+@Composable
+private fun FlexSelectIcon(
+	brushType: FlexBrushType,
+	config: FlexSelectConfig,
+	isSelectHovered: Boolean,
+	onClearListener: () -> Unit
+) {
+	val iconSize by animateDpAsState(config.iconSize)
+	Crossfade(
+		targetState = isSelectHovered,
+		modifier = Modifier.size(iconSize),
+		animationSpec = spring()
+	) {
+		if (it) {
+			val interactionSource = remember { MutableInteractionSource() }
+			val isHovered by interactionSource.collectIsHoveredAsState()
+			val isPressed by interactionSource.collectIsPressedAsState()
+			val brush by animateFlexBrushAsState(
+				targetValue = when {
+					isPressed -> brushType.brush.lightenWithBrush
+					isHovered -> brushType.brush
+					else -> FlexBrush.Gray
+				}
+			)
+			val scale by animateFloatAsState(
+				targetValue = if (isPressed) 0.9f else 1f
+			)
+			FlexIcon(
+				imageVector = Icons.Rounded.Cancel,
+				modifier = Modifier
+					.scale(scale)
+					.size(iconSize)
+					.hoverable(interactionSource)
+					.clickable(
+						interactionSource = interactionSource,
+						indication = null,
+						onClick = onClearListener
+					),
+				tint = brush
+			)
+		} else {
+			FlexIcon(
+				imageVector = Icons.Rounded.KeyboardArrowDown,
+				modifier = Modifier.size(iconSize),
+				tint = FlexBrush.Gray
+			)
+		}
+	}
 }
