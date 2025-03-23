@@ -2,10 +2,10 @@
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "35"
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 agp = "8.9.0"
 maven-publish = "0.31.0"
-compose-plugin = "1.8.0-alpha04"
+compose-plugin = "1.8.0-beta01"
 androidx-activity-compose = "1.10.1"
 
 [libraries]
