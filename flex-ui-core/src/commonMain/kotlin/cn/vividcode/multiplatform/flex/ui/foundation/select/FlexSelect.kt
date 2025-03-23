@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Cancel
@@ -195,7 +197,16 @@ private fun <Key : Any> FlexSelectImpl(
 	) {
 		val density = LocalDensity.current
 		val searchInteractionSource = remember { MutableInteractionSource() }
-		
+		var searchText by remember { mutableStateOf<String?>(null) }
+		val filterOptions by remember(options, searchText) {
+			derivedStateOf {
+				searchText?.isNotBlank()?.let {
+					options.filter {
+						it.value.trim().contains(searchText!!.trim(), ignoreCase = true)
+					}
+				} ?: options
+			}
+		}
 		if (multiple) {
 			FlexMultipleSelectedOptions(
 				selectedKeys = selectedKeys,
@@ -213,7 +224,8 @@ private fun <Key : Any> FlexSelectImpl(
 				config = config,
 				placeholder = placeholder,
 				interactionSource = searchInteractionSource,
-				isPopupVisible = isPopupVisible
+				isPopupVisible = isPopupVisible,
+				onSearchChanged = { searchText = it }
 			)
 		}
 		
@@ -248,6 +260,7 @@ private fun <Key : Any> FlexSelectImpl(
 			onDismissRequest = {
 				if (isIdle) {
 					isPopupVisible = false
+					searchText = null
 				}
 			},
 			width = with(density) { size.width.toDp() },
@@ -256,10 +269,10 @@ private fun <Key : Any> FlexSelectImpl(
 			config = config,
 			selectedKeys = selectedKeys,
 			onSelectedKeysChanged = onSelectedKeysChanged,
-			options = options,
+			options = filterOptions,
 			brushType = brushType,
 			cornerType = cornerType,
-			multiple = multiple
+			multiple = multiple,
 		)
 	}
 }
@@ -521,11 +534,15 @@ private fun <Key : Any> RowScope.FlexSelectSingleSearch(
 	config: FlexSelectConfig,
 	placeholder: @Composable () -> Unit,
 	interactionSource: MutableInteractionSource,
-	isPopupVisible: Boolean
+	isPopupVisible: Boolean,
+	onSearchChanged: (String) -> Unit
 ) {
 	var value by remember { mutableStateOf("") }
 	val brush by animateFlexBrushAsState(
-		targetValue = if (isPopupVisible) FlexBrush.Gray else brushType.brush
+		targetValue = when {
+			isPopupVisible && selectType == FlexSelectType.Default -> brushType.brush.copy(alpha = 0.7f)
+			else -> brushType.brush
+		}
 	)
 	LaunchedEffect(selectedKey) {
 		value = options.find { it.key == selectedKey }?.value ?: ""
@@ -533,41 +550,51 @@ private fun <Key : Any> RowScope.FlexSelectSingleSearch(
 	val fontSize by animateTextUnitAsState(config.fontSize)
 	val letterSpacing by animateTextUnitAsState(config.letterSpacing)
 	val horizontalPadding by animateDpAsState(config.horizontalPadding)
-	BasicTextField(
-		value = value,
-		onValueChange = { value = it },
-		modifier = Modifier
-			.weight(1f)
-			.padding(horizontal = horizontalPadding),
-		readOnly = selectType == FlexSelectType.Default,
-		textStyle = LocalTextStyle.current.copy(
-			brush = brush.original,
-			fontSize = fontSize,
-			fontWeight = config.fontWeight,
-			letterSpacing = letterSpacing,
-			lineHeight = fontSize
-		),
-		singleLine = true,
-		interactionSource = interactionSource,
-		decorationBox = @Composable { innerTextField ->
-			if (value.isEmpty()) {
-				val placeholderBrush by animateFlexBrushAsState(brushType.brush.copy(alpha = 0.7f))
-				CompositionLocalProvider(
-					LocalTextStyle provides LocalTextStyle.current.copy(
-						brush = placeholderBrush.original,
-						fontSize = fontSize,
-						fontWeight = config.fontWeight,
-						letterSpacing = letterSpacing,
-						lineHeight = fontSize
-					)
-				) {
-					placeholder()
+	CompositionLocalProvider(
+		LocalTextSelectionColors provides TextSelectionColors(
+			handleColor = brushType.brush.colors.first(),
+			backgroundColor = brushType.brush.colors.first().copy(alpha = 0.15f),
+		)
+	) {
+		BasicTextField(
+			value = value,
+			onValueChange = {
+				value = it
+				onSearchChanged(it)
+			},
+			modifier = Modifier
+				.weight(1f)
+				.padding(horizontal = horizontalPadding),
+			readOnly = selectType == FlexSelectType.Default,
+			textStyle = LocalTextStyle.current.copy(
+				brush = brush.original,
+				fontSize = fontSize,
+				fontWeight = config.fontWeight,
+				letterSpacing = letterSpacing,
+				lineHeight = fontSize
+			),
+			singleLine = true,
+			interactionSource = interactionSource,
+			decorationBox = @Composable { innerTextField ->
+				if (value.isEmpty()) {
+					val placeholderBrush by animateFlexBrushAsState(brushType.brush.copy(alpha = 0.7f))
+					CompositionLocalProvider(
+						LocalTextStyle provides LocalTextStyle.current.copy(
+							brush = placeholderBrush.original,
+							fontSize = fontSize,
+							fontWeight = config.fontWeight,
+							letterSpacing = letterSpacing,
+							lineHeight = fontSize
+						)
+					) {
+						placeholder()
+					}
+				} else {
+					innerTextField()
 				}
-			} else {
-				innerTextField()
 			}
-		}
-	)
+		)
+	}
 }
 
 @Composable
