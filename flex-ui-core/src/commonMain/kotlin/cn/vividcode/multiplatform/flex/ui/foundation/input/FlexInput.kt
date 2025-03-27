@@ -41,8 +41,6 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
@@ -53,14 +51,14 @@ import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.type.disabledBrush
-import cn.vividcode.multiplatform.flex.ui.type.transparentBrush
+import cn.vividcode.multiplatform.flex.ui.type.disabled
+import cn.vividcode.multiplatform.flex.ui.type.transparent
+import cn.vividcode.multiplatform.flex.ui.utils.BrushType
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.animateTextUnitAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border
 import cn.vividcode.multiplatform.flex.ui.utils.darken
-import cn.vividcode.multiplatform.flex.ui.utils.darkenWithBrush
-import cn.vividcode.multiplatform.flex.ui.utils.disabledWithBrush
 import cn.vividcode.multiplatform.flex.ui.utils.lighten
 
 /**
@@ -133,17 +131,17 @@ fun FlexInput(
 			derivedStateOf { textFieldIsHovered || leadingIconIsHovered || trailingIconIsHovered }
 		}
 		
-		val fontSize by animateFloatAsState(config.fontSize.value)
-		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
+		val fontSize by animateTextUnitAsState(config.fontSize)
+		val letterSpacing by animateTextUnitAsState(config.letterSpacing)
 		val contentBrush by animateFlexBrushAsState(
-			targetValue = if (enabled) brushType.brush else brushType.disabledBrush
+			targetValue = if (enabled) brushType.brush else brushType.disabled(BrushType.Brush)
 		)
 		val textStyle by remember(fontSize, config.fontWeight, letterSpacing, contentBrush) {
 			derivedStateOf {
 				TextStyle(
-					fontSize = fontSize.sp,
+					fontSize = fontSize,
 					fontWeight = config.fontWeight,
-					letterSpacing = if (letterSpacing >= 0f) letterSpacing.sp else TextUnit.Unspecified,
+					letterSpacing = letterSpacing,
 					brush = contentBrush.original
 				)
 			}
@@ -255,16 +253,16 @@ private fun FlexInputDecorationBox(
 		targetValue = when (inputType) {
 			FlexInputType.Default -> {
 				when {
-					!enabled -> brushType.transparentBrush
+					!enabled -> brushType.transparent(BrushType.Brush)
 					isFocused -> brushType.brush
 					isHovered -> brushType.brush.copy(alpha = 0.8f)
-					else -> brushType.transparentBrush
+					else -> brushType.transparent(BrushType.Brush)
 				}
 			}
 			
 			FlexInputType.Outlined -> {
 				when {
-					!enabled -> brushType.disabledBrush
+					!enabled -> brushType.disabled(BrushType.Brush)
 					isFocused -> brushType.brush
 					isHovered -> brushType.brush.copy(alpha = 0.8f)
 					else -> brushType.brush.copy(alpha = 0.6f)
@@ -385,8 +383,8 @@ private fun FlexInputIcon(
 	val brush = icon.tint ?: iconBrush
 	val iconTint by animateFlexBrushAsState(
 		targetValue = when {
-			!enabled -> brush.disabledWithBrush
-			isPressed -> brush.darkenWithBrush
+			!enabled -> brush.darken(BrushType.Brush)
+			isPressed -> brush.darken(BrushType.Brush)
 			isFocused || isHovered -> brush
 			else -> brush.copy(alpha = 0.7f)
 		}

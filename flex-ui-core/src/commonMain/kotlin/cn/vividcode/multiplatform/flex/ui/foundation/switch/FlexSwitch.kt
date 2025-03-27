@@ -1,12 +1,16 @@
 package cn.vividcode.multiplatform.flex.ui.foundation.switch
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
@@ -21,14 +25,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.icon.FlexIcon
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
-import cn.vividcode.multiplatform.flex.ui.type.*
-import cn.vividcode.multiplatform.flex.ui.utils.*
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
+import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
+import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.type.darken
+import cn.vividcode.multiplatform.flex.ui.type.disabled
+import cn.vividcode.multiplatform.flex.ui.type.lighten
+import cn.vividcode.multiplatform.flex.ui.utils.BrushType
+import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.animateTextUnitAsState
+import cn.vividcode.multiplatform.flex.ui.utils.background
+import cn.vividcode.multiplatform.flex.ui.utils.darken
+import cn.vividcode.multiplatform.flex.ui.utils.disabled
+import cn.vividcode.multiplatform.flex.ui.utils.lighten
 
 @Composable
 fun FlexSwitch(
@@ -55,21 +69,20 @@ fun FlexSwitch(
 	val backgroundBrush by animateFlexBrushAsState(
 		targetValue = if (checked) {
 			when {
-				!enabled -> brushType.disabledBrush
-				isPressed -> brushType.darkenBrush
-				isHovered -> brushType.lightenBrush
+				!enabled -> brushType.disabled(BrushType.Brush)
+				isPressed -> brushType.darken(BrushType.Brush)
+				isHovered -> brushType.lighten(BrushType.Brush)
 				else -> brushType.brush
 			}
 		} else {
 			when {
-				!enabled -> FlexBrush.Gray.disabledWithBrush
-				isPressed -> FlexBrush.Gray.darkenWithBrush
-				isHovered -> FlexBrush.Gray.lightenWithBrush
+				!enabled -> FlexBrush.Gray.disabled(BrushType.Brush)
+				isPressed -> FlexBrush.Gray.darken(BrushType.Brush)
+				isHovered -> FlexBrush.Gray.lighten(BrushType.Brush)
 				else -> FlexBrush.Gray
 			}
 		}
 	)
-	
 	Box(
 		modifier = modifier
 			.width(height * 2)
@@ -143,11 +156,11 @@ fun FlexSwitch(
 			) {
 				when (label) {
 					is FlexSwitchTextLabel -> {
-						val textSize by animateFloatAsState(config.textLabelSize.value)
+						val textSize by animateTextUnitAsState(config.textLabelSize)
 						Text(
 							text = label.checked,
-							fontSize = textSize.sp,
-							lineHeight = textSize.sp,
+							fontSize = textSize,
+							lineHeight = textSize,
 							maxLines = 1,
 							style = LocalTextStyle.current.copy(
 								brush = onBrush.original
@@ -185,11 +198,11 @@ fun FlexSwitch(
 			) {
 				when (label) {
 					is FlexSwitchTextLabel -> {
-						val textSize by animateFloatAsState(config.textLabelSize.value)
+						val textSize by animateTextUnitAsState(config.textLabelSize)
 						Text(
 							text = label.unchecked,
-							fontSize = textSize.sp,
-							lineHeight = textSize.sp,
+							fontSize = textSize,
+							lineHeight = textSize,
 							maxLines = 1,
 							style = LocalTextStyle.current.copy(
 								brush = onBrush.original

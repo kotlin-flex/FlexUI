@@ -33,7 +33,7 @@ internal object FlexInputSizeDefaults : FlexSizeDefaults<FlexInputConfig>() {
 			fontSize = 14.sp,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 24.dp
+			iconSize = 20.dp
 		)
 	
 	override fun FlexInputConfig.scale(scale: Float) = this.copy(

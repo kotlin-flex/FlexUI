@@ -8,14 +8,11 @@ import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import cn.vividcode.multiplatform.flex.ui.utils.BrushType
+import cn.vividcode.multiplatform.flex.ui.utils.FractionWeight
 import cn.vividcode.multiplatform.flex.ui.utils.darken
-import cn.vividcode.multiplatform.flex.ui.utils.darkenWithBrush
-import cn.vividcode.multiplatform.flex.ui.utils.darkenWithOnBrush
-import cn.vividcode.multiplatform.flex.ui.utils.disabledWithBrush
-import cn.vividcode.multiplatform.flex.ui.utils.disabledWithOnBrush
+import cn.vividcode.multiplatform.flex.ui.utils.disabled
 import cn.vividcode.multiplatform.flex.ui.utils.lighten
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithBrush
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithOnBrush
 import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
 
 /**
@@ -172,50 +169,37 @@ internal fun getDefaultBrushType(
 			?: defaultBrushType
 	}
 
-internal val FlexBrushType.darkenBrush: FlexBrush
-	@Composable
-	get() = this.brush.darkenWithBrush
-
-internal val FlexBrushType.lightenBrush: FlexBrush
-	@Composable
-	get() = this.brush.lightenWithBrush
-
-internal val FlexBrushType.disabledBrush: FlexBrush
-	@Composable
-	get() = this.brush.disabledWithBrush
+@Composable
+internal fun FlexBrushType.darken(
+	brushType: BrushType,
+	fractionWeight: FractionWeight = FractionWeight.Medium
+): FlexBrush {
+	val flexBrush = brushType.getFlexBrush(this)
+	return flexBrush.darken(brushType, fractionWeight)
+}
 
 @Composable
-internal fun FlexBrushType.darkenBrush(fraction: Float): FlexBrush =
-	this.brush.darken(fraction)
+internal fun FlexBrushType.lighten(
+	brushType: BrushType,
+	fractionWeight: FractionWeight = FractionWeight.Medium
+): FlexBrush {
+	val flexBrush = brushType.getFlexBrush(this)
+	return flexBrush.lighten(brushType, fractionWeight)
+}
 
 @Composable
-internal fun FlexBrushType.lightenBrush(fraction: Float): FlexBrush =
-	this.brush.lighten(fraction)
-
-internal val FlexBrushType.transparentBrush: FlexBrush
-	@Composable
-	get() = this.brush.copy(alpha = 0f)
-
-internal val FlexBrushType.darkenOnBrush: FlexBrush
-	@Composable
-	get() = this.onBrush.darkenWithOnBrush
-
-internal val FlexBrushType.lightenOnBrush: FlexBrush
-	@Composable
-	get() = this.onBrush.lightenWithOnBrush
-
-internal val FlexBrushType.disabledOnBrush: FlexBrush
-	@Composable
-	get() = this.onBrush.disabledWithOnBrush
+internal fun FlexBrushType.disabled(
+	brushType: BrushType,
+	fractionWeight: FractionWeight = FractionWeight.Medium
+): FlexBrush {
+	val flexBrush = brushType.getFlexBrush(this)
+	return flexBrush.disabled(brushType, fractionWeight)
+}
 
 @Composable
-internal fun FlexBrushType.darkenOnBrush(fraction: Float): FlexBrush =
-	this.onBrush.darken(fraction)
-
-@Composable
-internal fun FlexBrushType.lightenOnBrush(fraction: Float): FlexBrush =
-	this.onBrush.lighten(fraction)
-
-internal val FlexBrushType.transparentOnBrush: FlexBrush
-	@Composable
-	get() = this.onBrush.copy(alpha = 0f)
+internal fun FlexBrushType.transparent(
+	brushType: BrushType
+): FlexBrush {
+	val flexBrush = brushType.getFlexBrush(this)
+	return flexBrush.copy(alpha = 0f)
+}

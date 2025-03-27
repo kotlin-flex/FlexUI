@@ -46,7 +46,7 @@ internal object FlexSelectSizeDefaults : FlexSizeDefaults<FlexSelectConfig>() {
 			fontSize = 14.sp,
 			fontWeight = FontWeight.Normal,
 			letterSpacing = TextUnit.Unspecified,
-			iconSize = 24.dp,
+			iconSize = 20.dp,
 			tagHeight = 24.dp,
 			tagInterval = 4.5.dp,
 			tagFontSize = 12.sp,

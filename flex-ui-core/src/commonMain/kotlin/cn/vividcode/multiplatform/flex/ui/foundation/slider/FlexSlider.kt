@@ -178,7 +178,7 @@ fun FlexSlider(
 			}
 			val sliderBrush by animateFlexBrushAsState(
 				targetValue = MaterialTheme.colorScheme.surfaceVariant.toSolidColor().let {
-					if (enabled) it else it.disabledWithBrush
+					if (enabled) it else it.disabled(BrushType.Brush)
 				}
 			)
 			Box(
@@ -215,13 +215,13 @@ fun FlexSlider(
 			}
 			val thumbBrush by animateFlexBrushAsState(
 				targetValue = when {
-					!enabled -> brushType.disabledBrush
+					!enabled -> brushType.disabled(BrushType.Brush)
 					isFocused -> brushType.brush
 					else -> brushType.brush.copy(alpha = 0.75f)
 				}
 			)
 			val contentBrush by animateFlexBrushAsState(
-				targetValue = if (enabled) brushType.onBrush else brushType.lightenOnBrush
+				targetValue = if (enabled) brushType.onBrush else brushType.lighten(BrushType.OnBrush)
 			)
 			Box(
 				modifier = Modifier
@@ -275,8 +275,8 @@ fun FlexSlider(
 			)
 			val borderBrush by animateFlexBrushAsState(
 				targetValue = when {
-					!enabled -> brushType.disabledBrush
-					isThumbFocused -> brushType.lightenBrush
+					!enabled -> brushType.disabled(BrushType.Brush)
+					isThumbFocused -> brushType.lighten(BrushType.Brush)
 					isFocused -> brushType.brush
 					else -> brushType.brush.copy(alpha = 0.8f)
 				}

@@ -25,6 +25,7 @@ import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.config.LocalFlexConfig
 import cn.vividcode.multiplatform.flex.ui.foundation.radio.FlexRadioType.Button
 import cn.vividcode.multiplatform.flex.ui.type.*
+import cn.vividcode.multiplatform.flex.ui.utils.BrushType
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border
@@ -103,11 +104,11 @@ internal fun <Key : Any> FlexSwipeRadio(
 			val option = options[currentIndex]
 			val borderBrush by animateFlexBrushAsState(
 				targetValue = when {
-					!option.enabled || selectedKey != option.key || radioType == Button -> brushType.transparentBrush
+					!option.enabled || selectedKey != option.key || radioType == Button -> brushType.transparent(BrushType.Brush)
 					else -> {
 						when {
-							isButtonPressed -> brushType.darkenBrush
-							isButtonHovered -> brushType.lightenBrush
+							isButtonPressed -> brushType.darken(BrushType.Brush)
+							isButtonHovered -> brushType.lighten(BrushType.Brush)
 							else -> brushType.brush
 						}
 					}
@@ -116,11 +117,11 @@ internal fun <Key : Any> FlexSwipeRadio(
 			val backgroundBrush by animateFlexBrushAsState(
 				targetValue = when {
 					!option.enabled -> DisabledBackgroundBrush
-					selectedKey != option.key || radioType == FlexRadioType.Default -> brushType.transparentBrush
+					selectedKey != option.key || radioType == FlexRadioType.Default -> brushType.transparent(BrushType.Brush)
 					else -> {
 						when {
-							isButtonPressed -> brushType.darkenBrush
-							isButtonHovered -> brushType.lightenBrush
+							isButtonPressed -> brushType.darken(BrushType.Brush)
+							isButtonHovered -> brushType.lighten(BrushType.Brush)
 							else -> brushType.brush
 						}
 					}

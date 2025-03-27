@@ -16,6 +16,7 @@ import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMapIndexed
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
+import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import kotlin.math.min
 
 /**
@@ -49,9 +50,7 @@ internal fun animateFlexBrushAsState(
 			}
 		}
 	}
-	return derivedStateOf {
-		flexBrush
-	}
+	return derivedStateOf { flexBrush }
 }
 
 private val flexBrushDefaultSpring = spring<Color>()
@@ -88,32 +87,83 @@ internal fun FlexBrush.lighten(fraction: Float): FlexBrush {
 	return this.replace(colors)
 }
 
-internal val FlexBrush.darkenWithBrush: FlexBrush
-	@Composable
-	get() = this.darken(
-		fraction = if (LocalDarkTheme.current) 0.06f else 0.1f
-	)
+internal enum class FractionWeight(
+	val weight: Float
+) {
+	
+	Lowest(0.5f),
+	
+	Low(0.75f),
+	
+	Medium(1f),
+	
+	High(1.5f),
+	
+	Highest(2f)
+}
 
-internal val FlexBrush.lightenWithBrush: FlexBrush
-	@Composable
-	get() = this.lighten(
-		fraction = if (LocalDarkTheme.current) 0.06f else 0.1f
-	)
+internal enum class BrushType(
+	val lightFraction: Float,
+	val darkFraction: Float,
+	val disabledAlpha: Float,
+	val getFlexBrush: @Composable (flexBrushType: FlexBrushType) -> FlexBrush
+) {
+	
+	OnBrush(
+		lightFraction = 0.05f,
+		darkFraction = 0.15f,
+		disabledAlpha = 0.8f,
+		getFlexBrush = { it.onBrush }
+	),
+	
+	Brush(
+		lightFraction = 0.06f,
+		darkFraction = 0.1f,
+		disabledAlpha = 0.6f,
+		getFlexBrush = { it.brush }
+	),
+	
+	OnBrushContainer(
+		lightFraction = 0.05f,
+		darkFraction = 0.15f,
+		disabledAlpha = 0.8f,
+		getFlexBrush = { it.onBrushContainer }
+	),
+	
+	BrushContainer(
+		lightFraction = 0.06f,
+		darkFraction = 0.1f,
+		disabledAlpha = 0.6f,
+		getFlexBrush = { it.brushContainer }
+	);
+}
 
-internal val FlexBrush.disabledWithBrush: FlexBrush
-	get() = this.copy(alpha = 0.6f)
+@Composable
+internal fun FlexBrush.darken(
+	brushType: BrushType,
+	fractionWeight: FractionWeight = FractionWeight.Medium
+): FlexBrush {
+	var fraction = if (LocalDarkTheme.current) brushType.darkFraction else brushType.lightFraction
+	fraction *= fractionWeight.weight
+	val colors = this.colors.fastMap { it.darken(fraction) }
+	return this.replace(colors)
+}
 
-internal val FlexBrush.darkenWithOnBrush: FlexBrush
-	@Composable
-	get() = this.darken(
-		fraction = if (LocalDarkTheme.current) 0.05f else 0.15f
-	)
+@Composable
+internal fun FlexBrush.lighten(
+	brushType: BrushType,
+	fractionWeight: FractionWeight = FractionWeight.Medium
+): FlexBrush {
+	var fraction = if (LocalDarkTheme.current) brushType.darkFraction else brushType.lightFraction
+	fraction *= fractionWeight.weight
+	val colors = this.colors.fastMap { it.lighten(fraction) }
+	return this.replace(colors)
+}
 
-internal val FlexBrush.lightenWithOnBrush: FlexBrush
-	@Composable
-	get() = this.lighten(
-		fraction = if (LocalDarkTheme.current) 0.05f else 0.15f
-	)
-
-internal val FlexBrush.disabledWithOnBrush: FlexBrush
-	get() = this.copy(alpha = 0.8f)
+internal fun FlexBrush.disabled(
+	brushType: BrushType,
+	fractionWeight: FractionWeight = FractionWeight.Medium
+): FlexBrush {
+	val alpha = brushType.disabledAlpha * fractionWeight.weight
+	return this.copy(alpha)
+}

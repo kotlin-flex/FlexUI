@@ -23,7 +23,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.sp
 import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
@@ -34,10 +33,12 @@ import cn.vividcode.multiplatform.flex.ui.theme.LocalDarkTheme
 import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
-import cn.vividcode.multiplatform.flex.ui.type.darkenBrush
-import cn.vividcode.multiplatform.flex.ui.type.lightenBrush
+import cn.vividcode.multiplatform.flex.ui.type.darken
+import cn.vividcode.multiplatform.flex.ui.type.lighten
+import cn.vividcode.multiplatform.flex.ui.utils.BrushType
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
-import cn.vividcode.multiplatform.flex.ui.utils.disabledWithBrush
+import cn.vividcode.multiplatform.flex.ui.utils.animateTextUnitAsState
+import cn.vividcode.multiplatform.flex.ui.utils.disabled
 import cn.vividcode.multiplatform.flex.ui.utils.disabledWithColor
 import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
 import kotlin.jvm.JvmName
@@ -145,9 +146,9 @@ enum class FlexRadioSwitchType {
 internal val DisabledBackgroundBrush: FlexBrush
 	@Composable
 	get() = if (LocalDarkTheme.current) {
-		FlexBrush.DarkGray.disabledWithBrush
+		FlexBrush.DarkGray.disabled(BrushType.Brush)
 	} else {
-		FlexBrush.LightGray.disabledWithBrush
+		FlexBrush.LightGray.disabled(BrushType.Brush)
 	}
 
 internal val DisabledColor: Color
@@ -177,7 +178,7 @@ internal fun FlexRadioText(
 			else -> 1f
 		}
 	)
-	val fontSize by animateFloatAsState(config.fontSize.value)
+	val fontSize by animateTextUnitAsState(config.fontSize)
 	val onBrush by animateFlexBrushAsState(
 		targetValue = when {
 			!enabled -> MaterialTheme.colorScheme.outline.toSolidColor()
@@ -190,8 +191,8 @@ internal fun FlexRadioText(
 			
 			else -> {
 				when {
-					isPressed -> brushType.darkenBrush
-					isHovered -> brushType.lightenBrush
+					isPressed -> brushType.darken(BrushType.Brush)
+					isHovered -> brushType.lighten(BrushType.Brush)
 					else -> brushType.brush
 				}
 			}
@@ -200,9 +201,9 @@ internal fun FlexRadioText(
 	Text(
 		text = value,
 		modifier = Modifier.scale(scale),
-		fontSize = fontSize.sp,
+		fontSize = fontSize,
 		fontWeight = config.fontWeight,
-		lineHeight = fontSize.sp,
+		lineHeight = fontSize,
 		letterSpacing = config.letterSpacing,
 		style = LocalTextStyle.current.copy(
 			brush = onBrush.original

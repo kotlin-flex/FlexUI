@@ -2,7 +2,6 @@ package cn.vividcode.multiplatform.flex.ui.foundation.select
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -50,14 +49,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastMap
 import cn.vividcode.multiplatform.flex.ui.common.FlexOption
 import cn.vividcode.multiplatform.flex.ui.config.FlexComposeDefaultConfig
 import cn.vividcode.multiplatform.flex.ui.config.FlexDefaults
@@ -69,11 +66,12 @@ import cn.vividcode.multiplatform.flex.ui.layout.popup.FlexAnimatedPopup
 import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.type.FlexSizeType
+import cn.vividcode.multiplatform.flex.ui.utils.BrushType
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
 import cn.vividcode.multiplatform.flex.ui.utils.animateTextUnitAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import cn.vividcode.multiplatform.flex.ui.utils.border
-import cn.vividcode.multiplatform.flex.ui.utils.lightenWithBrush
+import cn.vividcode.multiplatform.flex.ui.utils.lighten
 import cn.vividcode.multiplatform.flex.ui.utils.toSolidColor
 
 /**
@@ -373,7 +371,7 @@ private fun <Key : Any> RowScope.FlexMultipleSelectedOptions(
 		val onBrushContainer by animateFlexBrushAsState(brushType.onBrushContainer)
 		val selectedOptions by remember(selectedKeys, options) {
 			derivedStateOf {
-				selectedKeys.map { key ->
+				selectedKeys.fastMap { key ->
 					options.first { it.key == key }
 				}
 			}
@@ -450,8 +448,8 @@ private fun <Key> FlexSelectOptionList(
 			.clip(itemShape)
 			.verticalScroll(verticalScrollState)
 	) {
-		val fontSize by animateFloatAsState(config.fontSize.value)
-		val letterSpacing by animateFloatAsState(config.letterSpacing.value)
+		val fontSize by animateTextUnitAsState(config.fontSize)
+		val letterSpacing by animateTextUnitAsState(config.letterSpacing)
 		val popupItemHeight by animateDpAsState(config.popupItemHeight)
 		val popupItemHorizontalPadding by animateDpAsState(config.popupItemHorizontalPadding)
 		val brush by animateFlexBrushAsState(brushType.brush)
@@ -459,7 +457,7 @@ private fun <Key> FlexSelectOptionList(
 		val iconSize by animateDpAsState(config.iconSize)
 		val selectedList by remember(options, selectedKeys) {
 			derivedStateOf {
-				options.map { it.key in selectedKeys }
+				options.fastMap { it.key in selectedKeys }
 			}
 		}
 		options.forEachIndexed { index, option ->
@@ -478,9 +476,7 @@ private fun <Key> FlexSelectOptionList(
 					)
 				}
 			}
-			val brushContainer by animateFlexBrushAsState(
-				targetValue = if (selected) brushType.brushContainer else FlexBrush.Transparent
-			)
+			val brushContainer = if (selected) brushType.brushContainer else FlexBrush.Transparent
 			Row(
 				modifier = Modifier
 					.fillMaxWidth()
@@ -506,9 +502,9 @@ private fun <Key> FlexSelectOptionList(
 			) {
 				Text(
 					text = option.value,
-					fontSize = fontSize.sp,
+					fontSize = fontSize,
 					fontWeight = config.fontWeight,
-					letterSpacing = if (letterSpacing >= 0f) letterSpacing.sp else TextUnit.Unspecified,
+					letterSpacing = letterSpacing,
 					style = LocalTextStyle.current.copy(
 						brush = (if (selected) onBrushContainer else brush).original
 					)
@@ -616,18 +612,14 @@ private fun FlexSelectIcon(
 			val isPressed by interactionSource.collectIsPressedAsState()
 			val brush by animateFlexBrushAsState(
 				targetValue = when {
-					isPressed -> brushType.brush.lightenWithBrush
+					isPressed -> brushType.brush.lighten(BrushType.Brush)
 					isHovered -> brushType.brush
 					else -> FlexBrush.Gray
 				}
 			)
-			val scale by animateFloatAsState(
-				targetValue = if (isPressed) 0.9f else 1f
-			)
 			FlexIcon(
 				imageVector = Icons.Rounded.Cancel,
 				modifier = Modifier
-					.scale(scale)
 					.size(iconSize)
 					.hoverable(interactionSource)
 					.clickable(

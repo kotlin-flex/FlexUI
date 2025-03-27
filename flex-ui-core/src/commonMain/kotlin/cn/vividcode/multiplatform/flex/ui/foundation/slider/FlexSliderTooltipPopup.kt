@@ -32,13 +32,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import cn.vividcode.multiplatform.flex.ui.config.foundation.FlexSliderConfig
 import cn.vividcode.multiplatform.flex.ui.graphics.FlexBrush
 import cn.vividcode.multiplatform.flex.ui.type.FlexBrushType
 import cn.vividcode.multiplatform.flex.ui.type.FlexCornerType
 import cn.vividcode.multiplatform.flex.ui.utils.animateFlexBrushAsState
+import cn.vividcode.multiplatform.flex.ui.utils.animateTextUnitAsState
 import cn.vividcode.multiplatform.flex.ui.utils.background
 import kotlin.math.sqrt
 
@@ -202,13 +202,14 @@ private fun TooltipText(
 			),
 		contentAlignment = Alignment.Center
 	) {
-		val fontSize by animateFloatAsState(config.toolbarFontSize.value)
+		val fontSize by animateTextUnitAsState(config.toolbarFontSize)
+		val toolbarFontLetterSpacing by animateTextUnitAsState(config.toolbarFontLetterSpacing)
 		Text(
 			text = tooltipText,
-			fontSize = fontSize.sp,
+			fontSize = fontSize,
 			fontWeight = config.toolbarFontWeight,
-			lineHeight = fontSize.sp,
-			letterSpacing = config.toolbarFontLetterSpacing,
+			lineHeight = fontSize,
+			letterSpacing = toolbarFontLetterSpacing,
 			style = LocalTextStyle.current.copy(
 				brush = onBrush.original
 			)
